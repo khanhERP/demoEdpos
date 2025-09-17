@@ -1,50 +1,23 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+// Tạo __dirname cho ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default defineConfig({
-  plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-        ]
-      : []),
-  ],
+  plugins: [react()],
+  root: path.resolve(__dirname, "client"),
+  build: {
+    outDir: path.resolve(__dirname, "dist"), // Vercel nhận dist/
+    emptyOutDir: true
+  },
   resolve: {
     alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
-    },
-  },
-  root: path.resolve(import.meta.dirname, "client"),
-build: {
-  outDir: path.resolve(import.meta.dirname, "dist_client"), // đổi tên thư mục
-  emptyOutDir: true,
-},
-  server: {
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
-    host: "0.0.0.0",
-    port: 5173,
-    hmr: process.env.NODE_ENV === "development" ? {
-      port: 5173,
-      host: "0.0.0.0",
-      clientPort: 443,
-    } : false,
-    proxy: {
-      "/api": {
-        target: "http://localhost:5000",
-        changeOrigin: true,
-      },
-    },
-  },
-});
+      "@": path.resolve(__dirname, "client/src"),
+    }
+  }
+})
