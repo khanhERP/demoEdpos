@@ -93,8 +93,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       setSelectedReceipt(null);
 
       // Refresh data
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
     };
 
     window.addEventListener(
@@ -123,7 +123,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
     isLoading,
     refetch: refetchTables,
   } = useQuery({
-    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
     staleTime: 60 * 1000, // Cache 1 phút
     gcTime: 5 * 60 * 1000, // Giữ cache 5 phút
     refetchOnWindowFocus: false,
@@ -133,7 +133,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: orders, refetch: refetchOrders } = useQuery({
-    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
     staleTime: 30 * 1000, // Cache 30 giây cho orders
     gcTime: 2 * 60 * 1000, // Giữ cache 2 phút
     refetchOnWindowFocus: false,
@@ -147,7 +147,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
     isLoading: orderItemsLoading,
     refetch: refetchOrderItems,
   } = useQuery({
-    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", selectedOrder?.id],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", selectedOrder?.id],
     enabled: !!selectedOrder?.id && orderDetailsOpen,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -173,7 +173,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: products } = useQuery({
-    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
     staleTime: 60 * 60 * 1000, // Cache for 1 hour (products don't change often)
     gcTime: 2 * 60 * 60 * 1000, // Keep in cache for 2 hours
     refetchOnWindowFocus: false,
@@ -182,7 +182,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: storeSettings } = useQuery({
-    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/store-settings"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
     staleTime: 2 * 60 * 60 * 1000, // Cache for 2 hours (settings rarely change)
     gcTime: 4 * 60 * 60 * 1000, // Keep in cache for 4 hours
     refetchOnWindowFocus: false,
@@ -191,7 +191,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: customers } = useQuery({
-    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"],
     enabled: pointsPaymentOpen,
     staleTime: 30 * 60 * 1000, // Cache for 30 minutes
     gcTime: 60 * 60 * 1000, // Keep in cache for 1 hour
@@ -238,7 +238,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   useEffect(() => {
     if (orderDetailsOpen && selectedOrder?.id) {
       const cachedData = queryClient.getQueryData([
-        "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items",
+        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
         selectedOrder.id,
       ]);
       if (!cachedData) {
@@ -257,8 +257,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Only invalidate - don't force refetch, let cache handle it
       if (!event.detail?.skipAllRefetch) {
-        queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
-        queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
+        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
       }
     };
 
@@ -268,7 +268,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Only invalidate specific data that changed
       if (!event.detail?.skipAllRefetch && event.detail?.orderId) {
         queryClient.invalidateQueries({
-          queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", event.detail.orderId],
+          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", event.detail.orderId],
         });
       }
     };
@@ -395,26 +395,26 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                 });
 
                 // Strategy 3: Set fresh data immediately with forced update
-                queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"], freshTables);
-                queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"], freshOrders);
+                queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
+                queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
 
                 // Strategy 4: Multiple timed invalidations with force refetch
                 setTimeout(() => {
                   console.log("🔄 TableGrid: First invalidation wave");
-                  queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-                  queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
                 }, 50);
 
                 setTimeout(() => {
                   console.log("🔄 TableGrid: Second refetch wave");
-                  queryClient.refetchQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-                  queryClient.refetchQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+                  queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+                  queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
                 }, 200);
 
                 setTimeout(() => {
                   console.log("🔄 TableGrid: Final force refresh wave");
-                  queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-                  queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
                   refetchTables();
                   refetchOrders();
                 }, 500);
@@ -764,8 +764,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       );
 
       // Clear cache and force immediate refresh for immediate UI update
-      queryClient.removeQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-      queryClient.removeQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
 
       // Force immediate fresh fetch
       try {
@@ -883,26 +883,26 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       try {
         // Use fetch directly with no-cache to bypass React Query entirely for immediate update
         const [freshTables, freshOrders] = await Promise.all([
-          fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables", {
+          fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", {
             cache: "no-store",
             headers: { "Cache-Control": "no-cache" },
           }).then((r) => r.json()),
-          fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", {
+          fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
             cache: "no-store",
             headers: { "Cache-Control": "no-cache" },
           }).then((r) => r.json()),
         ]);
 
         // Set fresh data immediately in cache
-        queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"], freshTables);
-        queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"], freshOrders);
+        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
+        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
 
         console.log("✅ Table: Fresh data fetched and set in cache");
 
         // Force component re-render by invalidating after setting fresh data
         setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-          queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
         }, 50);
       } catch (fetchError) {
         console.error(
@@ -955,7 +955,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       try {
         const [completedOrder, orderItemsData] = await Promise.all([
           queryClient.fetchQuery({
-            queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", variables.orderId],
+            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", variables.orderId],
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
@@ -965,7 +965,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             },
           }),
           queryClient.fetchQuery({
-            queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", variables.orderId],
+            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", variables.orderId],
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
@@ -1074,7 +1074,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       orderId: number;
     }) => {
       // First redeem points
-      await apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/redeem-points", {
+      await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points", {
         customerId,
         points,
       });
@@ -1148,11 +1148,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         }
       }
 
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", variables.orderId],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", variables.orderId],
       });
       setOrderDetailsOpen(false);
       setPointsPaymentOpen(false);
@@ -1167,7 +1167,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Fetch the completed order to get its details for receipt
       queryClient
         .fetchQuery({
-          queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", variables.orderId],
+          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", variables.orderId],
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
@@ -1356,7 +1356,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       paymentMethod: string;
     }) => {
       // First redeem all available points
-      await apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/redeem-points", {
+      await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points", {
         customerId,
         points,
       });
@@ -1430,11 +1430,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         }
       }
 
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", variables.orderId],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", variables.orderId],
       });
       setOrderDetailsOpen(false);
       setMixedPaymentOpen(false);
@@ -1451,7 +1451,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Fetch the completed order to get its details for receipt
       queryClient
         .fetchQuery({
-          queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", variables.orderId],
+          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", variables.orderId],
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
@@ -1572,10 +1572,10 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       return response;
     },
     onSuccess: (data, orderId) => {
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", orderId],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", orderId],
       }); // Invalidate items for the deleted order
       toast({
         title: "Xóa đơn hàng thành công",
@@ -1677,8 +1677,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Force immediate fresh fetch without cache
       Promise.all([
-        fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", { cache: "no-store" }).then((r) => r.json()),
-        fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables", { cache: "no-store" }).then((r) => r.json()),
+        fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", { cache: "no-store" }).then((r) => r.json()),
+        fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", { cache: "no-store" }).then((r) => r.json()),
         fetch(`/api/order-items/${orderId}`, { cache: "no-store" }).then((r) =>
           r.json(),
         ),
@@ -1689,7 +1689,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
           );
 
           // Force component re-render by setting a timestamp
-          queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"], (oldData: any) => {
+          queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], (oldData: any) => {
             if (!oldData || !Array.isArray(oldData)) return oldData;
 
             return oldData.map((order: any) => {
@@ -1785,10 +1785,10 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       });
     },
     onSuccess: (data, orderId) => {
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", orderId],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", orderId],
       });
     },
   });
@@ -2107,7 +2107,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         // Strategy A: Direct fetch with no-cache headers
         const [freshTables, freshOrders] = await Promise.all([
           fetch(
-            "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables?" +
+            "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables?" +
               new URLSearchParams({
                 _t: Date.now().toString(),
                 _force: "true",
@@ -2122,7 +2122,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             },
           ).then((r) => r.json()),
           fetch(
-            "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders?" +
+            "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?" +
               new URLSearchParams({
                 _t: Date.now().toString(),
                 _force: "true",
@@ -2139,19 +2139,19 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         ]);
 
         // STEP 3: Set fresh data immediately in cache
-        queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"], freshTables);
-        queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"], freshOrders);
+        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
+        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
         console.log("✅ Table Grid: Fresh data loaded and cached");
 
         // STEP 4: Force multiple re-renders with different timings
         setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-          queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
         }, 50);
 
         setTimeout(() => {
-          queryClient.refetchQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-          queryClient.refetchQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+          queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+          queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
         }, 200);
 
         // STEP 5: Close all modals and clear states
@@ -2402,8 +2402,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Clear cache completely
       queryClient.clear();
-      queryClient.removeQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-      queryClient.removeQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
 
       // Force fresh fetch immediately
       try {
@@ -2757,7 +2757,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       };
 
       // Call auto-print API for both employee and kitchen printers
-      const response = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/auto-print", {
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/auto-print", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -3846,8 +3846,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
               ]);
 
               // Strategy 3: Set fresh data immediately in cache
-              queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"], freshTables);
-              queryClient.setQueryData(["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"], freshOrders);
+              queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
+              queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
 
               console.log(
                 "✅ Table: Fresh data loaded and cached after receipt modal close",
@@ -3855,13 +3855,13 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
               // Strategy 4: Multiple timed invalidations to force re-renders
               setTimeout(() => {
-                queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-                queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+                queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+                queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
               }, 50);
 
               setTimeout(() => {
-                queryClient.refetchQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
-                queryClient.refetchQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+                queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+                queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
               }, 150);
 
               setTimeout(() => {
