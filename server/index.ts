@@ -170,4 +170,9 @@ app.use((req, res, next) => {
   } catch (error) {
     console.error('Failed to start server:', error);
   }
+  
 })();
+
+app.get("/api/hello", (req, res) => {
+  res.json({ msg: "Hello" });
+});
