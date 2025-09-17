@@ -55,7 +55,7 @@ export default function InventoryPage() {
 
   const updateStockMutation = useMutation({
     mutationFn: async (data: StockUpdateForm) => {
-      return await apiRequest('/api/inventory/update-stock', 'POST', data);
+      return await apiRequest('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/inventory/update-stock', 'POST', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });

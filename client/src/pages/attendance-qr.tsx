@@ -20,21 +20,21 @@ export default function AttendanceQRPage() {
   const { t } = useTranslation();
 
   const { data: employees } = useQuery({
-    queryKey: ['/api/employees'],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees'],
   });
 
   const { data: todayAttendance, refetch: refetchTodayAttendance } = useQuery({
-    queryKey: ['/api/attendance/today', selectedEmployeeId],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance/today', selectedEmployeeId],
     enabled: !!selectedEmployeeId,
   });
 
   const clockInMutation = useMutation({
-    mutationFn: () => apiRequest('POST', '/api/attendance/clock-in', {
+    mutationFn: () => apiRequest('POST', 'https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance/clock-in', {
       employeeId: parseInt(selectedEmployeeId),
       notes
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/attendance'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance'] });
       refetchTodayAttendance();
       setNotes("");
       toast({
@@ -54,7 +54,7 @@ export default function AttendanceQRPage() {
   const clockOutMutation = useMutation({
     mutationFn: () => apiRequest('POST', `/api/attendance/clock-out/${(todayAttendance as AttendanceRecord)?.id}`, {}),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/attendance'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance'] });
       refetchTodayAttendance();
       toast({
         title: "퇴근 기록 완료",
@@ -73,7 +73,7 @@ export default function AttendanceQRPage() {
   const breakStartMutation = useMutation({
     mutationFn: () => apiRequest('POST', `/api/attendance/break-start/${(todayAttendance as AttendanceRecord)?.id}`, {}),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/attendance'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance'] });
       refetchTodayAttendance();
       toast({
         title: t('attendance.breakStartSuccess'),
@@ -92,7 +92,7 @@ export default function AttendanceQRPage() {
   const breakEndMutation = useMutation({
     mutationFn: () => apiRequest('POST', `/api/attendance/break-end/${(todayAttendance as AttendanceRecord)?.id}`, {}),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/attendance'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance'] });
       refetchTodayAttendance();
       toast({
         title: "휴식 종료",

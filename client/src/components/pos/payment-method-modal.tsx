@@ -886,7 +886,7 @@ export function PaymentMethodModal({
                 console.log(`🔄 Checking table status update for table ${updatedOrder.tableId} after ${method} payment`);
                 
                 // Check if there are any other unpaid orders on this table
-                const ordersResponse = await fetch('/api/orders');
+                const ordersResponse = await fetch('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders');
                 const allOrders = await ordersResponse.json();
                 
                 const otherActiveOrders = Array.isArray(allOrders) 

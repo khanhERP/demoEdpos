@@ -19,7 +19,7 @@ export function EmployeeList() {
   const { t } = useTranslation();
 
   const { data: employeesData, isLoading } = useQuery<Employee[]>({
-    queryKey: ['/api/employees'],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees'],
   });
 
   // Sort employees by ID descending (newest first)
@@ -31,7 +31,7 @@ export function EmployeeList() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/employees'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees'] });
       toast({
         title: t('common.success'),
         description: t('employees.deleteSuccess'),

@@ -75,7 +75,7 @@ app.use((req, res, next) => {
   });
 
   // Add WebSocket popup close endpoint
-  app.post('/api/popup/close', (req, res) => {
+  app.post('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/popup/close', (req, res) => {
     const { success } = req.body;
 
     // Import and use WebSocket server
@@ -87,7 +87,7 @@ app.use((req, res, next) => {
   });
 
   // Add endpoint to receive payment notification from external API
-app.post('/api/NotifyPos/ReceiveNotify', (req, res) => {
+app.post('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/NotifyPos/ReceiveNotify', (req, res) => {
     try {
       const { TransactionUuid } = req.body;
 

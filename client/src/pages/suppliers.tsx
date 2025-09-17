@@ -25,7 +25,7 @@ export default function SuppliersPage() {
   const queryClient = useQueryClient();
 
   const { data: suppliers, isLoading } = useQuery({
-    queryKey: ['/api/suppliers', { status: selectedStatus, search: searchQuery }],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/suppliers', { status: selectedStatus, search: searchQuery }],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (selectedStatus !== 'all') params.append('status', selectedStatus);
@@ -42,7 +42,7 @@ export default function SuppliersPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/suppliers'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/suppliers'] });
       toast({
         title: t('suppliers.deleteSuccess'),
         description: t('suppliers.deleteSuccessDesc'),

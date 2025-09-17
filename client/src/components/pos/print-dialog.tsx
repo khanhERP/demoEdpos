@@ -264,7 +264,7 @@ export function PrintDialog({
       // Always try POS API first for any device
       try {
         console.log('🖨️ Attempting POS printer API...');
-        const printApiResponse = await fetch('/api/pos/print-receipt', {
+        const printApiResponse = await fetch('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/pos/print-receipt', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -793,7 +793,7 @@ export function PrintDialog({
 
                 // Send message to parent to stop any popup flows
                 try {
-                  fetch('/api/popup/close', {
+                  fetch('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/popup/close', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',

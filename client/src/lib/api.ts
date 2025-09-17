@@ -1,5 +1,5 @@
 export const loginPosAsync = async (request: LoginPosRequest): Promise<LoginResponse> => {
-  const response = await fetch('/api/pos/login', {
+  const response = await fetch('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/pos/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

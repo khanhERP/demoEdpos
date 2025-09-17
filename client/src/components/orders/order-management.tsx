@@ -133,13 +133,13 @@ export function OrderManagement() {
 
   // Query orders by date range - filter only table orders
   const { data: orders, isLoading: ordersLoading } = useQuery({
-    queryKey: ['/api/orders', 'table'],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders', 'table'],
     refetchInterval: 2000, // Faster polling - every 2 seconds
     refetchOnWindowFocus: true, // Refetch when window regains focus
     refetchIntervalInBackground: true, // Continue refetching in background
     staleTime: 0, // Always consider data fresh to force immediate updates
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/orders?salesChannel=table');
+      const response = await apiRequest('GET', 'https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?salesChannel=table');
       if (!response.ok) {
         throw new Error('Failed to fetch table orders');
       }
@@ -167,20 +167,20 @@ export function OrderManagement() {
   });
 
   const { data: tables } = useQuery({
-    queryKey: ['/api/tables'],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'],
   });
 
   const { data: products } = useQuery({
-    queryKey: ['/api/products'],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products'],
   });
 
   const { data: customers } = useQuery({
-    queryKey: ['/api/customers'],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers'],
     enabled: pointsPaymentOpen,
   });
 
   const { data: orderItems, isLoading: orderItemsLoading } = useQuery({
-    queryKey: ['/api/order-items', selectedOrder?.id],
+    queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items', selectedOrder?.id],
     enabled: !!selectedOrder?.id && orderDetailsOpen,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -208,8 +208,8 @@ export function OrderManagement() {
     mutationFn: ({ orderId, status }: { orderId: number; status: string }) =>
       apiRequest('PUT', `/api/orders/${orderId}/status`, { status }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/tables'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] });
       toast({
         title: t('common.success'),
         description: t('orders.orderStatusUpdated'),
@@ -247,10 +247,10 @@ export function OrderManagement() {
 
       // Force immediate refresh
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-        queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-        queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-        queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+        queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+        queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
       ]);
 
       // Don't show toast immediately to avoid conflicts with receipt modal
@@ -317,7 +317,7 @@ export function OrderManagement() {
       remainingAmount?: number;
     }) => {
       // First redeem points
-      await apiRequest('POST', '/api/customers/redeem-points', {
+      await apiRequest('POST', 'https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points', {
         customerId,
         points
       });
@@ -331,9 +331,9 @@ export function OrderManagement() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/tables'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/customers'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers'] });
       setOrderDetailsOpen(false);
       setPointsPaymentOpen(false);
       setSelectedCustomer(null);
@@ -361,7 +361,7 @@ export function OrderManagement() {
       paymentMethod: string;
     }) => {
       // First redeem all available points
-      await apiRequest('POST', '/api/customers/redeem-points', {
+      await apiRequest('POST', 'https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points', {
         customerId,
         points
       });
@@ -374,9 +374,9 @@ export function OrderManagement() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/tables'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/customers'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] });
+      queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers'] });
       setOrderDetailsOpen(false);
       setMixedPaymentOpen(false);
       setMixedPaymentData(null);
@@ -485,10 +485,10 @@ export function OrderManagement() {
       // Force immediate refresh with multiple attempts (5 times)
       for (let i = 0; i < 5; i++) {
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-          queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-          queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-          queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+          queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+          queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+          queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+          queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
         ]);
 
         if (i < 4) {
@@ -501,8 +501,8 @@ export function OrderManagement() {
       intervals.forEach((delay, index) => {
         setTimeout(async () => {
           await Promise.all([
-            queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-            queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+            queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+            queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
           ]);
           console.log(`🔄 Delayed refresh ${index + 1} completed after ${delay}ms`);
         }, delay);
@@ -771,10 +771,10 @@ export function OrderManagement() {
 
         // Invalidate and refetch queries immediately
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-          queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-          queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-          queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+          queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+          queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+          queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+          queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
         ]);
 
         console.log(`✅ Queries refreshed after status update`);
@@ -1157,10 +1157,10 @@ export function OrderManagement() {
       try {
         // Force immediate refresh
         await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-          queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-          queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-          queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+          queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+          queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+          queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+          queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
         ]);
 
         // Close all modals immediately and prevent any reopening
@@ -1223,10 +1223,10 @@ export function OrderManagement() {
 
       // Force immediate UI refresh
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-        queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-        queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-        queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+        queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+        queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
       ]);
 
       // Close all modals immediately - no receipt display for direct payments
@@ -1543,18 +1543,18 @@ export function OrderManagement() {
     console.log('🔄 Order Management: Refreshing data...');
     try {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-        queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-        queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-        queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+        queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+        queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
       ]);
       console.log('✅ Order Management: Data refreshed successfully');
     } catch (error) {
       console.error('❌ Order Management: Error refreshing data:', error);
       // Try again after a delay
       setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-        queryClient.invalidateQueries({ queryKey: ['/api/tables'] });
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] });
+        queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] });
       }, 1000);
     }
   }, [queryClient]);
@@ -3135,8 +3135,8 @@ export function OrderManagement() {
             }
 
             // Force UI refresh
-            queryClient.invalidateQueries({ queryKey: ['/api/orders'] });
-            queryClient.invalidateQueries({ queryKey: ['/api/tables'] });
+            queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] });
+            queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] });
 
             toast({
               title: 'Thành công',
@@ -3252,10 +3252,10 @@ export function OrderManagement() {
 
             // Step 2: Force data refresh before clearing states
             await Promise.all([
-              queryClient.invalidateQueries({ queryKey: ['/api/orders'] }),
-              queryClient.invalidateQueries({ queryKey: ['/api/tables'] }),
-              queryClient.refetchQueries({ queryKey: ['/api/orders'] }),
-              queryClient.refetchQueries({ queryKey: ['/api/tables'] })
+              queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+              queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] }),
+              queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] }),
+              queryClient.refetchQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] })
             ]);
 
             // Step 3: Clear modal states gradually to prevent white screen
