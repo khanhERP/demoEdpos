@@ -168,8 +168,8 @@ export function EInvoiceModal({
         "🎯 E-invoice modal completed payment successfully for order:",
         variables.orderId,
       );
-      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
 
       toast({
         title: "Thanh toán thành công",
@@ -201,13 +201,13 @@ export function EInvoiceModal({
 
   // Fetch E-invoice connections
   const { data: eInvoiceConnections = [] } = useQuery<any[]>({
-    queryKey: ["/api/einvoice-connections"],
+    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice-connections"],
     enabled: isOpen,
   });
 
   // Fetch active invoice templates for dropdown
   const { data: allInvoiceTemplates = [] } = useQuery<any[]>({
-    queryKey: ["/api/invoice-templates/active"],
+    queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates/active"],
     enabled: isOpen,
   });
 
