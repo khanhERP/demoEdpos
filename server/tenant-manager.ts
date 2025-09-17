@@ -27,6 +27,12 @@ class TenantManager {
         isActive: true,
       },
       {
+        subdomain: "demo-edpos",
+        databaseUrl: process.env.EXTERNAL_DB_URL || process.env.DATABASE_URL!,
+        storeName: "Demo Store - Cửa hàng demo",
+        isActive: true,
+      },
+      {
         subdomain: "hazkitchen",
         databaseUrl: process.env.EXTERNAL_DB_URL || process.env.DATABASE_URL!,
         storeName: "Store 1 - Cửa hàng số 1",
