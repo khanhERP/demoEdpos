@@ -172,3 +172,7 @@ app.use((req, res, next) => {
   }
   
 })();
+
+app.get("/api/hello", (req, res) => {
+  res.json({ msg: "Hello" });
+});
