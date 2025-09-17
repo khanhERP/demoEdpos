@@ -291,7 +291,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
     const connectWebSocket = () => {
       try {
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const wsUrl = `${protocol}//${window.location.host}/ws`;
+        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
         ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
@@ -2415,7 +2415,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Send WebSocket signal for data refresh
       try {
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const wsUrl = `${protocol}//${window.location.host}/ws`;
+        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
         const ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
@@ -3912,7 +3912,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             try {
               const protocol =
                 window.location.protocol === "https:" ? "wss:" : "ws:";
-              const wsUrl = `${protocol}//${window.location.host}/ws`;
+              const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
               const ws = new WebSocket(wsUrl);
 
               ws.onopen = () => {

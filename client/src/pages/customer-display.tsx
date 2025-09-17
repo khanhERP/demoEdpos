@@ -87,7 +87,7 @@ export default function CustomerDisplayPage() {
   useEffect(() => {
     console.log("Customer Display: Initializing WebSocket connection");
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
 
     let ws: WebSocket;
     let reconnectTimer: NodeJS.Timeout;

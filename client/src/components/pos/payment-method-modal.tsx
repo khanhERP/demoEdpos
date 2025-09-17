@@ -428,7 +428,7 @@ export function PaymentMethodModal({
             try {
               const protocol =
                 window.location.protocol === "https:" ? "wss:" : "ws:";
-              const wsUrl = `${protocol}//${window.location.host}/ws`;
+              const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
               console.log(
                 "🎯 QR Payment: Connecting to WebSocket for customer display:",
                 wsUrl,
@@ -563,7 +563,7 @@ export function PaymentMethodModal({
             try {
               const protocol =
                 window.location.protocol === "https:" ? "wss:" : "ws:";
-              const wsUrl = `${protocol}//${window.location.host}/ws`;
+              const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
               console.log(
                 "Fallback QR Payment: Attempting to connect to WebSocket:",
                 wsUrl,
@@ -695,7 +695,7 @@ export function PaymentMethodModal({
         try {
           const protocol =
             window.location.protocol === "https:" ? "wss:" : "ws:";
-          const wsUrl = `${protocol}//${window.location.host}/ws`;
+          const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
           const ws = new WebSocket(wsUrl);
 
           ws.onopen = () => {
@@ -1262,7 +1262,7 @@ export function PaymentMethodModal({
     // Send message to customer display to clear QR payment
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${protocol}//${window.location.host}/ws`;
+      const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
       const ws = new WebSocket(wsUrl);
 
       ws.onopen = () => {
@@ -1699,7 +1699,7 @@ export function PaymentMethodModal({
         try {
           const protocol =
             window.location.protocol === "https:" ? "wss:" : "ws:";
-          const wsUrl = `${protocol}//${window.location.host}/ws`;
+          const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
           const ws = new WebSocket(wsUrl);
 
           ws.onopen = () => {
@@ -1801,7 +1801,7 @@ export function PaymentMethodModal({
             try {
               const protocol =
                 window.location.protocol === "https:" ? "wss:" : "ws:";
-              const wsUrl = `${protocol}//${window.location.host}/ws`;
+              const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
               const ws = new WebSocket(wsUrl);
 
               ws.onopen = () => {
@@ -1919,7 +1919,7 @@ export function PaymentMethodModal({
                     try {
                       const protocol =
                         window.location.protocol === "https:" ? "wss:" : "ws:";
-                      const wsUrl = `${protocol}//${window.location.host}/ws`;
+                      const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
                       const ws = new WebSocket(wsUrl);
 
                       ws.onopen = () => {
@@ -1995,7 +1995,7 @@ export function PaymentMethodModal({
                           window.location.protocol === "https:"
                             ? "wss:"
                             : "ws:";
-                        const wsUrl = `${protocol}//${window.location.host}/ws`;
+                        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
                         const ws = new WebSocket(wsUrl);
 
                         ws.onopen = () => {
@@ -2041,7 +2041,7 @@ export function PaymentMethodModal({
                           window.location.protocol === "https:"
                             ? "wss:"
                             : "ws:";
-                        const wsUrl = `${protocol}//${window.location.host}/ws`;
+                        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
                         const ws = new WebSocket(wsUrl);
 
                         ws.onopen = () => {
@@ -2245,7 +2245,7 @@ export function PaymentMethodModal({
                           window.location.protocol === "https:"
                             ? "wss:"
                             : "ws:";
-                        const wsUrl = `${protocol}//${window.location.host}/ws`;
+                        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
                         const ws = new WebSocket(wsUrl);
 
                         ws.onopen = () => {
@@ -2282,7 +2282,7 @@ export function PaymentMethodModal({
                           window.location.protocol === "https:"
                             ? "wss:"
                             : "ws:";
-                        const wsUrl = `${protocol}//${window.location.host}/ws`;
+                        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
                         const ws = new WebSocket(wsUrl);
 
                         ws.onopen = () => {

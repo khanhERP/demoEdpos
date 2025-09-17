@@ -243,7 +243,7 @@ export function ShoppingCart({
   useEffect(() => {
     console.log("📡 Shopping Cart: Initializing single WebSocket connection");
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
 
     let reconnectTimer: NodeJS.Timeout | null = null;
     let shouldReconnect = true;
@@ -554,7 +554,7 @@ export function ShoppingCart({
       // Send WebSocket signal for refresh
       try {
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const wsUrl = `${protocol}//${window.location.host}/ws`;
+        const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
         const ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
@@ -1760,7 +1760,7 @@ export function ShoppingCart({
                 // Fallback WebSocket connection if main one is not available
                 const protocol =
                   window.location.protocol === "https:" ? "wss:" : "ws:";
-                const wsUrl = `${protocol}//${window.location.host}/ws`;
+                const wsUrl = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/ws`;
                 const fallbackWs = new WebSocket(wsUrl);
 
                 fallbackWs.onopen = () => {
