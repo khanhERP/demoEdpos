@@ -164,14 +164,16 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     productManagementDesc: "상품 정보와 가격을 관리합니다",
     stockStatus: "재고 상태",
     usageStatus: "사용 상태",
-    updateProductInfo: "Update product information",
+    updateProductInfo: "상품 정보 업데이트",
+    updateCategoryInfo: "카테고리 정보 업데이트",
     enterProductInfo: "Enter new product information",
     trackInventory: "Track Inventory",
-    enableInventoryTracking: "Enable inventory tracking for this product",
+    enableInventoryTracking: "이 상품의 재고 추적을 활성화",
     yes: "네",
     // Product form dialog
     addProductTitle: "상품 추가",
     addProductDesc: "새 상품 정보를 입력하세요",
+    editProductTitle: "상품 수정",
     editProductDesc: "상품 정보를 수정하세요",
     productDescriptionPlaceholder: "상품 설명을 입력하세요 (선택사항)",
     productDescriptionLabel: "상품 설명",
@@ -185,13 +187,21 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     usageStatusActive: "활성",
     usageStatusInactive: "비활성",
     selectUsageStatus: "상태를 선택하세요",
-    
+
     // Placeholders
     categoryNamePlaceholder: "카테고리 이름을 입력하세요",
     templateNumberPlaceholder: "예: 01GTKT0/001",
     templateCodePlaceholder: "예: 123451/88890345", 
     symbolPlaceholder: "예: AA/19E",
     templateNamePlaceholder: "예: 템플릿 1",
+    productsCount: "개 상품",
+    
+    // Product deletion confirmation
+    confirmDeleteProductTitle: "상품 삭제 확인",
+    confirmDeleteProductDesc: "정말로 상품을 삭제하시겠습니까?",
+    deleteProductWarning: "경고: 이 작업은 되돌릴 수 없습니다. 상품이 시스템에서 영구적으로 삭제됩니다.",
+    deleteProductDetails: "이는 이 상품이 포함된 주문 및 보고서에 영향을 줄 것입니다.",
+    deleteProductAction: "상품 삭제",
   },
   en: {
     title: "Settings",
@@ -358,6 +368,7 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     stockStatus: "Stock Status",
     usageStatus: "Usage Status",
     updateProductInfo: "Update product information",
+    updateCategoryInfo: "Update category information",
     enterProductInfo: "Enter new product information",
     trackInventory: "Track Inventory",
     enableInventoryTracking: "Enable inventory tracking for this product",
@@ -367,6 +378,7 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     // Product form dialog
     addProductTitle: "Add Product",
     addProductDesc: "Enter new product information",
+    editProductTitle: "Edit Product",
     editProductDesc: "Update product information",
     productDescriptionPlaceholder: "Enter product description (optional)",
     productDescriptionLabel: "Product Description",
@@ -380,13 +392,21 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     usageStatusActive: "Active",
     usageStatusInactive: "Inactive",
     selectUsageStatus: "Select status",
-    
+
     // Placeholders
     categoryNamePlaceholder: "Enter category name",
     templateNumberPlaceholder: "e.g., 01GTKT0/001",
     templateCodePlaceholder: "e.g., 123451/88890345",
     symbolPlaceholder: "e.g., AA/19E", 
     templateNamePlaceholder: "e.g., Template 1",
+    productsCount: "products",
+    
+    // Product deletion confirmation
+    confirmDeleteProductTitle: "Confirm Product Deletion",
+    confirmDeleteProductDesc: "Are you sure you want to delete this product?",
+    deleteProductWarning: "Warning: This action cannot be undone. The product will be permanently deleted from the system.",
+    deleteProductDetails: "This will affect orders and reports containing this product.",
+    deleteProductAction: "Delete Product",
   },
   vi: {
     title: "Cài đặt",
@@ -553,6 +573,7 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     stockStatus: "Trạng thái kho",
     usageStatus: "Trạng thái sử dụng",
     updateProductInfo: "Cập nhật thông tin sản phẩm",
+    updateCategoryInfo: "Cập nhật thông tin danh mục",
     enterProductInfo: "Nhập thông tin sản phẩm mới",
     trackInventory: "Theo dõi tồn kho",
     enableInventoryTracking: "Kích hoạt theo dõi tồn kho cho sản phẩm này",
@@ -562,6 +583,7 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     // Product form dialog
     addProductTitle: "Thêm sản phẩm",
     addProductDesc: "Nhập thông tin sản phẩm mới",
+    editProductTitle: "Sửa sản phẩm",
     editProductDesc: "Cập nhật thông tin sản phẩm",
     productDescriptionPlaceholder: "Nhập mô tả sản phẩm (tùy chọn)",
     productDescriptionLabel: "Mô tả sản phẩm",
@@ -575,12 +597,20 @@ export const settingsTranslations: { [key: string]: SettingsTranslations } = {
     usageStatusActive: "Hoạt động",
     usageStatusInactive: "Không hoạt động",
     selectUsageStatus: "Chọn trạng thái",
-    
+
     // Placeholders
     categoryNamePlaceholder: "Nhập tên danh mục",
     templateNumberPlaceholder: "Ví dụ: 01GTKT0/001",
     templateCodePlaceholder: "Ví dụ: 123451/88890345",
     symbolPlaceholder: "Ví dụ: AA/19E",
     templateNamePlaceholder: "Ví dụ: Mẫu số 1",
+    productsCount: "sản phẩm",
+    
+    // Product deletion confirmation
+    confirmDeleteProductTitle: "Xác nhận xóa sản phẩm",
+    confirmDeleteProductDesc: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
+    deleteProductWarning: "Cảnh báo: Hành động này không thể hoàn tác. Sản phẩm sẽ bị xóa vĩnh viễn khỏi hệ thống.",
+    deleteProductDetails: "Điều này sẽ ảnh hưởng đến các đơn hàng và báo cáo có chứa sản phẩm này.",
+    deleteProductAction: "Xóa sản phẩm",
   },
 };

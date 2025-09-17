@@ -87,7 +87,6 @@ const EINVOICE_PROVIDERS = [
   { name: "EHoaDon", value: "5" },
   { name: "BkavInvoice", value: "6" },
   { name: "MInvoice", value: "7" },
-  { name: "SInvoice", value: "8" },
   { name: "WinInvoice", value: "9" },
 ];
 
@@ -203,7 +202,7 @@ export default function Settings() {
       }
 
       await queryClient.refetchQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
+        queryKey: ["/api/employees"],
       });
 
       toast({
@@ -244,21 +243,21 @@ export default function Settings() {
 
   // Fetch store settings
   const { data: storeData, isLoading } = useQuery<StoreSettings>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
+    queryKey: ["/api/store-settings"],
   });
 
   // Fetch customers
   const { data: customersData, isLoading: customersLoading } = useQuery<
     Customer[]
   >({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"],
+    queryKey: ["/api/customers"],
   });
 
   // Fetch employees
   const { data: employeesRawData, isLoading: employeesLoading } = useQuery<
     any[]
   >({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
+    queryKey: ["/api/employees"],
   });
 
   // Sort employees by ID descending (newest first)
@@ -282,14 +281,14 @@ export default function Settings() {
   const { data: categoriesData, isLoading: categoriesLoading } = useQuery<
     any[]
   >({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
+    queryKey: ["/api/categories"],
   });
 
   // Fetch products (include inactive products in settings)
   const { data: productsData, isLoading: productsLoading } = useQuery<any[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", { includeInactive: true }],
+    queryKey: ["/api/products", { includeInactive: true }],
     queryFn: async () => {
-      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products?includeInactive=true");
+      const response = await fetch("/api/products?includeInactive=true");
       if (!response.ok) throw new Error("Failed to fetch products");
       return response.json();
     },
@@ -343,11 +342,11 @@ export default function Settings() {
   // Mutation to update store settings
   const updateStoreSettingsMutation = useMutation({
     mutationFn: async (settings: Partial<InsertStoreSettings>) => {
-      const response = await apiRequest("PUT", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings", settings);
+      const response = await apiRequest("PUT", "/api/store-settings", settings);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/store-settings"] });
       toast({
         title: t("common.success"),
         description: t("settings.storeUpdated"),
@@ -471,8 +470,8 @@ export default function Settings() {
   const addPaymentMethod = () => {
     const newMethod = {
       id: paymentMethods.length + 1,
-      name: "Phương thức thanh toán mới",
-      nameKey: "newPayment",
+      name: t("common.comboValues.newPaymentMethod"),
+      nameKey: "newPaymentMethod",
       type: "custom",
       enabled: false,
       icon: "💳",
@@ -554,7 +553,7 @@ export default function Settings() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/customers"] });
 
       toast({
         title: "Thành công",
@@ -630,7 +629,7 @@ export default function Settings() {
     }
 
     try {
-      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories", {
+      const response = await fetch("/api/categories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -645,8 +644,8 @@ export default function Settings() {
       const result = await response.json();
 
       // Refetch data immediately
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/categories"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -703,8 +702,8 @@ export default function Settings() {
       resetCategoryForm();
 
       // Refetch data immediately
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/categories"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -757,8 +756,8 @@ export default function Settings() {
       }
 
       // Refetch data immediately
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/categories"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -810,8 +809,8 @@ export default function Settings() {
         afterTaxPrice: productForm.afterTaxPrice || null,
       };
 
-      const response = await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", productData);
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      const response = await apiRequest("POST", "/api/products", productData);
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       toast({
         title: t("common.success"),
         description: t("common.productCreateSuccess"),
@@ -855,7 +854,7 @@ export default function Settings() {
         `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${editingProduct.id}`,
         productData,
       );
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
       toast({
         title: t("common.success"),
         description: t("common.productUpdateSuccess"),
@@ -885,7 +884,7 @@ export default function Settings() {
     try {
       await apiRequest("DELETE", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${productToDelete.id}`);
 
-      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -897,7 +896,7 @@ export default function Settings() {
     } catch (error) {
       console.error("Product delete error:", error);
       toast({
-        title: t("common.error"),
+        title: "Lỗi",
         description: "Có lỗi xảy ra khi xóa sản phẩm",
         variant: "destructive",
       });
@@ -951,7 +950,7 @@ export default function Settings() {
   // Fetch E-invoice connections
   const { data: eInvoiceConnections = [], isLoading: eInvoiceLoading } =
     useQuery<any[]>({
-      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
+      queryKey: ["/api/einvoice-connections"],
     });
 
   // E-invoice mutations
@@ -959,14 +958,14 @@ export default function Settings() {
     mutationFn: async (data: any) => {
       const response = await apiRequest(
         "POST",
-        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections",
+        "/api/einvoice-connections",
         data,
       );
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
+        queryKey: ["/api/einvoice-connections"],
       });
       toast({
         title: "Thành công",
@@ -995,7 +994,7 @@ export default function Settings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
+        queryKey: ["/api/einvoice-connections"],
       });
       toast({
         title: "Thành công",
@@ -1023,7 +1022,7 @@ export default function Settings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
+        queryKey: ["/api/einvoice-connections"],
       });
       toast({
         title: "Thành công",
@@ -1100,8 +1099,8 @@ export default function Settings() {
   const handleCreateEInvoice = () => {
     if (!validateEInvoiceForm()) {
       toast({
-        title: "Lỗi",
-        description: "Vui lòng điền đầy đủ thông tin bắt buộc",
+        title: t("common.error"),
+        description: t("common.comboValues.pleaseEnterRequired"),
         variant: "destructive",
       });
       return;
@@ -1113,8 +1112,8 @@ export default function Settings() {
   const handleUpdateEInvoice = () => {
     if (!validateEInvoiceForm()) {
       toast({
-        title: "Lỗi",
-        description: "Vui lòng điền đầy đủ thông tin bắt buộc",
+        title: t("common.error"),
+        description: t("common.comboValues.pleaseEnterRequired"),
         variant: "destructive",
       });
       return;
@@ -1204,17 +1203,17 @@ export default function Settings() {
   const { data: invoiceTemplates = [], isLoading: templatesLoading } = useQuery<
     any[]
   >({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"],
+    queryKey: ["/api/invoice-templates"],
   });
 
   // Invoice template mutations
   const createTemplateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates", data);
+      const response = await apiRequest("POST", "/api/invoice-templates", data);
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoice-templates"] });
       toast({
         title: "Thành công",
         description: "Mẫu số HĐĐT đã được tạo thành công",
@@ -1241,7 +1240,7 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoice-templates"] });
       toast({
         title: "Thành công",
         description: "Mẫu số HĐĐT đã được cập nhật thành công",
@@ -1267,7 +1266,7 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoice-templates"] });
       toast({
         title: "Thành công",
         description: "Mẫu số HĐĐT đã được xóa thành công",
@@ -2014,7 +2013,7 @@ export default function Settings() {
                                           colSpan={9}
                                           className="p-8 text-center text-sm text-gray-500"
                                         >
-                                          Đang tải dữ liệu...
+                                          {t("common.comboValues.loadingData")}
                                         </td>
                                       </tr>
                                     ) : invoiceTemplates.length === 0 ? (
@@ -2025,9 +2024,15 @@ export default function Settings() {
                                         >
                                           <div className="flex flex-col items-center gap-2">
                                             <SettingsIcon className="w-8 h-8 text-gray-400" />
-                                            <p>Chưa có mẫu số HĐĐT nào</p>
+                                            <p>
+                                              {t(
+                                                "common.comboValues.noTemplatesFound",
+                                              )}
+                                            </p>
                                             <p className="text-xs">
-                                              Nhấn "Thêm mẫu số" để bắt đầu
+                                              {t(
+                                                "common.comboValues.clickAddTemplateToStart",
+                                              )}
                                             </p>
                                           </div>
                                         </td>
@@ -2210,7 +2215,7 @@ export default function Settings() {
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                           <Printer className="h-5 w-5 text-green-600" />
-                          Cấu hình máy in
+                          {t("common.comboValues.printerConfiguration")}
                         </CardTitle>
                         <CardDescription>
                           Quản lý các máy in kết nối với hệ thống POS
@@ -2662,7 +2667,7 @@ export default function Settings() {
                                               p.categoryId === category.id,
                                           ).length
                                         : 0}{" "}
-                                      sản phẩm
+                                      {t("settings.productsCount")}
                                     </p>
                                   </div>
                                 </div>
@@ -2824,7 +2829,7 @@ export default function Settings() {
                                 >
                                   <td className="px-4 py-3">
                                     <div
-                                      className="font-medium truncate"
+                                      className="font-medium max-w-[200px] truncate"
                                       title={product.name}
                                     >
                                       {product.name}
@@ -2841,9 +2846,14 @@ export default function Settings() {
                                   <td className="px-4 py-3">
                                     <Badge
                                       variant="outline"
-                                      className="text-xs truncate"
+                                      className="text-xs max-w-full break-words whitespace-normal leading-tight"
                                     >
-                                      {category?.name || "N/A"}
+                                      <span
+                                        className="block max-w-[100px] truncate"
+                                        title={category?.name || "N/A"}
+                                      >
+                                        {category?.name || "N/A"}
+                                      </span>
                                     </Badge>
                                   </td>
                                   <td className="px-4 py-3 text-right">
@@ -2873,8 +2883,8 @@ export default function Settings() {
                                       }`}
                                     >
                                       {product.stock > 0
-                                        ? t("settings.inStock")
-                                        : t("settings.outOfStock")}
+                                        ? t("common.inStock")
+                                        : t("common.outOfStock")}
                                     </Badge>
                                   </td>
                                   <td className="px-4 py-3 text-center">
@@ -3005,13 +3015,13 @@ export default function Settings() {
                         <Users className="w-12 h-12 mx-auto text-gray-400 mb-4" />
                         <p className="text-gray-500">
                           {employeeSearchTerm
-                            ? "Không tìm thấy nhân viên nào phù hợp"
-                            : "Chưa có nhân viên nào được đăng ký"}
+                            ? t("employees.noEmployeesFound")
+                            : t("employees.noEmployeesRegistered")}
                         </p>
                         <p className="text-sm text-gray-400 mt-2">
                           {employeeSearchTerm
-                            ? "Thử tìm kiếm với từ khóa khác"
-                            : "Thêm nhân viên đầu tiên để bắt đầu"}
+                            ? t("employees.noEmployeesFoundDesc")
+                            : t("employees.noEmployeesRegisteredDesc")}
                         </p>
                       </div>
                     ) : (
@@ -3141,14 +3151,8 @@ export default function Settings() {
 
                     <div className="flex justify-between items-center mt-6">
                       <div className="text-sm text-gray-600">
-                        Tổng số nhân viên:{" "}
+                        {t("employees.totalEmployees")}:{" "}
                         {employeesData ? employeesData.length : 0}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
-                          <Clock className="w-4 h-4 mr-2" />
-                          {t("attendance.title")}
-                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -3197,7 +3201,11 @@ export default function Settings() {
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <span className="text-2xl">{method.icon}</span>
-                              <span className="font-medium">{method.name}</span>
+                              <span className="font-medium">
+                                {method.nameKey
+                                  ? t(`common.${method.nameKey}`)
+                                  : method.name}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Switch
@@ -3287,11 +3295,13 @@ export default function Settings() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
-              {editingCategory ? "Sửa danh mục" : t("settings.addCategory")}
+              {editingCategory
+                ? t("settings.editCategory")
+                : t("settings.addCategory")}
             </DialogTitle>
             <DialogDescription>
               {editingCategory
-                ? "Cập nhật thông tin danh mục sản phẩm"
+                ? t("settings.updateCategoryInfo")
                 : t("settings.categoryManagementDesc")}
             </DialogDescription>
           </DialogHeader>
@@ -3354,7 +3364,7 @@ export default function Settings() {
               }
               className="bg-green-600 hover:bg-green-700"
             >
-              {editingCategory ? "Cập nhật" : t("common.create")}
+              {editingCategory ? t("common.update") : t("common.create")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -3629,29 +3639,25 @@ export default function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-red-600">
               <Trash2 className="w-5 h-5" />
-              Xác nhận xóa danh mục
+              {t("common.comboValues.confirmDeleteCategoryTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa danh mục{" "}
-                  <span className="font-semibold text-gray-900">
-                    "{categoryToDelete?.name}"
-                  </span>{" "}
-                  không?
+                  {t("common.comboValues.confirmDeleteCategoryDesc", {
+                    name: categoryToDelete?.name,
+                  })}
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-sm text-red-700">
-                      <strong>Cảnh báo:</strong> Hành động này không thể hoàn
-                      tác. Danh mục sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                      {t("common.comboValues.deleteCategoryWarning")}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Hãy đảm bảo rằng không còn sản phẩm nào trong danh mục này
-                  trước khi xóa.
+                  {t("common.comboValues.deleteCategoryDetails")}
                 </p>
               </div>
             </AlertDialogDescription>
@@ -3664,14 +3670,14 @@ export default function Settings() {
               }}
               className="hover:bg-gray-100"
             >
-              Hủy bỏ
+              {t("common.comboValues.cancelAction")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteCategory}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Xóa danh mục
+              {t("common.comboValues.deleteCategoryAction")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -3686,30 +3692,25 @@ export default function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-red-600">
               <Trash2 className="w-5 h-5" />
-              Xác nhận xóa khách hàng
+              {t("common.comboValues.confirmDeleteCustomerTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa khách hàng{" "}
-                  <span className="font-semibold text-gray-900">
-                    "{customerToDelete?.name}"
-                  </span>{" "}
-                  không?
+                  {t("common.comboValues.confirmDeleteCustomerDesc", {
+                    name: customerToDelete?.name,
+                  })}
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-sm text-red-700">
-                      <strong>Cảnh báo:</strong> Hành động này không thể hoàn
-                      tác. Tất cả dữ liệu của khách hàng sẽ bị xóa vĩnh viễn
-                      khỏi hệ thống.
+                      {t("common.comboValues.deleteCustomerWarning")}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Điều này bao gồm lịch sử mua hàng, điểm tích lũy và thông tin
-                  cá nhân.
+                  {t("common.comboValues.deleteCustomerDetails")}
                 </p>
               </div>
             </AlertDialogDescription>
@@ -3722,14 +3723,14 @@ export default function Settings() {
               }}
               className="hover:bg-gray-100"
             >
-              Hủy bỏ
+              {t("common.comboValues.cancelAction")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteCustomer}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Xóa khách hàng
+              {t("common.comboValues.deleteCustomerAction")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -3744,29 +3745,28 @@ export default function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-red-600">
               <Trash2 className="w-5 h-5" />
-              Xác nhận xóa sản phẩm
+              {t("settings.confirmDeleteProductTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa sản phẩm{" "}
+                  {t("settings.confirmDeleteProductDesc")}{" "}
                   <span className="font-semibold text-gray-900">
                     "{productToDelete?.name}"
-                  </span>{" "}
-                  không?
+                  </span>
+                  ?
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-sm text-red-700">
-                      <strong>Cảnh báo:</strong> Hành động này không thể hoàn
-                      tác. Sản phẩm sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                      <strong>{t("common.warning")}:</strong>{" "}
+                      {t("settings.deleteProductWarning")}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Điều này sẽ ảnh hưởng đến các đơn hàng và báo cáo có chứa sản
-                  phẩm này.
+                  {t("settings.deleteProductDetails")}
                 </p>
               </div>
             </AlertDialogDescription>
@@ -3779,14 +3779,14 @@ export default function Settings() {
               }}
               className="hover:bg-gray-100"
             >
-              Hủy bỏ
+              {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteProduct}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Xóa sản phẩm
+              {t("settings.deleteProductAction")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -3801,15 +3801,12 @@ export default function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-red-600">
               <Trash2 className="w-5 h-5" />
-              Xác nhận xóa nhân viên
+              {t("employees.confirmDeleteEmployeeTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa nhân viên{" "}
-                  <span className="font-semibold text-gray-900">
-                    "{employeeToDelete?.name}"
-                  </span>{" "}
+                  Bạn có chắc chắn muốn xóa nhân viên "{employeeToDelete?.name}"
                   không?
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
@@ -3837,14 +3834,14 @@ export default function Settings() {
               }}
               className="hover:bg-gray-100"
             >
-              Hủy bỏ
+              {t("employees.cancelAction")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteEmployee}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Xóa nhân viên
+              {t("employees.deleteEmployeeAction")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -4422,15 +4419,21 @@ export default function Settings() {
       >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Chỉnh sửa phương thức thanh toán</DialogTitle>
+            <DialogTitle>
+              {editingPaymentMethod
+                ? t("common.edit") + " " + t("settings.paymentMethods")
+                : t("settings.addPayment")}
+            </DialogTitle>
             <DialogDescription>
-              Cập nhật thông tin của phương thức thanh toán
+              {editingPaymentMethod
+                ? t("common.update") + " " + t("settings.paymentMethods")
+                : t("settings.addPayment")}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="paymentMethodName" className="text-right">
-                Tên phương thức
+                {t("common.name")}
               </Label>
               <Input
                 id="paymentMethodName"
@@ -4442,12 +4445,12 @@ export default function Settings() {
                   }))
                 }
                 className="col-span-3"
-                placeholder="Nhập tên phương thức thanh toán"
+                placeholder={t("common.name")}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="paymentMethodIcon" className="text-right">
-                Biểu tượng
+                {t("common.icon")}
               </Label>
               <Input
                 id="paymentMethodIcon"
@@ -4459,7 +4462,7 @@ export default function Settings() {
                   }))
                 }
                 className="col-span-3"
-                placeholder="Nhập emoji biểu tượng"
+                placeholder="💳"
               />
             </div>
           </div>
@@ -4471,13 +4474,13 @@ export default function Settings() {
                 resetPaymentMethodForm();
               }}
             >
-              Hủy bỏ
+              {t("common.cancel")}
             </Button>
             <Button
               onClick={handleUpdatePaymentMethod}
               className="bg-green-600 hover:bg-green-700"
             >
-              Cập nhật
+              {t("common.update")}
             </Button>
           </DialogFooter>
         </DialogContent>

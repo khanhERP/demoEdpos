@@ -83,19 +83,19 @@ export function ProductManagerModal({
     isLoading,
     refetch,
   } = useQuery<Product[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
+    queryKey: ["/api/products"],
     enabled: isOpen,
   });
 
   const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
+    queryKey: ["/api/categories"],
     enabled: isOpen,
   });
 
   const createProductMutation = useMutation({
     mutationFn: async (data: z.infer<typeof productFormSchema>) => {
       console.log("Sending product data:", data);
-      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", {
+      const response = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -109,8 +109,8 @@ export function ProductManagerModal({
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/active"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products/active"] });
       setShowAddForm(false);
       resetForm();
       toast({
@@ -155,8 +155,8 @@ export function ProductManagerModal({
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/active"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products/active"] });
       setEditingProduct(null);
       toast({
         title: "Success",
@@ -181,8 +181,8 @@ export function ProductManagerModal({
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/active"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/products/active"] });
       toast({
         title: "Success",
         description: "Product deleted successfully",
@@ -582,7 +582,7 @@ export function ProductManagerModal({
                           {t("tables.taxRate")}
                         </th>
                         <th className="text-left py-3 px-4 font-medium pos-text-primary">
-                          Giá sau thuế
+                          {t("common.comboValues.afterTaxPrice")}
                         </th>
                         <th className="text-left py-3 px-4 font-medium pos-text-primary">
                           {t("tables.stock")}
@@ -749,7 +749,7 @@ export function ProductManagerModal({
                             <Input
                               {...field}
                               type="text"
-                              placeholder="4000"
+                              placeholder={t("common.comboValues.pricePlaceholder")}
                               onChange={(e) => {
                                 const value = e.target.value;
                                 // Only allow numbers
@@ -827,7 +827,7 @@ export function ProductManagerModal({
                       name="afterTaxPrice"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Giá sau thuế</FormLabel>
+                          <FormLabel>{t("common.comboValues.afterTaxPrice")}</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -1005,7 +1005,7 @@ export function ProductManagerModal({
                           </FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel>
-                              Giá đã bao gồm thuế
+                              {t("common.comboValues.priceIncludesTax")}
                             </FormLabel>
                           </div>
                         </FormItem>
@@ -1024,7 +1024,7 @@ export function ProductManagerModal({
                     >
                       {editingProduct
                         ? t("tables.updateProduct")
-                        : t("tables.createProduct")}
+                        : t("common.comboValues.createProduct")}
                     </Button>
                   </div>
                 </form>

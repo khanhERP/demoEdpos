@@ -56,8 +56,8 @@ export default function TablesPage() {
 
               // Clear cache and force refresh
               queryClient.clear();
-              queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-              queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+              queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+              queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
 
               // Dispatch custom events for TableGrid component
               window.dispatchEvent(
@@ -104,8 +104,8 @@ export default function TablesPage() {
 
       // Force data refresh for any e-invoice related events
       queryClient.clear();
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
 
       // Dispatch refresh event for TableGrid
       window.dispatchEvent(

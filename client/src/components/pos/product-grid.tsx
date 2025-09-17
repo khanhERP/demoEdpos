@@ -43,7 +43,7 @@ export function ProductGrid({ selectedCategory, searchQuery, onAddToCart }: Prod
   };
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", { category: selectedCategory, search: searchQuery }],
+    queryKey: ["/api/products", { category: selectedCategory, search: searchQuery }],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) {
@@ -285,7 +285,7 @@ export function ProductGrid({ selectedCategory, searchQuery, onAddToCart }: Prod
             </div>
             <h3 className="text-lg font-medium pos-text-secondary mb-2">{t('pos.noProductsFound')}</h3>
             <p className="pos-text-tertiary">
-              {searchQuery ? "Thử điều chỉnh từ khóa tìm kiếm" : "Không có sản phẩm trong danh mục này"}
+              {searchQuery ? "Thử điều chỉnh từ khóa tìm kiếm" : t('pos.noProductsInCategory')}
             </p>
           </div>
         ) : (

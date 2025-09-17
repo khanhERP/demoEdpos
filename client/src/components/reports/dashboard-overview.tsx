@@ -73,7 +73,7 @@ export function DashboardOverview() {
     isLoading: ordersLoading,
     error: ordersError,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
+    queryKey: ["/api/orders/date-range", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(
@@ -97,10 +97,10 @@ export function DashboardOverview() {
 
   // Query order items for all orders
   const { data: orderItems = [], isLoading: orderItemsLoading } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
+    queryKey: ["/api/order-items"],
     queryFn: async () => {
       try {
-        const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items");
+        const response = await fetch("/api/order-items");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -118,17 +118,17 @@ export function DashboardOverview() {
   });
 
   const { data: tables } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
+    queryKey: ["/api/tables"],
   });
 
   const handleRefresh = () => {
     // Refresh the queries to get the latest data for the selected date
     setStartDate(formatDateToYYYYMMDD(new Date()));
     setEndDate(formatDateToYYYYMMDD(new Date()));
-    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range"] });
-    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"] });
-    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/order-items"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
   };
 
   const getDashboardStats = () => {
@@ -331,10 +331,10 @@ export function DashboardOverview() {
 
   // Get all current orders to check active ones (not date-filtered)
   const { data: allCurrentOrders = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
+    queryKey: ["/api/orders"],
     queryFn: async () => {
       try {
-        const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders");
+        const response = await fetch("/api/orders");
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         return await response.json();

@@ -54,7 +54,7 @@ export function SalesReport() {
     error: ordersError,
     refetch: refetchOrders,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
+    queryKey: ["/api/orders/date-range", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(
@@ -80,7 +80,7 @@ export function SalesReport() {
     isLoading: orderItemsLoading,
     refetch: refetchOrderItems,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/date-range", startDate, endDate],
+    queryKey: ["/api/order-items/date-range", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(

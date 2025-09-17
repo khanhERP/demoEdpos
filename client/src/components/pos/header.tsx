@@ -64,18 +64,18 @@ export function POSHeader({ onLogout }: POSHeaderProps) {
 
   // Fetch store settings
   const { data: storeSettings } = useQuery<StoreSettings>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
+    queryKey: ["/api/store-settings"],
   });
 
   // Fetch employees
   const { data: employees } = useQuery<Employee[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
+    queryKey: ["/api/employees"],
   });
 
   // Fetch today's attendance records
   const todayDate = new Date().toISOString().split("T")[0];
   const { data: todayAttendance } = useQuery<AttendanceRecord[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance", todayDate],
+    queryKey: ["/api/attendance", todayDate],
     queryFn: async () => {
       const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance?date=${todayDate}`);
       if (!response.ok) {

@@ -141,8 +141,8 @@ export default function SalesOrders() {
       setPrintReceiptData(null);
 
       // Refresh data
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
     };
 
     window.addEventListener(
@@ -163,29 +163,29 @@ export default function SalesOrders() {
     const handleNewOrder = () => {
       console.log("📱 Sales Orders: New order detected, refreshing data...");
       // Force immediate refresh with all date ranges
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices/date-range"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices/date-range"] });
     };
 
     const handleOrderUpdate = () => {
       console.log("🔄 Sales Orders: Order updated, refreshing data...");
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices/date-range"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices/date-range"] });
     };
 
     const handleRefreshOrders = () => {
       console.log("🔄 Sales Orders: Manual refresh triggered...");
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices/date-range"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/invoices/date-range"] });
     };
 
     // Listen for order creation and update events
@@ -237,7 +237,7 @@ export default function SalesOrders() {
     error: ordersError,
   } = useQuery({
     queryKey: [
-      "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range",
+      "/api/orders/date-range",
       startDate,
       endDate,
       currentPage,
@@ -285,10 +285,10 @@ export default function SalesOrders() {
 
   // Query all products to get tax rates
   const { data: products = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
+    queryKey: ["/api/products"],
     queryFn: async () => {
       try {
-        const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products");
+        const response = await apiRequest("GET", "/api/products");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -307,7 +307,7 @@ export default function SalesOrders() {
 
   // Query items for selected order
   const { data: orderItems = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", selectedInvoice?.id], // selectedInvoice is used here but it's actually an order
+    queryKey: ["/api/order-items", selectedInvoice?.id], // selectedInvoice is used here but it's actually an order
     queryFn: async () => {
       if (!selectedInvoice?.id) return [];
       try {
@@ -341,7 +341,7 @@ export default function SalesOrders() {
       return response.json();
     },
     onSuccess: (data, updatedOrder) => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
       setIsEditing(false);
       setEditableInvoice(null); // Resetting editableInvoice as it's used for both
 
@@ -394,7 +394,7 @@ export default function SalesOrders() {
       setShowBulkCancelDialog(false);
       setSelectedOrderIds(new Set());
 
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
 
       // Update selected order if it was cancelled
       if (selectedInvoice) {
@@ -431,7 +431,7 @@ export default function SalesOrders() {
     mutationFn: async (invoiceData: any) => {
       const response = await apiRequest(
         "POST",
-        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice/publish",
+        "/api/einvoice/publish",
         invoiceData,
       );
       return response.json();
@@ -501,7 +501,7 @@ export default function SalesOrders() {
           setPrintReceiptData(receiptData);
           setShowPrintDialog(true);
 
-          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
 
           setShowPublishDialog(false);
           setSelectedInvoice(null);
@@ -577,7 +577,7 @@ export default function SalesOrders() {
 
       setShowCancelDialog(false);
 
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
 
       // Update selected order if it was cancelled
       if (selectedInvoice && selectedInvoice.id === orderId) {
@@ -655,17 +655,17 @@ export default function SalesOrders() {
 
   const getEInvoiceStatusBadge = (status: number) => {
     const statusLabels = {
-      0: "Chưa phát hành",
-      1: "Đã phát hành",
-      2: "Tạo nháp",
-      3: "Đã duyệt",
-      4: "Đã bị thay thế (hủy)",
-      5: "Thay thế tạm",
-      6: "Thay thế",
-      7: "Đã bị điều chỉnh",
-      8: "Điều chỉnh tạm",
-      9: "Điều chỉnh",
-      10: "Đã hủy",
+      0: t("common.einvoiceStatus.notPublished"),
+      1: t("common.einvoiceStatus.published"),
+      2: t("common.einvoiceStatus.draft"),
+      3: t("common.einvoiceStatus.approved"),
+      4: t("common.einvoiceStatus.replaced"),
+      5: t("common.einvoiceStatus.tempReplaced"),
+      6: t("common.einvoiceStatus.replacement"),
+      7: t("common.einvoiceStatus.adjusted"),
+      8: t("common.einvoiceStatus.tempAdjusted"),
+      9: t("common.einvoiceStatus.adjustment"),
+      10: t("common.einvoiceStatus.cancelled"),
     };
 
     const statusColors = {
@@ -688,16 +688,16 @@ export default function SalesOrders() {
           statusColors[status as keyof typeof statusColors] || statusColors[0]
         }
       >
-        {statusLabels[status as keyof typeof statusColors] || "Không xác định"}
+        {statusLabels[status as keyof typeof statusColors] || t("common.einvoiceStatus.notPublished")}
       </Badge>
     );
   };
 
   const getInvoiceStatusBadge = (status: number) => {
     const statusLabels = {
-      1: "Hoàn thành",
-      2: "Đang phục vụ",
-      3: "Đã hủy",
+      1: t("common.comboValues.completed"),
+      2: t("common.comboValues.serving"),
+      3: t("common.comboValues.cancelled"),
     };
 
     const statusColors = {
@@ -712,7 +712,7 @@ export default function SalesOrders() {
           statusColors[status as keyof typeof statusColors] || statusColors[1]
         }
       >
-        {statusLabels[status as keyof typeof statusColors] || "Hoàn thành"}
+        {statusLabels[status as keyof typeof statusColors] || t("common.comboValues.completed")}
       </Badge>
     );
   };
@@ -734,7 +734,7 @@ export default function SalesOrders() {
               : order.status === "cancelled"
                 ? 3
                 : 2,
-        customerName: order.customerName || "Khách hàng l ��",
+        customerName: order.customerName || "Khách hàng l ",
         invoiceStatus:
           order.status === "paid"
             ? 1
@@ -1332,7 +1332,7 @@ export default function SalesOrders() {
                     <Button
                       onClick={() => {
                         queryClient.invalidateQueries({
-                          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
+                          queryKey: ["/api/orders"],
                         });
                       }}
                     >
@@ -1449,9 +1449,8 @@ export default function SalesOrders() {
                             </tr>
                           ) : (
                             filteredInvoices.map((item, index) => {
-                              const customerCode =
-                                item.customerTaxCode ||
-                                `KH000${String(index + 1).padStart(3, "0")}`;
+                              const customerCode = item.customerCode || item.customerTaxCode || `KH000${String(index + 1).padStart(3, "0")}`;
+                              const customerName = item.customerName || "Khách hàng lẻ";
                               const discount = parseFloat(item.discount || "0");
                               const tax = parseFloat(item.tax || "0");
                               const subtotal = parseFloat(item.subtotal || "0");
@@ -1554,11 +1553,9 @@ export default function SalesOrders() {
                                     <td className="px-3 py-3">
                                       <div
                                         className="text-sm truncate"
-                                        title={
-                                          item.customerName || "Khách hàng lẻ"
-                                        }
+                                        title={customerName}
                                       >
-                                        {item.customerName || "Khách hàng lẻ"}
+                                        {customerName}
                                       </div>
                                     </td>
                                     <td className="px-3 py-3 text-right">
@@ -1821,18 +1818,18 @@ export default function SalesOrders() {
                                                                 salesChannel ===
                                                                 "pos"
                                                               )
-                                                                return "Bán tại quầy";
+                                                                return t("common.comboValues.pos");
                                                               if (
                                                                 salesChannel ===
                                                                 "online"
                                                               )
-                                                                return "Bán online";
+                                                                return t("common.comboValues.online");
                                                               if (
                                                                 salesChannel ===
                                                                 "delivery"
                                                               )
-                                                                return "Giao hàng";
-                                                              return "Bán tại quầy"; // default
+                                                                return t("common.comboValues.delivery");
+                                                              return t("common.comboValues.pos"); // default
                                                             })()}
                                                           </td>
                                                           <td className="py-1 pr-4 font-medium whitespace-nowrap">
@@ -2826,7 +2823,7 @@ export default function SalesOrders() {
             // Handle the e-invoice result
             if (eInvoiceData.success) {
               // Refresh orders data
-              queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+              queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
 
               // Show success message
               toast({

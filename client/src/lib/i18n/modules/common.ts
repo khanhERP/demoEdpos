@@ -5,16 +5,24 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     loading: "로딩 중...",
     save: "저장",
     cancel: "취소",
+    amountShortfall: "부족 금액",
     delete: "삭제",
     edit: "편집",
+    remotemanagerproduct:
+      "비활성화된 모든 상품을 데이터베이스에서 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
     add: "추가",
+    areyouremoteorder: "원격 주문을 취소하시겠습니까?",
     productUpdateSuccess: "상품이 업데이트되었습니다",
     productCreateSuccess: "상품이 생성되었습니다",
+    invoiceSavedForLater: "나중에 발행하기 위해 송장이 저장되었습니다",
+    displayingInvoiceForPrint: "인쇄를 위해 송장을 표시하는 중입니다",
+    invoiceSavedSuccess: "송장이 성공적으로 저장되었습니다",
     search: "검색",
     confirm: "확인",
     yes: "예",
     no: "아니오",
     success: "성공",
+    restaurant: "식당",
     error: "오류",
     warning: "경고",
     info: "정보",
@@ -274,12 +282,21 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     usageStatus: "사용 상태:",
 
     // E-invoice status
-    einvoiceStatusLabel: "전자세금계산서 상태:",
+    einvoiceStatusLabel: "전자세C계산서 상태:",
     invoiceStatusLabel: "송장 상태:",
     einvoiceStatus: {
       notPublished: "발행되지 않음",
       published: "발행됨",
       error: "발행 오류",
+      draft: "초안",
+      approved: "승인됨",
+      replaced: "교체됨",
+      tempReplaced: "임시 교체",
+      replacement: "교체",
+      adjusted: "조정됨",
+      tempAdjusted: "임시 조정",
+      adjustment: "조정",
+      cancelled: "취소됨",
     },
 
     // Combo values
@@ -310,6 +327,7 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
       paid: "결제 완료",
       cancelled: "취소됨",
       completed: "완료",
+      serving: "서빙 중",
 
       // Product types
       food: "음식",
@@ -341,11 +359,115 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
       waiter: "웨이터",
       chef: "요리사",
       cleaner: "청소원",
+
+      // Time periods
+      days30: "30일",
+      days60: "60일",
+      days90: "90일",
+      days180: "180일",
+      days365: "365일",
+
+      // Sales channels
+      pos: "카운터 판매",
+      online: "온라인 판매",
+      delivery: "배송",
+
+      // Product pricing
+      afterTaxPrice: "세후 가격",
+      pricePlaceholder: "4000",
+      priceIncludesTax: "가격에 세금 포함",
+      createProduct: "상품 생성",
+      taxPercentage: "세금 (%)",
+      backToSales: "판매로 돌아가기",
+      printerConfiguration: "프린터 설정",
+      printerManagement: "프린터 관리",
+      printerDescription: "POS 시스템과 연결된 프린터 설정 및 관리",
+      configurePrinter: "프린터 설정",
+      addConnection: "연결 추가",
+      addTemplate: "템플릿 추가",
+      manageConnections: "연결 관리",
+      manageTemplates: "템플릿 관리",
+      noConnectionsFound: "연결된 HĐĐT가 없습니다",
+      clickAddToStart: "시작하려면 '연결 추가'를 클릭하세요",
+      noTemplatesFound: "HĐĐT 템플릿이 없습니다",
+      clickAddTemplateToStart: "시작하려면 '템플릿 추가'를 클릭하세요",
+      loadingData: "데이터를 로딩 중...",
+      searchKeyword: "다른 키워드로 검색해보세요",
+      addFirstEmployee: "첫 번째 직원을 추가하여 시작하세요",
+      noEmployeesFound: "직원을 찾을 수 없습니다",
+      employeeSearchPlaceholder: "이름, ID 또는 전화번호로 검색",
+      cannotDeleteEmployee: "직원을 삭제할 수 없습니다",
+      employeeHasAttendance:
+        "이 직원은 시스템에 출근 기록이 있습니다. 데이터 무결성을 위해 삭제할 수 없습니다.",
+      employeeHasOrders:
+        "이 직원은 시스템에 주문이 있습니다. 데이터 무결성을 위해 삭제할 수 없습니다.",
+      employeeDeletedSuccess: "직원이 성공적으로 삭제되었습니다",
+      employeeDeleteError: "직원 삭제 중 오류가 발생했습니다",
+      totalEmployees: "총 직원 수",
+      updatePaymentSuccess: "결제 방법이 성공적으로 업데이트되었습니다",
+      newPaymentMethod: "새 결제 방법",
+      cannotDeleteCategory:
+        "이 카테고리에는 {count}개의 제품이 있어 삭제할 수 없습니다. 먼저 제품을 삭제하거나 다른 카테고리로 이동하세요.",
+      confirmDeleteCategory: "이 카테고리를 삭제하시겠습니까?",
+      deleteWarning:
+        "경고: 이 작업은 되돌릴 수 없습니다. 카테고리가 시스템에서 영구적으로 삭제됩니다.",
+      ensureNoProducts: "삭제하기 전에 이 카테고리에 제품이 없는지 확인하세요.",
+      deleteCategory: "카테고리 삭제",
+      categoryDeletedSuccess: "카테고리가 성공적으로 삭제되었습니다",
+      categoryDeleteError: "카테고리 삭제 중 오류가 발생했습니다",
+      productDeletedSuccess: "제품이 성공적으로 삭제되었습니다",
+      productDeleteError: "제품 삭제 중 오류가 발생했습니다",
+      customerDeletedSuccess: "고객이 성공적으로 삭제되었습니다",
+      customerDeleteError: "고객 삭제 중 오류가 발생했습니다",
+      connectionCreatedSuccess: "HĐĐT 연결이 성공적으로 생성되었습니다",
+      connectionCreateError: "HĐĐT 연결 생성 중 오류가 발생했습니다",
+      connectionUpdatedSuccess: "HĐĐT 연결이 성공적으로 업데이트되었습니다",
+      connectionUpdateError: "HĐĐT 연결 업데이트 중 오류가 발생했습니다",
+      connectionDeletedSuccess: "HĐĐT 연결이 성공적으로 삭제되었습니다",
+      connectionDeleteError: "HĐĐT 연결 삭제 중 오류가 발생했습니다",
+      templateCreatedSuccess: "HĐĐT 템플릿이 성공적으로 생성되었습니다",
+      templateCreateError: "HĐĐT 템플릿 생성 중 오류가 발생했습니다",
+      templateUpdatedSuccess: "HĐĐT 템플릿이 성공적으로 업데이트되었습니다",
+      templateUpdateError: "HĐĐT 템플릿 업데이트 중 오류가 발생했습니다",
+      templateDeletedSuccess: "HĐĐT 템플릿이 성공적으로 삭제되었습니다",
+      templateDeleteError: "HĐĐT 템플릿 삭제 중 오류가 발생했습니다",
+      pleaseEnterRequired: "필수 정보를 모두 입력하세요",
+      pleaseEnterCategoryName: "카테고리 이름을 입력하세요",
+      categoryNotFound: "업데이트할 카테고리를 찾을 수 없습니다",
+      categoryCreatedSuccess: "카테고리가 성공적으로 생성되었습니다",
+      categoryCreateError: "카테고리 생성 중 오류가 발생했습니다",
+      categoryUpdatedSuccess: "카테고리가 성공적으로 업데이트되었습니다",
+      categoryUpdateError: "카테고리 업데이트 중 오류가 발생했습니다",
+      pinMinLength: "PIN 코드는 최소 4자리여야 합니다",
+      confirmDeleteCustomerTitle: "고객 삭제 확인",
+      confirmDeleteCustomerDesc: '"{name}" 고객을 삭제하시겠습니까?',
+      deleteCustomerWarning:
+        "경고: 이 작업은 되돌릴 수 없습니다. 모든 고객 데이터가 시스템에서 영구적으로 삭제됩니다.",
+      deleteCustomerDetails:
+        "여기에는 구매 내역, 적립 포인트 및 개인 정보가 포함됩니다.",
+      cancelAction: "취소",
+      deleteCustomerAction: "고객 삭제",
+      confirmDeleteCategoryTitle: "카테고리 삭제 확인",
+      confirmDeleteCategoryDesc: "카테고리 '{name}'을(를) 삭제하시겠습니까?",
+      deleteCategoryWarning:
+        "경고: 이 작업은 되돌릴 수 없습니다. 카테고리가 시스템에서 영구적으로 삭제됩니다.",
+      deleteCategoryDetails:
+        "삭제하기 전에 이 카테고리에 제품이 없는지 확인하세요.",
+      deleteCategoryAction: "카테고리 삭제",
     },
+
+    // Spending thresholds
+    editSpendingThreshold: "멤버십 등급 기준 수정",
+    saveSpendingThreshold: "멤버십 등급 기준 저장",
+
+    // Stock status
+    inStock: "재고 있음",
+    outOfStock: "품절",
 
     // Time periods
     days30: "30일",
     days60: "60일",
+    newPayment: "새 결제 방법",
     days90: "90일",
     days180: "180일",
     days365: "365일",
@@ -355,6 +477,10 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     product: "상품",
     combo: "콤보",
     service: "서비스",
+    create: "생성",
+    update: "업데이트",
+    confimremote:
+      "상품 productname 데이터베이스에서 영구적으로 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
 
     // Unit indicators
     perUnit: "개당",
@@ -364,9 +490,15 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     cancel: "Cancel",
     delete: "Delete",
     edit: "Edit",
+    newPayment: "New Payment Method",
     add: "Add",
+    restaurant: "Restaurant",
+    remotemanagerproduct:
+      "Are you sure you want to delete all inactive products from the database? This action cannot be undone.",
     search: "Search",
     filter: "Filter",
+    areyouremoteorder: "Are you sure you want to cancel this remote order?",
+    amountShortfall: "Shortfall",
     export: "Export",
     import: "Import",
     loading: "Loading...",
@@ -482,15 +614,48 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     notes: "Notes",
     notesPlaceholder: "Enter notes",
     additionalNotesPlaceholder: "Additional notes (optional)",
-    templateUsage: "Usage Status",
-    autoGenerated: "Auto Generated",
-    actions: "Action",
+    templateUsage: "Template Usage",
+    templateDefault: "Default Template",
+    noConnectionsFound: "No HĐĐT connections found",
+    noTemplatesFound: "No templates found",
+    clickAddConnectionToStart: "Click 'Add Connection' to start",
+    clickAddTemplateToStart: "Click 'Add Template' to start",
+    pleaseEnterRequired: "Please enter required information",
+    confirmDeleteCustomerTitle: "Confirm Customer Deletion",
+    confirmDeleteCustomerDesc:
+      "Are you sure you want to delete customer '{name}'?",
+    deleteCustomerWarning:
+      "Warning: This action cannot be undone. Customer data will be permanently deleted.",
+    deleteCustomerDetails:
+      "This includes purchase history, loyalty points and personal information.",
+    cancelAction: "Cancel",
+    deleteCustomerAction: "Delete Customer",
+    confirmDeleteCategoryTitle: "Confirm Category Deletion",
+    confirmDeleteCategoryDesc:
+      "Are you sure you want to delete category '{name}'?",
+    deleteCategoryWarning:
+      "Warning: This action cannot be undone. The category will be permanently deleted from the system.",
+    deleteCategoryDetails:
+      "Please ensure there are no products in this category before deletion.",
+    deleteCategoryAction: "Delete Category",
+    templateUsage: "Template Usage",
+    templateDefault: "Default Template",
+    noConnectionsFound: "No HĐĐT connections found",
+    noTemplatesFound: "No templates found",
+    clickAddConnectionToStart: "Click 'Add Connection' to start",
+    clickAddTemplateToStart: "Click 'Add Template' to start",
+    pleaseEnterRequired: "Please enter required information",
+    confirmDeleteCustomerTitle: "Confirm Customer Deletion",
+    confirmDeleteCustomerDesc:
+      "Are you sure you want to delete customer '{name}'?",
+    deleteCustomerWarning:
+      "Warning: This action cannot be undone. Customer data will be permanently deleted.",
+    deleteCustomerDetails:
+      "This includes purchase history, loyalty points and personal information.",
+    cancelAction: "Cancel",
+    deleteCustomerAction: "Delete Customer",
     invoiceErrorIssuedDelete:
       "Cannot delete an invoice that has already been issued.",
-    success: "Success",
-    error: "Error",
-    warning: "Warning",
-    info: "Information",
     restaurant: "Restaurant",
     tableDeleteConfirm: "Are you sure you want to delete this table?",
     tableDeleteError: "Cannot delete a table that has been used.",
@@ -630,11 +795,65 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
       waiter: "Waiter",
       chef: "Chef",
       cleaner: "Cleaner",
+
+      // Product pricing
+      afterTaxPrice: "After Tax Price",
+      pricePlaceholder: "4000",
+      priceIncludesTax: "Price includes tax",
+      createProduct: "Create Product",
+      taxPercentage: "Tax (%)",
+      backToSales: "Back to Sales",
+      printerConfiguration: "Printer Configuration",
+      printerManagement: "Printer Management",
+      printerDescription:
+        "Set up and manage printers connected to the POS system",
+      configurePrinter: "Configure Printer",
+      addConnection: "Add Connection",
+      addTemplate: "Add Template",
+      manageConnections: "Manage Connections",
+      manageTemplates: "Manage Templates",
+      noConnectionsFound: "No HĐĐT connections found",
+      clickAddToStart: "Click 'Add Connection' to get started",
+      noTemplatesFound: "No HĐĐT templates found",
+      clickAddTemplateToStart: "Click 'Add Template' to get started",
+      loadingData: "Loading data...",
+      searchKeyword: "Try searching with different keywords",
+      addFirstEmployee: "Add your first employee to get started",
+      noEmployeesFound: "No employees found",
+      employeeSearchPlaceholder: "Search by name, ID, or phone",
+      cannotDeleteEmployee: "Cannot delete employee",
+      employeeHasAttendance:
+        "This employee has attendance records in the system. Cannot delete to maintain data integrity.",
+      employeeHasOrders:
+        "This employee has orders in the system. Cannot delete to maintain data integrity.",
+      employeeDeletedSuccess: "Employee deleted successfully",
+      employeeDeleteError: "Error occurred while deleting employee",
+      totalEmployees: "Total employees",
+      updatePaymentSuccess: "Payment method updated successfully",
+      newPaymentMethod: "New Payment Method",
+      cannotDeleteCategory:
+        "Cannot delete this category because it has {count} products. Please delete or move the products to another category first.",
+      confirmDeleteCategory: "Do you want to delete this category?",
+      deleteCategoryWarning:
+        "Warning: This action cannot be undone. The category will be permanently deleted from the system.",
+      deleteCategoryDetails:
+        "Please ensure there are no products in this category before deletion.",
+      deleteCategoryAction: "Delete Category",
     },
+
+    // Spending thresholds
+    editSpendingThreshold: "Edit Membership Thresholds",
+    saveSpendingThreshold: "Save Membership Thresholds",
+
+    // Stock status
+    inStock: "In Stock",
+    outOfStock: "Out of Stock",
 
     // Time periods
     days30: "30 days",
     days60: "60 days",
+    confimremote:
+      "Are you sure you want to permanently delete productname from the database? This action cannot be undone.",
     days90: "90 days",
     days180: "180 days",
     days365: "365 days",
@@ -644,6 +863,8 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     product: "Product",
     combo: "Combo",
     service: "Service",
+    create: "Create",
+    update: "Update",
 
     // Unit indicators
     perUnit: "per item",
@@ -654,16 +875,23 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     delete: "Xóa",
     edit: "Chỉnh sửa",
     add: "Thêm",
+    restaurant: "Nhà hàng",
+    newPayment: "Phương thức thanh toán mới",
     search: "Tìm kiếm",
     filter: "Lọc",
     export: "Xuất",
     import: "Nhập",
+    confimremote:
+      "Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm productname khỏi cơ sở dữ liệu? Hành động này không thể hoàn tác.",
+    remotemanagerproduct:
+      "Bạn có chắc chắn muốn xóa vĩnh viễn tất cả sản phẩm vô hiệu khỏi cơ sở dữ liệu? Hành động này không thể hoàn tác.",
     loading: "Đang tải...",
     noData: "Không có dữ liệu",
     confirm: "Xác nhận",
     yes: "Có",
     no: "Không",
     close: "Đóng",
+    amountShortfall: "Thiếu",
     open: "Mở",
     view: "Xem",
     print: "In",
@@ -735,6 +963,7 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     about: "Về chúng tôi",
     settings: "Cài đặt",
     profile: "Hồ sơ",
+    create: "Tạo",
     logout: "Đăng xuất",
     login: "Đăng nhập",
     register: "Đăng ký",
@@ -923,13 +1152,72 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
       days90: "90 ngày",
       days180: "180 ngày",
       days365: "365 ngày",
+
+      // Sales channels
+      pos: "Bán tại quầy",
+      online: "Bán online",
+      delivery: "Giao hàng",
+
+      // Product pricing
+      afterTaxPrice: "Giá sau thuế",
+      pricePlaceholder: "4000",
+      priceIncludesTax: "Giá đã bao gồm thuế",
+      createProduct: "Tạo sản phẩm",
+      taxPercentage: "Thuế (%)",
+      backToSales: "Quay lại Bán hàng",
+      printerConfiguration: "Cấu hình máy in",
+      printerManagement: "Quản lý máy in",
+      printerDescription:
+        "Thiết lập và quản lý máy in kết nối với hệ thống POS",
+      configurePrinter: "Cấu hình máy in",
+      addConnection: "Thêm kết nối",
+      addTemplate: "Thêm mẫu số",
+      manageConnections: "Quản lý kết nối",
+      manageTemplates: "Quản lý mẫu số",
+      noConnectionsFound: "Chưa có kết nối HĐĐT nào",
+      clickAddToStart: "Nhấn 'Thêm kết nối' để bắt đầu",
+      noTemplatesFound: "Chưa có mẫu số HĐĐT nào",
+      clickAddTemplateToStart: "Nhấn 'Thêm mẫu số' để bắt đầu",
+      loadingData: "Đang tải dữ liệu...",
+      searchKeyword: "Thử tìm kiếm với từ khóa khác",
+      addFirstEmployee: "Thêm nhân viên đầu tiên để bắt đầu",
+      noEmployeesFound: "Không tìm thấy nhân viên nào phù hợp",
+      employeeSearchPlaceholder: "Tìm kiếm theo tên, ID hoặc số điện thoại",
+      cannotDeleteEmployee: "Không thể xóa nhân viên",
+      employeeHasAttendance:
+        "Nhân viên này đã có dữ liệu chấm công trong hệ thống. Không thể xóa để đảm bảo tính toàn vẹn dữ liệu.",
+      employeeHasOrders:
+        "Nhân viên này đã có đơn hàng trong hệ thống. Không thể xóa để đảm bảo tính toàn vẹn dữ liệu.",
+      employeeDeletedSuccess: "Nhân viên đã được xóa thành công",
+      employeeDeleteError: "Có lỗi xảy ra khi xóa nhân viên",
+      totalEmployees: "Tổng số nhân viên",
+      updatePaymentSuccess:
+        "Phương thức thanh toán đã được cập nhật thành công",
+      newPaymentMethod: "Phương thức thanh toán mới",
+      cannotDeleteCategory:
+        "Không thể xóa danh mục này vì còn {count} sản phẩm. Vui lòng xóa hoặc chuyển các sản phẩm sang danh mục khác trước.",
+      confirmDeleteCategory: "Bạn có chắc chắn muốn xóa danh mục này không?",
+      deleteCategoryWarning:
+        "Cảnh báo: Hành động này không thể hoàn tác. Danh mục sẽ bị xóa vĩnh viễn khỏi hệ thống.",
+      deleteCategoryDetails:
+        "Hãy đảm bảo rằng không còn sản phẩm nào trong danh mục này trước khi xóa.",
+      deleteCategoryAction: "Xóa danh mục",
     },
+
+    // Spending thresholds
+    editSpendingThreshold: "Sửa mức chi tiêu nâng hạng",
+    saveSpendingThreshold: "Lưu mức chi tiêu nâng hạng",
+
+    // Stock status
+    inStock: "Còn hàng",
+    outOfStock: "Hết hàng",
 
     // Product type
     productType: "Loại sản phẩm",
     product: "Sản phẩm",
     combo: "Combo",
     service: "Dịch vụ",
+    update: "Cập nhật",
 
     // Unit indicators
     perUnit: "món",
@@ -950,5 +1238,6 @@ export const commonTranslations: { [key: string]: CommonTranslations } = {
     description: "Mô tả",
     successTitle: "Thành công",
     templateUsage: "Trạng thái sử dụng",
+    areyouremoteorder: "Bạn có chắc chắn muốn xóa đơn hàng này?",
   },
 };

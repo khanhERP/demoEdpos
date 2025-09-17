@@ -63,9 +63,9 @@ export function InvoiceManagementModal({
 
   // Fetch invoices list
   const { data: invoices = [], isLoading } = useQuery<Invoice[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"],
+    queryKey: ["/api/invoices"],
     queryFn: async () => {
-      const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices");
+      const response = await apiRequest("GET", "/api/invoices");
       return response.json();
     },
     enabled: isOpen,
@@ -73,7 +73,7 @@ export function InvoiceManagementModal({
 
   // Fetch invoice items for selected invoice
   const { data: invoiceItems = [] } = useQuery<InvoiceItem[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-items", selectedInvoice?.id],
+    queryKey: ["/api/invoice-items", selectedInvoice?.id],
     queryFn: async () => {
       if (!selectedInvoice?.id) return [];
       const response = await apiRequest("GET", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-items/${selectedInvoice.id}`);

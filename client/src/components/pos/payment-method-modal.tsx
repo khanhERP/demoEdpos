@@ -776,6 +776,72 @@ export function PaymentMethodModal({
         );
         console.log(`💰 ${method} Discount amount:`, discountAmount);
 
+        // Prepare order items with discount distribution
+        let orderItems = (orderInfo.items || cartItems || []).map(
+          (item: any) => ({
+            productId: item.productId || item.id,
+            quantity: parseInt(item.quantity?.toString() || "1"),
+            unitPrice: item.unitPrice || item.price?.toString() || "0",
+            total:
+              item.total ||
+              (
+                parseFloat(item.price || "0") * parseInt(item.quantity || "1")
+              ).toString(),
+            notes: null,
+            discount: "0.00", // Will be calculated below
+          }),
+        );
+
+        // Distribute discount among items if discount exists
+        if (discountAmount > 0 && orderItems.length > 0) {
+          console.log("💰 Distributing discount among order items");
+
+          // Calculate total amount (subtotal before discount)
+          const totalAmount = orderItems.reduce((sum, item) => {
+            const unitPrice = Number(item.unitPrice || 0);
+            const quantity = Number(item.quantity || 0);
+            return sum + unitPrice * quantity;
+          }, 0);
+
+          if (totalAmount > 0) {
+            let allocatedDiscount = 0;
+
+            orderItems = orderItems.map((item, index) => {
+              const unitPrice = Number(item.unitPrice || 0);
+              const quantity = Number(item.quantity || 0);
+              const itemTotal = unitPrice * quantity;
+
+              let itemDiscount = 0;
+
+              if (index === orderItems.length - 1) {
+                // Last item gets remaining discount to ensure total matches exactly
+                itemDiscount = Math.max(0, discountAmount - allocatedDiscount);
+              } else {
+                // Calculate proportional discount
+                const proportionalDiscount =
+                  (discountAmount * itemTotal) / totalAmount;
+                itemDiscount = Math.round(proportionalDiscount);
+                allocatedDiscount += itemDiscount;
+              }
+
+              return {
+                ...item,
+                discount: itemDiscount.toFixed(2),
+              };
+            });
+
+            console.log("💰 Discount distribution completed:", {
+              totalDiscount: discountAmount,
+              itemsWithDiscount: orderItems.map((item) => ({
+                productId: item.productId,
+                unitPrice: item.unitPrice,
+                quantity: item.quantity,
+                discount: item.discount,
+              })),
+            });
+          }
+        }
+
         const orderData = {
           orderNumber: `ORD-${Date.now()}`,
           tableId: null, // POS orders don't have tables
@@ -793,26 +859,11 @@ export function PaymentMethodModal({
           discount: discountAmount.toString(),
         };
 
-        // Prepare order items
-        const orderItems = (orderInfo.items || cartItems || []).map(
-          (item: any) => ({
-            productId: item.productId || item.id,
-            quantity: parseInt(item.quantity?.toString() || "1"),
-            unitPrice: item.unitPrice || item.price?.toString() || "0",
-            total:
-              item.total ||
-              (
-                parseFloat(item.price || "0") * parseInt(item.quantity || "1")
-              ).toString(),
-            notes: null,
-          }),
-        );
-
         console.log(`📝 Creating POS ${method} order:`, orderData);
         console.log(`📦 Order items:`, orderItems);
 
         // Create order via API
-        const createResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
+        const createResponse = await fetch("/api/orders", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -871,65 +922,88 @@ export function PaymentMethodModal({
 
           if (updateResponse.ok) {
             const updatedOrder = await updateResponse.json();
-            console.log(`✅ Order updated with ${method} payment successfully:`, {
-              orderId: updatedOrder.id,
-              orderNumber: updatedOrder.orderNumber,
-              status: updatedOrder.status,
-              paymentMethod: updatedOrder.paymentMethod,
-              paymentStatus: updatedOrder.paymentStatus,
-              paidAt: updatedOrder.paidAt,
-            });
+            console.log(
+              `✅ Order updated with ${method} payment successfully:`,
+              {
+                orderId: updatedOrder.id,
+                orderNumber: updatedOrder.orderNumber,
+                status: updatedOrder.status,
+                paymentMethod: updatedOrder.paymentMethod,
+                paymentStatus: updatedOrder.paymentStatus,
+                paidAt: updatedOrder.paidAt,
+              },
+            );
 
             // Update table status if order has a table
             if (updatedOrder.tableId) {
               try {
-                console.log(`🔄 Checking table status update for table ${updatedOrder.tableId} after ${method} payment`);
-                
+                console.log(
+                  `🔄 Checking table status update for table ${updatedOrder.tableId} after ${method} payment`,
+                );
+
                 // Check if there are any other unpaid orders on this table
-                const ordersResponse = await fetch('https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders');
+                const ordersResponse = await fetch("/api/orders");
                 const allOrders = await ordersResponse.json();
-                
-                const otherActiveOrders = Array.isArray(allOrders) 
-                  ? allOrders.filter((o: any) => 
-                      o.tableId === updatedOrder.tableId && 
-                      o.id !== updatedOrder.id && 
-                      !["paid", "cancelled"].includes(o.status)
+
+                const otherActiveOrders = Array.isArray(allOrders)
+                  ? allOrders.filter(
+                      (o: any) =>
+                        o.tableId === updatedOrder.tableId &&
+                        o.id !== updatedOrder.id &&
+                        !["paid", "cancelled"].includes(o.status),
                     )
                   : [];
 
-                console.log(`🔍 Other active orders on table ${updatedOrder.tableId}:`, {
-                  otherOrdersCount: otherActiveOrders.length,
-                  otherOrders: otherActiveOrders.map(o => ({
-                    id: o.id,
-                    orderNumber: o.orderNumber,
-                    status: o.status
-                  }))
-                });
+                console.log(
+                  `🔍 Other active orders on table ${updatedOrder.tableId}:`,
+                  {
+                    otherOrdersCount: otherActiveOrders.length,
+                    otherOrders: otherActiveOrders.map((o) => ({
+                      id: o.id,
+                      orderNumber: o.orderNumber,
+                      status: o.status,
+                    })),
+                  },
+                );
 
                 // If no other unpaid orders, update table to available
                 if (otherActiveOrders.length === 0) {
-                  console.log(`🔄 Updating table ${updatedOrder.tableId} to available after ${method} payment`);
-                  
-                  const tableUpdateResponse = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${updatedOrder.tableId}/status`, {
-                    method: "PUT",
-                    headers: {
-                      "Content-Type": "application/json",
+                  console.log(
+                    `🔄 Updating table ${updatedOrder.tableId} to available after ${method} payment`,
+                  );
+
+                  const tableUpdateResponse = await fetch(
+                    `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${updatedOrder.tableId}/status`,
+                    {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        status: "available",
+                      }),
                     },
-                    body: JSON.stringify({
-                      status: "available"
-                    }),
-                  });
+                  );
 
                   if (tableUpdateResponse.ok) {
-                    console.log(`✅ Table ${updatedOrder.tableId} updated to available after ${method} payment`);
+                    console.log(
+                      `✅ Table ${updatedOrder.tableId} updated to available after ${method} payment`,
+                    );
                   } else {
-                    console.error(`❌ Failed to update table ${updatedOrder.tableId} status after ${method} payment`);
+                    console.error(
+                      `❌ Failed to update table ${updatedOrder.tableId} status after ${method} payment`,
+                    );
                   }
                 } else {
-                  console.log(`⏳ Table ${updatedOrder.tableId} still has ${otherActiveOrders.length} active orders, keeping occupied status`);
+                  console.log(
+                    `⏳ Table ${updatedOrder.tableId} still has ${otherActiveOrders.length} active orders, keeping occupied status`,
+                  );
                 }
               } catch (tableError) {
-                console.error(`❌ Error updating table status after ${method} payment:`, tableError);
+                console.error(
+                  `❌ Error updating table status after ${method} payment:`,
+                  tableError,
+                );
               }
             }
 
@@ -947,7 +1021,10 @@ export function PaymentMethodModal({
             );
           } else {
             const errorText = await updateResponse.text();
-            console.error(`❌ Failed to update order with ${method} payment:`, errorText);
+            console.error(
+              `❌ Failed to update order with ${method} payment:`,
+              errorText,
+            );
             toast({
               title: "Lỗi",
               description: `Không thể cập nhật phương thức thanh toán ${method}`,
@@ -955,7 +1032,10 @@ export function PaymentMethodModal({
             });
           }
         } catch (error) {
-          console.error(`❌ Error updating order with ${method} payment:`, error);
+          console.error(
+            `❌ Error updating order with ${method} payment:`,
+            error,
+          );
           toast({
             title: "Lỗi",
             description: `Lỗi khi xử lý thanh toán ${method}`,
@@ -979,18 +1059,90 @@ export function PaymentMethodModal({
         `🔄 TEMPORARY ORDER DETECTED - using receipt preview data for QR payment ${orderInfo.id}`,
       );
 
+      // Get discount amount and calculate distribution for QR payment
+      const discountAmount = Math.floor(
+        parseFloat(
+          receipt?.discount ||
+            receipt?.exactDiscount ||
+            orderForPayment?.discount ||
+            orderInfo?.discount ||
+            "0",
+        ),
+      );
+
+      console.log("💰 QR Order Creation: Discount amount:", discountAmount);
+
+      // Prepare order items with discount distribution
+      let orderItems = (orderInfo.items || cartItems || []).map(
+        (item: any) => ({
+          productId: item.productId || item.id,
+          quantity: parseInt(item.quantity?.toString() || "1"),
+          unitPrice: item.unitPrice || item.price?.toString() || "0",
+          total:
+            item.total ||
+            (
+              parseFloat(item.price || "0") * parseInt(item.quantity || "1")
+            ).toString(),
+          notes: null,
+          discount: "0.00", // Will be calculated below
+        }),
+      );
+
+      // Distribute discount among items if discount exists
+      if (discountAmount > 0 && orderItems.length > 0) {
+        console.log("💰 Distributing QR discount among order items");
+
+        // Calculate total amount (subtotal before discount)
+        const totalAmount = orderItems.reduce((sum, item) => {
+          const unitPrice = Number(item.unitPrice || 0);
+          const quantity = Number(item.quantity || 0);
+          return sum + unitPrice * quantity;
+        }, 0);
+
+        if (totalAmount > 0) {
+          let allocatedDiscount = 0;
+
+          orderItems = orderItems.map((item, index) => {
+            const unitPrice = Number(item.unitPrice || 0);
+            const quantity = Number(item.quantity || 0);
+            const itemTotal = unitPrice * quantity;
+
+            let itemDiscount = 0;
+
+            if (index === orderItems.length - 1) {
+              // Last item gets remaining discount to ensure total matches exactly
+              itemDiscount = Math.max(0, discountAmount - allocatedDiscount);
+            } else {
+              // Calculate proportional discount
+              const proportionalDiscount =
+                (discountAmount * itemTotal) / totalAmount;
+              itemDiscount = Math.round(proportionalDiscount);
+              allocatedDiscount += itemDiscount;
+            }
+
+            return {
+              ...item,
+              discount: itemDiscount.toFixed(2),
+            };
+          });
+
+          console.log("💰 QR Discount distribution completed:", {
+            totalDiscount: discountAmount,
+            itemsWithDiscount: orderItems.map((item) => ({
+              productId: item.productId,
+              unitPrice: item.unitPrice,
+              quantity: item.quantity,
+              discount: item.discount,
+            })),
+          });
+        }
+      }
+
       // SỬ DỤNG TRỰC TIẾP DỮ LIỆU TỪ RECEIPT PREVIEW - KHÔNG TÍNH TOÁN LẠI
       const receiptSubtotal =
         receipt?.exactSubtotal || orderInfo?.exactSubtotal || 0;
       const receiptTax = receipt?.exactTax || orderInfo?.exactTax || 0;
       const receiptTotal = receipt?.exactTotal || orderInfo?.exactTotal || 0;
-
-      console.log("💰 QR Complete: Using exact receipt preview data:", {
-        receiptSubtotal,
-        receiptTax,
-        receiptTotal,
-        source: "receipt_preview_exact",
-      });
 
       const orderData = {
         orderNumber: `ORD-${Date.now()}`,
@@ -1006,28 +1158,14 @@ export function PaymentMethodModal({
         total: receiptTotal.toString(),
         notes: `POS QR Payment - Transaction: ${currentTransactionUuid || "N/A"}`,
         paidAt: new Date().toISOString(),
+        discount: discountAmount.toString(),
       };
-
-      // Prepare order items
-      const orderItems = (orderInfo.items || cartItems || []).map(
-        (item: any) => ({
-          productId: item.productId || item.id,
-          quantity: parseInt(item.quantity?.toString() || "1"),
-          unitPrice: item.unitPrice || item.price?.toString() || "0",
-          total:
-            item.total ||
-            (
-              parseFloat(item.price || "0") * parseInt(item.quantity || "1")
-            ).toString(),
-          notes: null,
-        }),
-      );
 
       console.log("📝 Creating POS QR order:", orderData);
       console.log("📦 Order items:", orderItems);
 
       // Create order via API
-      const createResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
+      const createResponse = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1182,7 +1320,7 @@ export function PaymentMethodModal({
         `🔄 TEMPORARY ORDER DETECTED - using receipt preview data for cash payment ${orderInfo.id}`,
       );
 
-      // Get discount amount from multiple sources
+      // Get discount amount and calculate distribution for cash payment
       const discountAmount = Math.floor(
         parseFloat(
           receipt?.discount ||
@@ -1192,22 +1330,81 @@ export function PaymentMethodModal({
             "0",
         ),
       );
-      console.log("💰 Discount amount bán hàng trực tiếp:", discountAmount);
+
+      console.log("💰 Cash Order Creation: Discount amount:", discountAmount);
+
+      // Prepare order items with discount distribution
+      let orderItems = (orderInfo.items || cartItems || []).map(
+        (item: any) => ({
+          productId: item.productId || item.id,
+          quantity: parseInt(item.quantity?.toString() || "1"),
+          unitPrice: item.unitPrice || item.price?.toString() || "0",
+          total:
+            item.total ||
+            (
+              parseFloat(item.price || "0") * parseInt(item.quantity || "1")
+            ).toString(),
+          notes: null,
+          discount: "0.00", // Will be calculated below
+        }),
+      );
+
+      // Distribute discount among items if discount exists
+      if (discountAmount > 0 && orderItems.length > 0) {
+        console.log("💰 Distributing cash discount among order items");
+
+        // Calculate total amount (subtotal before discount)
+        const totalAmount = orderItems.reduce((sum, item) => {
+          const unitPrice = Number(item.unitPrice || 0);
+          const quantity = Number(item.quantity || 0);
+          return sum + unitPrice * quantity;
+        }, 0);
+
+        if (totalAmount > 0) {
+          let allocatedDiscount = 0;
+
+          orderItems = orderItems.map((item, index) => {
+            const unitPrice = Number(item.unitPrice || 0);
+            const quantity = Number(item.quantity || 0);
+
+            let itemDiscount = 0;
+
+            if (index === orderItems.length - 1) {
+              // Last item gets remaining discount to ensure total matches exactly
+              itemDiscount = Math.max(0, discountAmount - allocatedDiscount);
+            } else {
+              // Calculate proportional discount
+              const proportionalDiscount =
+                (discountAmount * unitPrice) / totalAmount;
+              itemDiscount = Math.round(proportionalDiscount);
+              allocatedDiscount += itemDiscount;
+            }
+
+            const itemTotal = unitPrice * quantity - itemDiscount;
+            item.total = itemTotal.toString();
+            return {
+              ...item,
+              discount: itemDiscount.toFixed(2),
+            };
+          });
+
+          console.log("💰 Cash Discount distribution completed:", {
+            totalDiscount: discountAmount,
+            itemsWithDiscount: orderItems.map((item) => ({
+              productId: item.productId,
+              unitPrice: item.unitPrice,
+              quantity: item.quantity,
+              discount: item.discount,
+            })),
+          });
+        }
+      }
 
       // SỬ DỤNG TRỰC TIẾP DỮ LIỆU TỪ RECEIPT PREVIEW - KHÔNG TÍNH TOÁN LẠI
       const receiptSubtotal =
         receipt?.exactSubtotal || orderInfo?.exactSubtotal || 0;
       const receiptTax = receipt?.exactTax || orderInfo?.exactTax || 0;
-      const receiptTotal =
-        (receipt?.exactTotal || orderInfo?.exactTotal || 0) +
-        (discountAmount || 0);
-
-      console.log("💰 Cash Complete: Using exact receipt preview data:", {
-        receiptSubtotal,
-        receiptTax,
-        receiptTotal,
-        source: "receipt_preview_exact",
-      });
+      const receiptTotal = receipt?.exactTotal || orderInfo?.exactTotal || 0;
 
       const orderData = {
         orderNumber: `ORD-${Date.now()}`,
@@ -1221,31 +1418,18 @@ export function PaymentMethodModal({
         subtotal: receiptSubtotal.toString(),
         tax: receiptTax.toString(),
         total: receiptTotal.toString(),
-        notes: `POS Cash Payment - Amount: ${cashAmountInput}, Change: ${finalChange}`,
+        notes: t("common.comboValues.posPaymentNote")
+          .replace("{amount}", cashAmountInput)
+          .replace("{change}", finalChange.toString()),
         paidAt: new Date(),
         discount: discountAmount.toString(),
       };
-
-      // Prepare order items
-      const orderItems = (orderInfo.items || cartItems || []).map(
-        (item: any) => ({
-          productId: item.productId || item.id,
-          quantity: parseInt(item.quantity?.toString() || "1"),
-          unitPrice: item.unitPrice || item.price?.toString() || "0",
-          total:
-            item.total ||
-            (
-              parseFloat(item.price || "0") * parseInt(item.quantity || "1")
-            ).toString(),
-          notes: null,
-        }),
-      );
 
       console.log("📝 Creating POS order:", orderData);
       console.log("📦 Order items:", orderItems);
 
       // Create order via API
-      const createResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
+      const createResponse = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1361,6 +1545,7 @@ export function PaymentMethodModal({
 
       invoiceData.receipt = {
         ...invoiceData.receipt,
+        tax: orderInfo?.tax,
         discount: receipt?.discount || orderInfo?.discount || 0,
       };
       // Set receipt data for modal
@@ -1370,20 +1555,18 @@ export function PaymentMethodModal({
       if (invoiceData.publishLater) {
         console.log("⏳ E-Invoice publish later completed - will show receipt");
         toast({
-          title: "Thành công",
-          description:
-            "Hóa đơn đã được lưu để phát hành sau. Đang hiển thị hóa đơn để in...",
+          title: `${t("common.success")}`,
+          description: `${t("einvoice.savedForLaterPublish")}.${t("einvoice.displayingForPrint")}`,
         });
       } else if (invoiceData.publishedImmediately || invoiceData.success) {
         console.log("✅ E-Invoice published immediately - will show receipt");
         toast({
-          title: "Thành công",
-          description:
-            "Hóa đơn điện tử đã được phát hành thành công. Đang hiển thị hóa đơn để in...",
+          title: `${t("common.success")}`,
+          description: `${t("einvoice.savedForLaterPublish")}.${t("einvoice.displayingForPrint")}`,
         });
       } else {
         toast({
-          title: "Thành công",
+          title: `${t("common.success")}`,
           description: "Hóa đơn điện tử đã được phát hành thành công!",
         });
       }
@@ -1995,8 +2178,8 @@ export function PaymentMethodModal({
                                 const changeAmount =
                                   receivedAmount - orderTotal;
                                 return changeAmount >= 0
-                                  ? "Tiền thối:"
-                                  : "Còn thiếu:";
+                                  ? t("pos.change") + ":"
+                                  : t("common.amountShortfall") + ":";
                               })()}
                             </span>
                             <span

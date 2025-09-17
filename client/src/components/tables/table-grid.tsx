@@ -93,8 +93,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       setSelectedReceipt(null);
 
       // Refresh data
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
     };
 
     window.addEventListener(
@@ -123,7 +123,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
     isLoading,
     refetch: refetchTables,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
+    queryKey: ["/api/tables"],
     staleTime: 60 * 1000, // Cache 1 phút
     gcTime: 5 * 60 * 1000, // Giữ cache 5 phút
     refetchOnWindowFocus: false,
@@ -133,7 +133,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: orders, refetch: refetchOrders } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
+    queryKey: ["/api/orders"],
     staleTime: 30 * 1000, // Cache 30 giây cho orders
     gcTime: 2 * 60 * 1000, // Giữ cache 2 phút
     refetchOnWindowFocus: false,
@@ -147,7 +147,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
     isLoading: orderItemsLoading,
     refetch: refetchOrderItems,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", selectedOrder?.id],
+    queryKey: ["/api/order-items", selectedOrder?.id],
     enabled: !!selectedOrder?.id && orderDetailsOpen,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -173,7 +173,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: products } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
+    queryKey: ["/api/products"],
     staleTime: 60 * 60 * 1000, // Cache for 1 hour (products don't change often)
     gcTime: 2 * 60 * 60 * 1000, // Keep in cache for 2 hours
     refetchOnWindowFocus: false,
@@ -182,7 +182,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: storeSettings } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
+    queryKey: ["/api/store-settings"],
     staleTime: 2 * 60 * 60 * 1000, // Cache for 2 hours (settings rarely change)
     gcTime: 4 * 60 * 60 * 1000, // Keep in cache for 4 hours
     refetchOnWindowFocus: false,
@@ -191,7 +191,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   });
 
   const { data: customers } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"],
+    queryKey: ["/api/customers"],
     enabled: pointsPaymentOpen,
     staleTime: 30 * 60 * 1000, // Cache for 30 minutes
     gcTime: 60 * 60 * 1000, // Keep in cache for 1 hour
@@ -238,7 +238,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   useEffect(() => {
     if (orderDetailsOpen && selectedOrder?.id) {
       const cachedData = queryClient.getQueryData([
-        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
+        "/api/order-items",
         selectedOrder.id,
       ]);
       if (!cachedData) {
@@ -257,8 +257,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Only invalidate - don't force refetch, let cache handle it
       if (!event.detail?.skipAllRefetch) {
-        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
       }
     };
 
@@ -268,7 +268,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Only invalidate specific data that changed
       if (!event.detail?.skipAllRefetch && event.detail?.orderId) {
         queryClient.invalidateQueries({
-          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", event.detail.orderId],
+          queryKey: ["/api/order-items", event.detail.orderId],
         });
       }
     };
@@ -395,26 +395,26 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                 });
 
                 // Strategy 3: Set fresh data immediately with forced update
-                queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
-                queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
+                queryClient.setQueryData(["/api/tables"], freshTables);
+                queryClient.setQueryData(["/api/orders"], freshOrders);
 
                 // Strategy 4: Multiple timed invalidations with force refetch
                 setTimeout(() => {
                   console.log("🔄 TableGrid: First invalidation wave");
-                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
                 }, 50);
 
                 setTimeout(() => {
                   console.log("🔄 TableGrid: Second refetch wave");
-                  queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-                  queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+                  queryClient.refetchQueries({ queryKey: ["/api/tables"] });
+                  queryClient.refetchQueries({ queryKey: ["/api/orders"] });
                 }, 200);
 
                 setTimeout(() => {
                   console.log("🔄 TableGrid: Final force refresh wave");
-                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-                  queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
                   refetchTables();
                   refetchOrders();
                 }, 500);
@@ -764,8 +764,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       );
 
       // Clear cache and force immediate refresh for immediate UI update
-      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.removeQueries({ queryKey: ["/api/tables"] });
+      queryClient.removeQueries({ queryKey: ["/api/orders"] });
 
       // Force immediate fresh fetch
       try {
@@ -883,26 +883,26 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       try {
         // Use fetch directly with no-cache to bypass React Query entirely for immediate update
         const [freshTables, freshOrders] = await Promise.all([
-          fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", {
+          fetch("/api/tables", {
             cache: "no-store",
             headers: { "Cache-Control": "no-cache" },
           }).then((r) => r.json()),
-          fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
+          fetch("/api/orders", {
             cache: "no-store",
             headers: { "Cache-Control": "no-cache" },
           }).then((r) => r.json()),
         ]);
 
         // Set fresh data immediately in cache
-        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
-        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
+        queryClient.setQueryData(["/api/tables"], freshTables);
+        queryClient.setQueryData(["/api/orders"], freshOrders);
 
         console.log("✅ Table: Fresh data fetched and set in cache");
 
         // Force component re-render by invalidating after setting fresh data
         setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
         }, 50);
       } catch (fetchError) {
         console.error(
@@ -955,7 +955,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       try {
         const [completedOrder, orderItemsData] = await Promise.all([
           queryClient.fetchQuery({
-            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", variables.orderId],
+            queryKey: ["/api/orders", variables.orderId],
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
@@ -965,7 +965,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             },
           }),
           queryClient.fetchQuery({
-            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", variables.orderId],
+            queryKey: ["/api/order-items", variables.orderId],
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
@@ -1074,7 +1074,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       orderId: number;
     }) => {
       // First redeem points
-      await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points", {
+      await apiRequest("POST", "/api/customers/redeem-points", {
         customerId,
         points,
       });
@@ -1148,11 +1148,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         }
       }
 
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/customers"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", variables.orderId],
+        queryKey: ["/api/order-items", variables.orderId],
       });
       setOrderDetailsOpen(false);
       setPointsPaymentOpen(false);
@@ -1167,7 +1167,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Fetch the completed order to get its details for receipt
       queryClient
         .fetchQuery({
-          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", variables.orderId],
+          queryKey: ["/api/orders", variables.orderId],
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
@@ -1331,12 +1331,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       });
     } else {
       // Mixed payment - use all available points + other payment method
-      const remainingAmount = finalTotal - pointsValue;
       setMixedPaymentData({
         customerId: selectedCustomer.id,
         pointsToUse: customerPoints,
         orderId: selectedOrder.id,
-        remainingAmount,
+        remainingAmount: finalTotal - pointsValue,
       });
       setPointsPaymentOpen(false);
       setMixedPaymentOpen(true);
@@ -1356,7 +1355,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       paymentMethod: string;
     }) => {
       // First redeem all available points
-      await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points", {
+      await apiRequest("POST", "/api/customers/redeem-points", {
         customerId,
         points,
       });
@@ -1430,11 +1429,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         }
       }
 
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/customers"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", variables.orderId],
+        queryKey: ["/api/order-items", variables.orderId],
       });
       setOrderDetailsOpen(false);
       setMixedPaymentOpen(false);
@@ -1451,7 +1450,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Fetch the completed order to get its details for receipt
       queryClient
         .fetchQuery({
-          queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", variables.orderId],
+          queryKey: ["/api/orders", variables.orderId],
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
@@ -1572,10 +1571,10 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       return response;
     },
     onSuccess: (data, orderId) => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", orderId],
+        queryKey: ["/api/order-items", orderId],
       }); // Invalidate items for the deleted order
       toast({
         title: "Xóa đơn hàng thành công",
@@ -1677,8 +1676,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Force immediate fresh fetch without cache
       Promise.all([
-        fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", { cache: "no-store" }).then((r) => r.json()),
-        fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", { cache: "no-store" }).then((r) => r.json()),
+        fetch("/api/orders", { cache: "no-store" }).then((r) => r.json()),
+        fetch("/api/tables", { cache: "no-store" }).then((r) => r.json()),
         fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${orderId}`, { cache: "no-store" }).then((r) =>
           r.json(),
         ),
@@ -1689,7 +1688,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
           );
 
           // Force component re-render by setting a timestamp
-          queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], (oldData: any) => {
+          queryClient.setQueryData(["/api/orders"], (oldData: any) => {
             if (!oldData || !Array.isArray(oldData)) return oldData;
 
             return oldData.map((order: any) => {
@@ -1785,10 +1784,10 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       });
     },
     onSuccess: (data, orderId) => {
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
       queryClient.invalidateQueries({
-        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", orderId],
+        queryKey: ["/api/order-items", orderId],
       });
     },
   });
@@ -1849,7 +1848,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
   // Helper function to handle delete order
   const handleDeleteOrder = (order: Order) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa đơn hàng này?")) {
+    if (window.confirm(`${t("common.areyouremoteorder")}`)) {
       deleteOrderMutation.mutate(order.id);
     }
   };
@@ -2107,7 +2106,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         // Strategy A: Direct fetch with no-cache headers
         const [freshTables, freshOrders] = await Promise.all([
           fetch(
-            "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables?" +
+            "/api/tables?" +
               new URLSearchParams({
                 _t: Date.now().toString(),
                 _force: "true",
@@ -2122,7 +2121,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             },
           ).then((r) => r.json()),
           fetch(
-            "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?" +
+            "/api/orders?" +
               new URLSearchParams({
                 _t: Date.now().toString(),
                 _force: "true",
@@ -2139,19 +2138,19 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         ]);
 
         // STEP 3: Set fresh data immediately in cache
-        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
-        queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
+        queryClient.setQueryData(["/api/tables"], freshTables);
+        queryClient.setQueryData(["/api/orders"], freshOrders);
         console.log("✅ Table Grid: Fresh data loaded and cached");
 
         // STEP 4: Force multiple re-renders with different timings
         setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-          queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
         }, 50);
 
         setTimeout(() => {
-          queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-          queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+          queryClient.refetchQueries({ queryKey: ["/api/tables"] });
+          queryClient.refetchQueries({ queryKey: ["/api/orders"] });
         }, 200);
 
         // STEP 5: Close all modals and clear states
@@ -2163,7 +2162,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
         // Show success message
         toast({
-          title: "Thành công",
+          title: `${t("common.success")}`,
           description: paymentData.publishLater
             ? "Đơn hàng đã được thanh toán và lưu để phát hành hóa đơn sau"
             : "Đơn hàng đã được thanh toán thành công",
@@ -2402,8 +2401,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Clear cache completely
       queryClient.clear();
-      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-      queryClient.removeQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+      queryClient.removeQueries({ queryKey: ["/api/tables"] });
+      queryClient.removeQueries({ queryKey: ["/api/orders"] });
 
       // Force fresh fetch immediately
       try {
@@ -2757,7 +2756,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       };
 
       // Call auto-print API for both employee and kitchen printers
-      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/auto-print", {
+      const response = await fetch("/api/auto-print", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -2905,22 +2904,24 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                     {/* Table Number */}
                     <div className="relative">
                       <div
-                        className={`min-w-12 min-h-12 max-w-20 rounded-full ${statusConfig.color} flex items-center justify-center text-white font-bold p-2`}
+                        className={`px-3 py-2 rounded-lg ${statusConfig.color} flex items-center justify-center font-bold shadow-lg border-2 border-white min-w-[80px] min-h-[48px]`}
                         style={{
                           fontSize:
                             table.tableNumber.length > 8
-                              ? "0.6rem"
+                              ? "0.75rem"
                               : table.tableNumber.length > 5
-                                ? "0.75rem"
-                                : "0.875rem",
+                                ? "0.875rem"
+                                : "1rem",
                         }}
                       >
-                        <span className="text-center leading-tight break-all">
+                        <span className="text-center leading-tight text-white break-words hyphens-auto px-1">
                           {table.tableNumber}
                         </span>
                       </div>
                       {activeOrder && (
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full animate-pulse"></div>
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 rounded-full animate-pulse border-2 border-white shadow-md flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        </div>
                       )}
                     </div>
 
@@ -2945,7 +2946,25 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                             ? getOrderStatusBadge(activeOrder.status).variant
                             : statusConfig.variant
                         }
-                        className="text-xs"
+                        className="text-xs rounded-full px-3 py-1 font-medium shadow-sm border-0"
+                        style={{
+                          backgroundColor:
+                            table.status === "available"
+                              ? "#dcfce7"
+                              : table.status === "occupied"
+                                ? "#fecaca"
+                                : table.status === "reserved"
+                                  ? "#fef3c7"
+                                  : "#f3f4f6",
+                          color:
+                            table.status === "available"
+                              ? "#166534"
+                              : table.status === "occupied"
+                                ? "#dc2626"
+                                : table.status === "reserved"
+                                  ? "#d97706"
+                                  : "#6b7280",
+                        }}
                       >
                         {table.status === "occupied" && activeOrder
                           ? getOrderStatusBadge(activeOrder.status).label
@@ -3246,7 +3265,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                   parseFloat(selectedOrder.discount) > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">
-                        {t("orders.discount")}:
+                        {t("common.discount")}:
                       </span>
                       <span className="font-medium text-red-600">
                         -
@@ -3332,8 +3351,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                           sku:
                             item.productSku ||
                             `FOOD${String(item.productId).padStart(5, "0")}`,
-                          taxRate: parseFloat(product?.taxRate || "0"),
-                          afterTaxPrice: product?.afterTaxPrice || null,
+                          taxRate: parseFloat(
+                            item.taxRate || product?.taxRate || "0",
+                          ),
+                          afterTaxPrice:
+                            item.afterTaxPrice || product?.afterTaxPrice,
                           discount: item.discount || "0",
                           discountAmount: item.discount,
                         };
@@ -3368,7 +3390,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                       };
 
                       console.log(
-                        "📄 Table: Showing receipt preview like POS with exact Order Details values",
+                        "📄 Table: Showing receipt preview with exact Order Details values",
                       );
                       console.log("💰 Exact values passed:", {
                         subtotal: orderDetailsSubtotal,
@@ -3846,8 +3868,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
               ]);
 
               // Strategy 3: Set fresh data immediately in cache
-              queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"], freshTables);
-              queryClient.setQueryData(["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"], freshOrders);
+              queryClient.setQueryData(["/api/tables"], freshTables);
+              queryClient.setQueryData(["/api/orders"], freshOrders);
 
               console.log(
                 "✅ Table: Fresh data loaded and cached after receipt modal close",
@@ -3855,13 +3877,13 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
               // Strategy 4: Multiple timed invalidations to force re-renders
               setTimeout(() => {
-                queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-                queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+                queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+                queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
               }, 50);
 
               setTimeout(() => {
-                queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
-                queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+                queryClient.refetchQueries({ queryKey: ["/api/tables"] });
+                queryClient.refetchQueries({ queryKey: ["/api/orders"] });
               }, 150);
 
               setTimeout(() => {
@@ -4006,7 +4028,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Tổng gốc:</span>
+                  <span>{t("tables.total")}:</span>
                   <span className="font-medium">
                     {(() => {
                       // Calculate correct total from order items for payment calculation
@@ -4060,7 +4082,9 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                 {selectedOrder.discount &&
                   Number(selectedOrder.discount) > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-red-600">Giảm giá:</span>
+                      <span className="text-red-600">
+                        {t("common.discount")}:
+                      </span>
                       <span className="font-medium text-red-600">
                         -
                         {Math.floor(

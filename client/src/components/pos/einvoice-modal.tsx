@@ -168,11 +168,11 @@ export function EInvoiceModal({
         "🎯 E-invoice modal completed payment successfully for order:",
         variables.orderId,
       );
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
 
       toast({
-        title: "Thanh toán thành công",
+        title: `${t("common.success")}`,
         description:
           "Hóa đơn điện tử đã được phát hành và đơn hàng đã được thanh toán",
       });
@@ -201,13 +201,13 @@ export function EInvoiceModal({
 
   // Fetch E-invoice connections
   const { data: eInvoiceConnections = [] } = useQuery<any[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
+    queryKey: ["/api/einvoice-connections"],
     enabled: isOpen,
   });
 
   // Fetch active invoice templates for dropdown
   const { data: allInvoiceTemplates = [] } = useQuery<any[]>({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates/active"],
+    queryKey: ["/api/invoice-templates/active"],
     enabled: isOpen,
   });
 
@@ -341,7 +341,7 @@ export function EInvoiceModal({
     setIsTaxCodeLoading(true);
     try {
       // Use a proxy endpoint through our server to avoid CORS issues
-      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tax-code-lookup", {
+      const response = await fetch("/api/tax-code-lookup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -448,7 +448,7 @@ export function EInvoiceModal({
       if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
         console.error("❌ No valid cart items found for later publishing");
         toast({
-          title: "Lỗi",
+          title: `${t("common.error")}`,
           description: "Không có sản phẩm nào trong giỏ hàng để lưu thông tin.",
           variant: "destructive",
         });
@@ -460,7 +460,7 @@ export function EInvoiceModal({
       if (!total || total <= 0) {
         console.error("❌ Invalid total amount for later publishing:", total);
         toast({
-          title: "Lỗi",
+          title: `${t("common.error")}`,
           description: "Tổng tiền không hợp lệ để lưu hóa đơn.",
           variant: "destructive",
         });
@@ -566,7 +566,7 @@ export function EInvoiceModal({
       );
 
       // Lưu hóa đơn vào bảng invoices và invoice_items
-      const invoiceResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices", {
+      const invoiceResponse = await fetch("/api/invoices", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -651,9 +651,8 @@ export function EInvoiceModal({
 
       // Show success message
       toast({
-        title: "Thành công",
-        description:
-          "Thông tin hóa đơn điện tử đã được lưu. Đang hiển thị màn hình in hóa đơn...",
+        title: `${t("common.success")}`,
+        description: `${t("einvoice.savedForLaterPublish")}.${t("einvoice.displayingForPrint")}`,
       });
 
       // Prepare comprehensive invoice data with receipt to display receipt modal
@@ -706,7 +705,7 @@ export function EInvoiceModal({
 
       toast({
         variant: "destructive",
-        title: "Lỗi",
+        title: `${t("common.error")}`,
         description: errorMessage,
       });
     } finally {
@@ -986,7 +985,7 @@ export function EInvoiceModal({
       );
 
       // Call the proxy API
-      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice/publish", {
+      const response = await fetch("/api/einvoice/publish", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1124,7 +1123,7 @@ export function EInvoiceModal({
             invoicePayload,
           );
 
-          const invoiceResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices", {
+          const invoiceResponse = await fetch("/api/invoices", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -1178,7 +1177,7 @@ export function EInvoiceModal({
 
           console.log("💾 Saving published order to database:", orderData);
 
-          const saveResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
+          const saveResponse = await fetch("/api/orders", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -1200,7 +1199,7 @@ export function EInvoiceModal({
         }
 
         toast({
-          title: "Thành công",
+          title: `${t("common.success")}`,
           description: `Hóa đơn điện tử đã được phát hành thành công!\nSố hóa đơn: ${result.data?.invoiceNo || "N/A"}`,
         });
 
@@ -1323,7 +1322,7 @@ export function EInvoiceModal({
         };
 
         try {
-          const transactionResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions", {
+          const transactionResponse = await fetch("/api/transactions", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

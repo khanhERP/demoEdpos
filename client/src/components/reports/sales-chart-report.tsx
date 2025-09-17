@@ -107,7 +107,7 @@ export function SalesChartReport() {
     isLoading: ordersLoading,
     error: ordersError,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
+    queryKey: ["/api/orders/date-range", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(
@@ -133,10 +133,10 @@ export function SalesChartReport() {
 
   // Query order items for all orders
   const { data: orderItems = [], isLoading: orderItemsLoading } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
+    queryKey: ["/api/order-items"],
     queryFn: async () => {
       try {
-        const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items");
+        const response = await fetch("/api/order-items");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -157,19 +157,19 @@ export function SalesChartReport() {
   });
 
   const { data: tables } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
+    queryKey: ["/api/tables"],
   });
 
   // Combined loading state
   const isLoading = ordersLoading || orderItemsLoading;
 
   const { data: employees } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
+    queryKey: ["/api/employees"],
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: products } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", selectedCategory, productType, productSearch],
+    queryKey: ["/api/products", selectedCategory, productType, productSearch],
     queryFn: async () => {
       const response = await fetch(
         `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${selectedCategory}/${productType}/${productSearch || ""}`,
@@ -181,12 +181,12 @@ export function SalesChartReport() {
   });
 
   const { data: categories } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
+    queryKey: ["/api/categories"],
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: customers } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers", customerSearch, customerStatus],
+    queryKey: ["/api/customers", customerSearch, customerStatus],
     queryFn: async () => {
       const response = await fetch(
         `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/${customerSearch || "all"}/${customerStatus}`,
@@ -201,7 +201,7 @@ export function SalesChartReport() {
   const { data: productAnalysisData, isLoading: productAnalysisLoading } =
     useQuery({
       queryKey: [
-        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/product-analysis",
+        "/api/product-analysis",
         startDate,
         endDate,
         selectedCategory,
@@ -225,12 +225,12 @@ export function SalesChartReport() {
     });
 
   const { data: suppliers } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/suppliers"],
+    queryKey: ["/api/suppliers"],
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: transactions } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions"],
+    queryKey: ["/api/transactions"],
     staleTime: 5 * 60 * 1000,
   });
 

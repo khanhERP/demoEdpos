@@ -62,7 +62,7 @@ export function OrderReport() {
 
   // Query orders by date range
   const { data: orders = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
+    queryKey: ["/api/orders/date-range", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}`);
@@ -80,7 +80,7 @@ export function OrderReport() {
 
   // Query transactions by date range
   const { data: transactions = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions", startDate, endDate],
+    queryKey: ["/api/transactions", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions/${startDate}/${endDate}`);
@@ -97,15 +97,15 @@ export function OrderReport() {
   });
 
   const { data: products = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
+    queryKey: ["/api/products"],
   });
 
   const { data: categories = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
+    queryKey: ["/api/categories"],
   });
 
   const { data: employees = [] } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
+    queryKey: ["/api/employees"],
   });
 
   const getFilteredData = () => {

@@ -67,8 +67,8 @@ export function OrderManagement() {
       setSelectedReceipt(null);
 
       // Refresh data
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
     };
 
     window.addEventListener('printCompleted', handlePrintCompleted as EventListener);
@@ -1995,7 +1995,7 @@ export function OrderManagement() {
                       <span className="text-lg font-bold text-green-600">
                         {(() => {
                           const finalTotal = getOrderTotal(order);
-                          
+
                           if (finalTotal === 0) {
                             return <span className="text-gray-400">Đang tính...</span>;
                           }
@@ -2008,7 +2008,7 @@ export function OrderManagement() {
                     {/* Show discount info if applicable */}
                     {order.discount && Number(order.discount) > 0 && (
                       <div className="flex items-center justify-between text-xs text-red-600">
-                        <span>Giảm giá:</span>
+                        <span>{t("reports.discount")}:</span>
                         <span>-{formatCurrency(Math.floor(Number(order.discount)))}</span>
                       </div>
                     )}
@@ -2314,7 +2314,7 @@ export function OrderManagement() {
                               </div>
                               {item.discount && Number(item.discount) > 0 && (
                                 <div className="text-xs text-red-600">
-                                  Giảm giá: -{Math.floor(Number(item.discount)).toLocaleString()} ₫
+                                  {t("reports.discount")}: -{Math.floor(Number(item.discount)).toLocaleString()} ₫
                                 </div>
                               )}
                             </div>
@@ -2336,22 +2336,22 @@ export function OrderManagement() {
                   <h4 className="font-medium mb-2">{t('orders.totalAmount')}</h4>
                   <div className="space-y-1 text-sm">
                     <div className="flex justify-between">
-                      <span>Tổng phụ</span>
+                      <span>{t('orders.subtotal')}</span>
                       <span>{formatCurrency(Math.floor(Number(selectedOrder?.subtotal || 0)))}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Thuế</span>
+                      <span>{t('orders.tax')}</span>
                       <span>{formatCurrency(Math.floor(Number(selectedOrder?.tax || 0)))}</span>
                     </div>
                     {selectedOrder?.discount && Number(selectedOrder.discount) > 0 && (
                       <div className="flex justify-between text-red-600">
-                        <span>Giảm giá</span>
+                        <span>{t("orders.discount")}</span>
                         <span>-{formatCurrency(Math.floor(Number(selectedOrder.discount)))}</span>
                       </div>
                     )}
                     <Separator />
                     <div className="flex justify-between font-medium">
-                      <span>Tổng tiền:</span>
+                      <span>{t('orders.total')}</span>
                       <span>{formatCurrency(Math.floor(Number(selectedOrder?.total || 0)))}</span>
                     </div>
                   </div>
@@ -2517,7 +2517,7 @@ export function OrderManagement() {
                           receiptDiscount: receiptPreview.discount,
                           receiptExactDiscount: receiptPreview.exactDiscount,
                           orderTotal: paymentOrderData.total,
-                          orderExactTotal: paymentOrderData.exactTotal,
+                          orderExactTotal: paymentOrderData.total,
                           orderId: paymentOrderData.id
                         });
 
@@ -2554,7 +2554,7 @@ export function OrderManagement() {
                       className="flex-1 bg-blue-600 hover:bg-blue-700"
                     >
                       <CreditCard className="w-4 h-4 mr-2" />
-                      {t('customers.pointManagement')}
+                      {t('orders.pointsPaymentTitle')}
                     </Button>
                   </div>
                 )}
@@ -2730,17 +2730,17 @@ export function OrderManagement() {
                 {selectedOrder.discount && Number(selectedOrder.discount) > 0 && (
                   <div className="mt-1">
                     <p className="text-sm text-gray-600">
-                      Tổng gốc: {formatCurrency(orderDetailsCalculation.total)}
+                      {t('tables.subtotal')}: {formatCurrency(orderDetailsCalculation.total)}
                     </p>
                     <p className="text-sm text-red-600">
-                      Giảm giá: -{formatCurrency(Math.floor(Number(selectedOrder.discount)))}
+                      {t("reports.discount")}: -{formatCurrency(Math.floor(Number(selectedOrder.discount)))}
                     </p>
                   </div>
                 )}
                 {selectedCustomer && (
                   <div className="mt-2 pt-2 border-t border-blue-200">
                     <p className="text-sm text-gray-600">
-                      Điểm có sẵn: {(selectedCustomer.points || 0).toLocaleString()}P
+                      {t('orders.availablePoints')}: {(selectedCustomer.points || 0).toLocaleString()}P
                       <span className="ml-2 text-green-600">
                         (≈ {((selectedCustomer.points || 0) * 1000).toLocaleString()} ₫)
                       </span>
@@ -2753,7 +2753,7 @@ export function OrderManagement() {
 
                       return customerPointsValue < finalTotal && (
                         <p className="text-sm text-orange-600 mt-1">
-                          Cần thanh toán thêm: {(finalTotal - customerPointsValue).toLocaleString()} ₫
+                          {t('orders.remainingAmount')}: {(finalTotal - customerPointsValue).toLocaleString()} ₫
                         </p>
                       );
                     })()}
@@ -2768,7 +2768,7 @@ export function OrderManagement() {
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder={t('customers.searchPlaceholder')}
+                  placeholder={t('orders.pointsPaymentDialog.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9"
@@ -2811,7 +2811,7 @@ export function OrderManagement() {
             {selectedCustomer && selectedOrder && (
               <div className="space-y-3">
                 <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium mb-2">Chi tiết thanh toán</h4>
+                  <h4 className="font-medium mb-2">{t('orders.mixedPaymentSummary')}</h4>
                   {(() => {
                     // Use exact total from orderDetailsCalculation memo (already calculated)
                     const { total: calculatedTotal } = orderDetailsCalculation;
@@ -2849,7 +2849,7 @@ export function OrderManagement() {
 
           <div className="flex justify-end gap-2 pt-4">
             <Button variant="outline" onClick={() => setPointsPaymentOpen(false)}>
-              Hủy
+              {t('common.cancel')}
             </Button>
             <Button
               onClick={handlePointsPayment}
@@ -3042,7 +3042,7 @@ export function OrderManagement() {
                   onClick={() => setMixedPaymentOpen(true)}
                   className="bg-orange-600 hover:bg-orange-700"
                 >
-                  {t('orders.mixedPaymentTitle')}
+                  {t('orders.mixedPaymentButton')}
                 </Button>
               </div>
             </div>
@@ -3123,7 +3123,7 @@ export function OrderManagement() {
 
             // Close all modals
             setOrderForPayment(null);
-            setOrderDetailsOpen(false);
+            setOrderDetailsOpen(null);
             setSelectedOrder(null);
             setPreviewReceipt(null);
 

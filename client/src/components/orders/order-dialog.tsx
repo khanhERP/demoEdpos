@@ -53,15 +53,15 @@ export function OrderDialog({
   const queryClient = useQueryClient();
 
   const { data: products, isLoading: productsLoading } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
+    queryKey: ["/api/products"],
   });
 
   const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
+    queryKey: ["/api/categories"],
   });
 
   const { data: existingOrderItems, refetch: refetchExistingItems } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", existingOrder?.id],
+    queryKey: ["/api/order-items", existingOrder?.id],
     enabled: !!(existingOrder?.id && mode === "edit" && open),
     staleTime: 0,
     queryFn: async () => {
@@ -185,41 +185,42 @@ export function OrderDialog({
             }
           }
 
-          // Step 2: Use EXACT displayed values from screen (like create mode)
+          // Step 2: Use EXACT displayed values from screen footer (NO recalculation)
           console.log(
-            `📝 Using EXACT displayed values for order ${existingOrder.id}`,
+            `📝 Using EXACT displayed values for order ${existingOrder.id} - NO recalculation`,
           );
 
-          // Get EXACT values that user sees on screen from footer calculations
-          const displayedSubtotal = Math.floor(calculateSubtotal());
-          const displayedTax = Math.floor(calculateTax());
-          const displayedTotal = Math.floor(calculateTotal());
+          // Get the EXACT displayed values from the footer calculations
+          const footerSubtotal = calculateSubtotal();
+          const footerTax = calculateTax();
+          const footerTotal = calculateTotal();
 
-          console.log(
-            "💰 Edit mode - Using EXACT displayed values from screen:",
-            {
-              existingItemsCount: existingItems.length,
-              newItemsCount: cart.length,
-              displayedSubtotal: displayedSubtotal,
-              displayedTax: displayedTax,
-              displayedDiscount: Math.floor(discount),
-              displayedTotal: displayedTotal,
-              source: "exact_screen_display_edit_mode",
-            },
-          );
+          // Use floor to match exactly what user sees in footer
+          const displayedSubtotal = Math.floor(footerSubtotal);
+          const displayedTax = Math.floor(footerTax);
+          const displayedDiscount = Math.floor(discount);
+          const displayedTotal = Math.floor(footerTotal);
 
-          console.log(
-            `💰 Edit mode - Saving EXACT displayed totals: subtotal=${displayedSubtotal}, tax=${displayedTax}, discount=${Math.floor(discount)}, total=${displayedTotal}`,
-          );
+          console.log("💰 Edit mode - Using EXACT footer displayed values:", {
+            footerSubtotal,
+            footerTax,
+            footerTotal,
+            displayedSubtotal,
+            displayedTax,
+            displayedDiscount,
+            displayedTotal,
+            source: "footer_display_exact_match",
+          });
+
           const updateResponse = await apiRequest(
             "PUT",
             `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${existingOrder.id}`,
             {
               customerName: orderData.order.customerName,
               customerCount: orderData.order.customerCount,
-              subtotal: displayedSubtotal.toString(), // Use exact displayed values
+              subtotal: displayedSubtotal.toString(),
               tax: displayedTax.toString(),
-              discount: Math.floor(discount).toString(),
+              discount: displayedDiscount.toString(),
               total: displayedTotal.toString(),
             },
           );
@@ -234,7 +235,7 @@ export function OrderDialog({
           return updateResult;
         } else {
           console.log("📝 Creating new order...");
-          const response = await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", orderData);
+          const response = await apiRequest("POST", "/api/orders", orderData);
 
           if (!response.ok) {
             const errorData = await response.text();
@@ -274,12 +275,12 @@ export function OrderDialog({
         try {
           // Clear existing cache for this specific order items
           queryClient.removeQueries({
-            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", existingOrder.id],
+            queryKey: ["/api/order-items", existingOrder.id],
           });
 
           // Force fresh fetch of order items
           const freshOrderItems = await queryClient.fetchQuery({
-            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", existingOrder.id],
+            queryKey: ["/api/order-items", existingOrder.id],
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
@@ -307,11 +308,11 @@ export function OrderDialog({
 
       // Invalidate and refetch all related queries
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] }),
-        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] }),
-        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"] }),
-        queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] }),
-        queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/orders"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/tables"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/order-items"] }),
+        queryClient.refetchQueries({ queryKey: ["/api/orders"] }),
+        queryClient.refetchQueries({ queryKey: ["/api/tables"] }),
       ]);
 
       // Reset form state
@@ -324,10 +325,7 @@ export function OrderDialog({
 
       toast({
         title: t("orders.orderUpdateSuccess"),
-        description:
-          mode === "edit"
-            ? "Đã cập nhật đơn hàng thành công"
-            : t("orders.orderUpdateSuccessDesc"),
+        description: t("orders.orderUpdateSuccessDesc"),
       });
 
       console.log("✅ Order mutation completed - proper update flow executed");
@@ -443,32 +441,13 @@ export function OrderDialog({
       totalSubtotal += unitPrice * quantity;
     });
 
-    // Apply formula: subtotal = price * quantity - discount
-    return Math.max(0, totalSubtotal - discount);
+    // Return subtotal before discount (price * quantity)
+    return totalSubtotal;
   };
 
   const calculateTax = () => {
     // Array to store individual tax amounts for precise calculation
     const individualTaxAmounts = [];
-
-    // Get total subtotal before discount for proportional calculation
-    let totalSubtotalBeforeDiscount = 0;
-
-    // Add existing order items if in edit mode
-    if (mode === "edit" && existingItems && Array.isArray(existingItems)) {
-      existingItems.forEach((item) => {
-        const unitPrice = parseFloat(item.unitPrice);
-        const quantity = parseInt(item.quantity);
-        totalSubtotalBeforeDiscount += unitPrice * quantity;
-      });
-    }
-
-    // Add new cart items
-    cart.forEach((item) => {
-      const unitPrice = parseFloat(item.product.price);
-      const quantity = item.quantity;
-      totalSubtotalBeforeDiscount += unitPrice * quantity;
-    });
 
     // Calculate tax for existing items in edit mode
     if (mode === "edit" && existingItems.length > 0) {
@@ -476,24 +455,17 @@ export function OrderDialog({
         const product = products?.find((p: Product) => p.id === item.productId);
         let itemTax = 0;
 
-        if (product?.taxRate && parseFloat(product.taxRate) > 0) {
+        if (
+          product?.afterTaxPrice &&
+          product.afterTaxPrice !== null &&
+          product.afterTaxPrice !== ""
+        ) {
+          // Use afterTaxPrice - price to get tax amount per unit
+          const afterTaxPrice = parseFloat(product.afterTaxPrice);
           const basePrice = Number(item.unitPrice || 0);
           const quantity = Number(item.quantity || 0);
-          const itemSubtotal = basePrice * quantity;
-
-          // Calculate proportional discount for this item
-          const itemDiscountAmount =
-            totalSubtotalBeforeDiscount > 0
-              ? (discount * itemSubtotal) / totalSubtotalBeforeDiscount
-              : 0;
-
-          // Apply new formula: tax = (price * quantity - discount) * taxRate
-          const subtotalAfterDiscount = Math.max(
-            0,
-            itemSubtotal - itemDiscountAmount,
-          );
-          const taxRate = parseFloat(product.taxRate) / 100;
-          itemTax = subtotalAfterDiscount * taxRate;
+          const taxPerUnit = afterTaxPrice - basePrice;
+          itemTax = taxPerUnit * quantity;
         }
 
         // Round individual tax amount and add to array
@@ -506,24 +478,17 @@ export function OrderDialog({
       const product = products?.find((p: Product) => p.id === item.product.id);
       let itemTax = 0;
 
-      if (product?.taxRate && parseFloat(product.taxRate) > 0) {
+      if (
+        product?.afterTaxPrice &&
+        product.afterTaxPrice !== null &&
+        product.afterTaxPrice !== ""
+      ) {
+        // Use afterTaxPrice - price to get tax amount per unit
+        const afterTaxPrice = parseFloat(product.afterTaxPrice);
         const basePrice = parseFloat(product.price);
         const quantity = item.quantity;
-        const itemSubtotal = basePrice * quantity;
-
-        // Calculate proportional discount for this item
-        const itemDiscountAmount =
-          totalSubtotalBeforeDiscount > 0
-            ? (discount * itemSubtotal) / totalSubtotalBeforeDiscount
-            : 0;
-
-        // Apply new formula: tax = (price * quantity - discount) * taxRate
-        const subtotalAfterDiscount = Math.max(
-          0,
-          itemSubtotal - itemDiscountAmount,
-        );
-        const taxRate = parseFloat(product.taxRate) / 100;
-        itemTax = subtotalAfterDiscount * taxRate;
+        const taxPerUnit = afterTaxPrice - basePrice;
+        itemTax = taxPerUnit * quantity;
       }
 
       // Round individual tax amount and add to array
@@ -542,41 +507,13 @@ export function OrderDialog({
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
     const tax = calculateTax();
-    return subtotal + tax;
+    // Total = subtotal + tax - discount
+    return Math.max(0, subtotal + tax - discount);
   };
 
   const calculateGrandTotal = () => {
-    // Calculate subtotal (price * quantity) without discount subtraction
-    let totalSubtotal = 0;
-
-    // Add existing order items if in edit mode
-    if (mode === "edit" && existingItems && Array.isArray(existingItems)) {
-      existingItems.forEach((item) => {
-        const unitPrice = parseFloat(item.unitPrice);
-        const quantity = parseInt(item.quantity);
-        totalSubtotal += unitPrice * quantity;
-      });
-    }
-
-    // Add new cart items
-    cart.forEach((item) => {
-      const unitPrice = parseFloat(item.product.price);
-      const quantity = item.quantity;
-      totalSubtotal += unitPrice * quantity;
-    });
-
-    const tax = calculateTax();
-    // Formula: price * quantity + tax - discount
-    const finalTotal = Math.max(0, totalSubtotal + tax - discount);
-
-    console.log("💰 Order Dialog - Grand Total Calculation:", {
-      subtotal: totalSubtotal,
-      tax: tax,
-      discount: discount,
-      finalTotal: finalTotal,
-    });
-
-    return finalTotal;
+    // Use the same calculation as calculateTotal for consistency
+    return calculateTotal();
   };
 
   const handlePlaceOrder = async () => {
@@ -698,54 +635,18 @@ export function OrderDialog({
         proceedWithUpdate: true,
       });
 
-      // Calculate updated discount for existing items
-      const updatedExistingItems = existingItems.map((item, index) => {
-        // Get all items (existing + new)
-        const allItems = [
-          ...existingItems,
-          ...cart.map((cartItem) => ({
-            unitPrice: cartItem.product.price,
-            quantity: cartItem.quantity,
-          })),
-        ];
-
-        const currentIndex = existingItems.findIndex(
-          (existingItem, idx) => idx === index,
-        );
-        const isLastItem = currentIndex === allItems.length - 1;
-
+      // Calculate updated discount for existing items using proportional distribution
+      const updatedExistingItems = existingItems.map((item) => {
         let itemDiscountAmount = 0;
 
         if (discount > 0) {
-          if (isLastItem) {
-            // Last item: total discount - sum of all previous discounts
-            let previousDiscounts = 0;
-            const totalBeforeDiscount = calculateTotal() - calculateTax();
-
-            for (let i = 0; i < allItems.length - 1; i++) {
-              const prevItemSubtotal =
-                Number(allItems[i].unitPrice || 0) *
-                Number(allItems[i].quantity || 0);
-              const prevItemDiscount =
-                totalBeforeDiscount > 0
-                  ? Math.floor(
-                      (discount * prevItemSubtotal) / totalBeforeDiscount,
-                    )
-                  : 0;
-              previousDiscounts += prevItemDiscount;
-            }
-
-            itemDiscountAmount = discount - previousDiscounts;
-          } else {
-            // Regular calculation for non-last items
-            const itemSubtotal =
-              Number(item.unitPrice || 0) * Number(item.quantity || 0);
-            const totalBeforeDiscount = calculateTotal() - calculateTax();
-            itemDiscountAmount =
-              totalBeforeDiscount > 0
-                ? Math.floor((discount * itemSubtotal) / totalBeforeDiscount)
-                : 0;
-          }
+          const itemSubtotal =
+            Number(item.unitPrice || 0) * Number(item.quantity || 0);
+          const totalBeforeDiscount = calculateSubtotal();
+          itemDiscountAmount =
+            totalBeforeDiscount > 0
+              ? Math.floor((discount * itemSubtotal) / totalBeforeDiscount)
+              : 0;
         }
 
         return {
@@ -764,21 +665,10 @@ export function OrderDialog({
         existingItems: updatedExistingItems, // Include updated existing items with new discount values
       });
     } else {
-      // Create mode - calculate with correct mapping
-      // Subtotal = tiền tạm tính (giá trước thuế * số lượng)
-      const subtotalAmount = cart.reduce(
-        (sum, item) => sum + parseFloat(item.product.price) * item.quantity,
-        0,
-      );
-
-      // Tax = thuế (sử dụng calculateTax function)
-      const taxAmount = calculateTax();
-
-      // Total = tổng tiền (subtotal + tax)
-      const totalAmount = subtotalAmount + taxAmount;
-
-      // Store total BEFORE discount subtraction (full order value)
-      const fullOrderTotal = totalAmount;
+      // Create mode - use exact displayed calculations
+      const subtotalAmount = Math.floor(calculateSubtotal());
+      const taxAmount = Math.floor(calculateTax());
+      const totalAmount = Math.floor(calculateTotal());
 
       const order = {
         orderNumber: `ORD-${Date.now()}`,
@@ -787,9 +677,9 @@ export function OrderDialog({
         customerName: customerName || null,
         customerCount: parseInt(customerCount) || 1,
         subtotal: subtotalAmount.toString(),
-        tax: calculateTax().toString(),
+        tax: taxAmount.toString(),
         discount: discount.toString(),
-        total: totalAmount.toString(), // Save total BEFORE discount subtraction
+        total: totalAmount.toString(),
         status: "served",
         paymentStatus: "pending",
         orderedAt: new Date().toISOString(),
@@ -829,9 +719,6 @@ export function OrderDialog({
       });
 
       console.log("Placing order:", { order, items });
-      console.log(
-        `💰 Creating order with totals: subtotal=${subtotalAmount}, tax=${taxAmount}, discount=${discount}, fullTotal=${fullOrderTotal}`,
-      );
       createOrderMutation.mutate({ order, items });
     }
   };
@@ -1012,7 +899,7 @@ export function OrderDialog({
                           </span>
                           {product.taxRate && (
                             <span className="text-xs text-gray-500">
-                              Thuế: {product.taxRate}%
+                              {t("reports.tax")}: {product.taxRate}%
                             </span>
                           )}
                         </div>
@@ -1079,73 +966,23 @@ export function OrderDialog({
                                 {/* Individual item discount for existing items */}
                                 {discount > 0 &&
                                   (() => {
-                                    // Get all items (existing + new)
-                                    const allItems = [
-                                      ...existingItems,
-                                      ...cart.map((cartItem) => ({
-                                        unitPrice: cartItem.product.price,
-                                        quantity: cartItem.quantity,
-                                      })),
-                                    ];
-
-                                    const currentIndex =
-                                      existingItems.findIndex(
-                                        (existingItem, idx) => idx === index,
-                                      );
-                                    const isLastItem =
-                                      currentIndex === allItems.length - 1;
-
-                                    let itemDiscountAmount = 0;
-
-                                    if (isLastItem) {
-                                      // Last item: total discount - sum of all previous discounts
-                                      let previousDiscounts = 0;
-                                      const totalBeforeDiscount =
-                                        calculateTotal() - calculateTax();
-
-                                      for (
-                                        let i = 0;
-                                        i < allItems.length - 1;
-                                        i++
-                                      ) {
-                                        const prevItemSubtotal =
-                                          Number(allItems[i].unitPrice || 0) *
-                                          Number(allItems[i].quantity || 0);
-                                        const prevItemDiscount =
-                                          totalBeforeDiscount > 0
-                                            ? Math.floor(
-                                                (discount * prevItemSubtotal) /
-                                                  totalBeforeDiscount,
-                                              )
-                                            : 0;
-                                        previousDiscounts += prevItemDiscount;
-                                      }
-
-                                      itemDiscountAmount =
-                                        discount - previousDiscounts;
-                                    } else {
-                                      // Regular calculation for non-last items
-                                      const itemSubtotal =
-                                        Number(item.unitPrice || 0) *
-                                        Number(item.quantity || 0);
-                                      const totalBeforeDiscount =
-                                        calculateTotal() - calculateTax();
-                                      itemDiscountAmount =
-                                        totalBeforeDiscount > 0
-                                          ? Math.floor(
-                                              (discount * itemSubtotal) /
-                                                totalBeforeDiscount,
-                                            )
-                                          : 0;
-                                    }
+                                    const itemSubtotal =
+                                      Number(item.unitPrice || 0) *
+                                      Number(item.quantity || 0);
+                                    const totalBeforeDiscount =
+                                      calculateSubtotal();
+                                    const itemDiscountAmount =
+                                      totalBeforeDiscount > 0
+                                        ? Math.floor(
+                                            (discount * itemSubtotal) /
+                                              totalBeforeDiscount,
+                                          )
+                                        : 0;
 
                                     return itemDiscountAmount > 0 ? (
                                       <div className="text-xs text-red-600 mt-1">
                                         {t("common.discount")} -
-                                        {Math.floor(
-                                          itemDiscountAmount,
-                                        ).toLocaleString()}{" "}
-                                        ₫
+                                        {itemDiscountAmount.toLocaleString()} ₫
                                       </div>
                                     ) : null;
                                   })()}
@@ -1306,25 +1143,25 @@ export function OrderDialog({
                                                 Promise.all([
                                                   queryClient.invalidateQueries(
                                                     {
-                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
+                                                      queryKey: ["/api/orders"],
                                                     },
                                                   ),
                                                   queryClient.invalidateQueries(
                                                     {
-                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
+                                                      queryKey: ["/api/tables"],
                                                     },
                                                   ),
                                                   queryClient.invalidateQueries(
                                                     {
                                                       queryKey: [
-                                                        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
+                                                        "/api/order-items",
                                                       ],
                                                     },
                                                   ),
                                                   queryClient.invalidateQueries(
                                                     {
                                                       queryKey: [
-                                                        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
+                                                        "/api/order-items",
                                                         existingOrder.id,
                                                       ],
                                                     },
@@ -1333,10 +1170,10 @@ export function OrderDialog({
                                                   // Force immediate refetch to update table grid display
                                                   return Promise.all([
                                                     queryClient.refetchQueries({
-                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
+                                                      queryKey: ["/api/orders"],
                                                     }),
                                                     queryClient.refetchQueries({
-                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
+                                                      queryKey: ["/api/tables"],
                                                     }),
                                                   ]);
                                                 });
@@ -1361,10 +1198,10 @@ export function OrderDialog({
 
                                           // Invalidate queries to refresh data
                                           queryClient.invalidateQueries({
-                                            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
+                                            queryKey: ["/api/order-items"],
                                           });
                                           queryClient.invalidateQueries({
-                                            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
+                                            queryKey: ["/api/orders"],
                                           });
                                         })
                                         .catch((error) => {
@@ -1522,7 +1359,7 @@ export function OrderDialog({
 
                                 return taxAmount > 0 ? (
                                   <div>
-                                    Thuế:{" "}
+                                    {t("reports.tax")}:{" "}
                                     {Math.floor(taxAmount).toLocaleString()} ₫
                                   </div>
                                 ) : null;
@@ -1618,7 +1455,7 @@ export function OrderDialog({
 
                                 return (
                                   <div className="font-medium text-blue-600">
-                                    Tổng: {finalTotal.toLocaleString()} ₫
+                                    {t("reports.totalMoney")}: {finalTotal.toLocaleString()} ₫
                                   </div>
                                 );
                               })()}
@@ -1628,72 +1465,22 @@ export function OrderDialog({
                           {/* Individual item discount display */}
                           {discount > 0 &&
                             (() => {
-                              // Get all items (existing + new)
-                              const allItems = [
-                                ...existingItems,
-                                ...cart.map((cartItem) => ({
-                                  unitPrice: cartItem.product.price,
-                                  quantity: cartItem.quantity,
-                                })),
-                              ];
-
-                              const currentCartIndex = cart.findIndex(
-                                (cartItem) =>
-                                  cartItem.product.id === item.product.id,
-                              );
-                              const currentOverallIndex =
-                                existingItems.length + currentCartIndex;
-                              const isLastItem =
-                                currentOverallIndex === allItems.length - 1;
-
-                              let itemDiscountAmount = 0;
-
-                              if (isLastItem) {
-                                // Last item: total discount - sum of all previous discounts
-                                let previousDiscounts = 0;
-                                const totalBeforeDiscount =
-                                  calculateTotal() - calculateTax();
-
-                                for (let i = 0; i < allItems.length - 1; i++) {
-                                  const prevItemSubtotal =
-                                    Number(allItems[i].unitPrice || 0) *
-                                    Number(allItems[i].quantity || 0);
-                                  const prevItemDiscount =
-                                    totalBeforeDiscount > 0
-                                      ? Math.floor(
-                                          (discount * prevItemSubtotal) /
-                                            totalBeforeDiscount,
-                                        )
-                                      : 0;
-                                  previousDiscounts += prevItemDiscount;
-                                }
-
-                                itemDiscountAmount =
-                                  discount - previousDiscounts;
-                              } else {
-                                // Regular calculation for non-last items
-                                const itemSubtotal =
-                                  Number(item.product.price) * item.quantity;
-                                const totalBeforeDiscount =
-                                  calculateTotal() - calculateTax();
-                                itemDiscountAmount =
-                                  totalBeforeDiscount > 0
-                                    ? Math.floor(
-                                        (discount * itemSubtotal) /
-                                          totalBeforeDiscount,
-                                      )
-                                    : 0;
-                              }
+                              const itemSubtotal =
+                                Number(item.product.price) * item.quantity;
+                              const totalBeforeDiscount = calculateSubtotal();
+                              const itemDiscountAmount =
+                                totalBeforeDiscount > 0
+                                  ? Math.floor(
+                                      (discount * itemSubtotal) /
+                                        totalBeforeDiscount,
+                                    )
+                                  : 0;
 
                               return itemDiscountAmount > 0 ? (
                                 <div className="text-xs text-red-600 mt-1 text-end">
                                   <span>{t("common.discount")}: </span>
                                   <span>
-                                    -
-                                    {Math.floor(
-                                      itemDiscountAmount,
-                                    ).toLocaleString()}{" "}
-                                    ₫
+                                    -{itemDiscountAmount.toLocaleString()} ₫
                                   </span>
                                 </div>
                               ) : null;
@@ -1778,7 +1565,7 @@ export function OrderDialog({
                 </div>
                 <div className="w-px h-4 bg-gray-300"></div>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-600">Thuế</span>
+                  <span className="text-gray-600">{t("reports.tax")}</span>
                   <span className="font-medium">
                     {Math.floor(calculateTax()).toLocaleString()} ₫
                   </span>
