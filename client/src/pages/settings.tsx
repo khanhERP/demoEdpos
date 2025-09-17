@@ -202,7 +202,7 @@ export default function Settings() {
       }
 
       await queryClient.refetchQueries({
-        queryKey: ["/api/employees"],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
       });
 
       toast({
@@ -243,21 +243,21 @@ export default function Settings() {
 
   // Fetch store settings
   const { data: storeData, isLoading } = useQuery<StoreSettings>({
-    queryKey: ["/api/store-settings"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
   });
 
   // Fetch customers
   const { data: customersData, isLoading: customersLoading } = useQuery<
     Customer[]
   >({
-    queryKey: ["/api/customers"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"],
   });
 
   // Fetch employees
   const { data: employeesRawData, isLoading: employeesLoading } = useQuery<
     any[]
   >({
-    queryKey: ["/api/employees"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
   });
 
   // Sort employees by ID descending (newest first)
@@ -281,12 +281,12 @@ export default function Settings() {
   const { data: categoriesData, isLoading: categoriesLoading } = useQuery<
     any[]
   >({
-    queryKey: ["/api/categories"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
   });
 
   // Fetch products (include inactive products in settings)
   const { data: productsData, isLoading: productsLoading } = useQuery<any[]>({
-    queryKey: ["/api/products", { includeInactive: true }],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", { includeInactive: true }],
     queryFn: async () => {
       const response = await fetch("/api/products?includeInactive=true");
       if (!response.ok) throw new Error("Failed to fetch products");
@@ -346,7 +346,7 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/store-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"] });
       toast({
         title: t("common.success"),
         description: t("settings.storeUpdated"),
@@ -553,7 +553,7 @@ export default function Settings() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      await queryClient.refetchQueries({ queryKey: ["/api/customers"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
 
       toast({
         title: "Thành công",
@@ -644,8 +644,8 @@ export default function Settings() {
       const result = await response.json();
 
       // Refetch data immediately
-      await queryClient.refetchQueries({ queryKey: ["/api/categories"] });
-      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -702,8 +702,8 @@ export default function Settings() {
       resetCategoryForm();
 
       // Refetch data immediately
-      await queryClient.refetchQueries({ queryKey: ["/api/categories"] });
-      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -756,8 +756,8 @@ export default function Settings() {
       }
 
       // Refetch data immediately
-      await queryClient.refetchQueries({ queryKey: ["/api/categories"] });
-      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -810,7 +810,7 @@ export default function Settings() {
       };
 
       const response = await apiRequest("POST", "/api/products", productData);
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       toast({
         title: t("common.success"),
         description: t("common.productCreateSuccess"),
@@ -854,7 +854,7 @@ export default function Settings() {
         `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${editingProduct.id}`,
         productData,
       );
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       toast({
         title: t("common.success"),
         description: t("common.productUpdateSuccess"),
@@ -884,7 +884,7 @@ export default function Settings() {
     try {
       await apiRequest("DELETE", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${productToDelete.id}`);
 
-      await queryClient.refetchQueries({ queryKey: ["/api/products"] });
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
 
       toast({
         title: t("common.success"),
@@ -950,7 +950,7 @@ export default function Settings() {
   // Fetch E-invoice connections
   const { data: eInvoiceConnections = [], isLoading: eInvoiceLoading } =
     useQuery<any[]>({
-      queryKey: ["/api/einvoice-connections"],
+      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
     });
 
   // E-invoice mutations
@@ -965,7 +965,7 @@ export default function Settings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["/api/einvoice-connections"],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
       });
       toast({
         title: "Thành công",
@@ -994,7 +994,7 @@ export default function Settings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["/api/einvoice-connections"],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
       });
       toast({
         title: "Thành công",
@@ -1022,7 +1022,7 @@ export default function Settings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["/api/einvoice-connections"],
+        queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
       });
       toast({
         title: "Thành công",
@@ -1203,7 +1203,7 @@ export default function Settings() {
   const { data: invoiceTemplates = [], isLoading: templatesLoading } = useQuery<
     any[]
   >({
-    queryKey: ["/api/invoice-templates"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"],
   });
 
   // Invoice template mutations
@@ -1213,7 +1213,7 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/invoice-templates"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
       toast({
         title: "Thành công",
         description: "Mẫu số HĐĐT đã được tạo thành công",
@@ -1240,7 +1240,7 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/invoice-templates"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
       toast({
         title: "Thành công",
         description: "Mẫu số HĐĐT đã được cập nhật thành công",
@@ -1266,7 +1266,7 @@ export default function Settings() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/invoice-templates"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
       toast({
         title: "Thành công",
         description: "Mẫu số HĐĐT đã được xóa thành công",

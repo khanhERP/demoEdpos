@@ -63,7 +63,7 @@ export function BulkImportModal({ isOpen, onClose }: BulkImportModalProps) {
       console.log("Error count:", data.errors);
       console.log("Results array:", data.results);
 
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
 
       if (data.errors > 0) {
         console.log("=== ERRORS FOUND ===");

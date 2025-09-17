@@ -73,7 +73,7 @@ export function DashboardOverview() {
     isLoading: ordersLoading,
     error: ordersError,
   } = useQuery({
-    queryKey: ["/api/orders/date-range", startDate, endDate],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
     queryFn: async () => {
       try {
         const response = await fetch(
@@ -97,7 +97,7 @@ export function DashboardOverview() {
 
   // Query order items for all orders
   const { data: orderItems = [], isLoading: orderItemsLoading } = useQuery({
-    queryKey: ["/api/order-items"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/order-items");
@@ -118,17 +118,17 @@ export function DashboardOverview() {
   });
 
   const { data: tables } = useQuery({
-    queryKey: ["/api/tables"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
   });
 
   const handleRefresh = () => {
     // Refresh the queries to get the latest data for the selected date
     setStartDate(formatDateToYYYYMMDD(new Date()));
     setEndDate(formatDateToYYYYMMDD(new Date()));
-    queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
-    queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range"] });
-    queryClient.invalidateQueries({ queryKey: ["/api/order-items"] });
-    queryClient.invalidateQueries({ queryKey: ["/api/tables"] });
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] });
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range"] });
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"] });
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
   };
 
   const getDashboardStats = () => {
@@ -331,7 +331,7 @@ export function DashboardOverview() {
 
   // Get all current orders to check active ones (not date-filtered)
   const { data: allCurrentOrders = [] } = useQuery({
-    queryKey: ["/api/orders"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/orders");

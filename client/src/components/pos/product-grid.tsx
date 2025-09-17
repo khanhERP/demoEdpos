@@ -43,7 +43,7 @@ export function ProductGrid({ selectedCategory, searchQuery, onAddToCart }: Prod
   };
 
   const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ["/api/products", { category: selectedCategory, search: searchQuery }],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", { category: selectedCategory, search: searchQuery }],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) {

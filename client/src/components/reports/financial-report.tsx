@@ -79,7 +79,7 @@ export function FinancialReport() {
 
   // Query orders and transactions for financial calculations
   const { data: orders = [] } = useQuery({
-    queryKey: ["/api/orders"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/orders");
@@ -94,7 +94,7 @@ export function FinancialReport() {
   });
 
   const { data: transactions = [] } = useQuery({
-    queryKey: ["/api/transactions"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/transactions");
@@ -109,7 +109,7 @@ export function FinancialReport() {
   });
 
   const { data: invoices = [] } = useQuery({
-    queryKey: ["/api/invoices"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/invoices");

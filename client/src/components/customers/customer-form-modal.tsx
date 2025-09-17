@@ -109,7 +109,7 @@ export function CustomerFormModal({ isOpen, onClose, customer }: CustomerFormMod
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/customers"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
       toast({
         title: t('common.success'),
         description: customer ? "고객 정보가 업데이트되었습니다." : "새 고객이 추가되었습니다.",
@@ -132,7 +132,7 @@ export function CustomerFormModal({ isOpen, onClose, customer }: CustomerFormMod
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/customers"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
       toast({
         title: t('common.success'),
         description: "고객 정보가 업데이트되었습니다.",

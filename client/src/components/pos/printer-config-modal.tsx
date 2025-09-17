@@ -56,7 +56,7 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
 
   // Fetch printer configurations
   const { data: printerConfigs = [], isLoading } = useQuery({
-    queryKey: ["/api/printer-configs"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"],
     queryFn: async () => {
       const response = await apiRequest("GET", "/api/printer-configs");
       return response.json();
@@ -74,8 +74,8 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
     },
     onSuccess: () => {
       // Force refetch data
-      queryClient.invalidateQueries({ queryKey: ["/api/printer-configs"] });
-      queryClient.refetchQueries({ queryKey: ["/api/printer-configs"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"] });
+      queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"] });
       toast({ title: "Thành công", description: "Đã thêm cấu hình máy in" });
       resetForm();
     },
@@ -92,8 +92,8 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
     },
     onSuccess: () => {
       // Force refetch data
-      queryClient.invalidateQueries({ queryKey: ["/api/printer-configs"] });
-      queryClient.refetchQueries({ queryKey: ["/api/printer-configs"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"] });
+      queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"] });
       toast({ title: "Thành công", description: "Đã cập nhật cấu hình máy in" });
       resetForm();
     },
@@ -109,8 +109,8 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
     },
     onSuccess: () => {
       // Force refetch data
-      queryClient.invalidateQueries({ queryKey: ["/api/printer-configs"] });
-      queryClient.refetchQueries({ queryKey: ["/api/printer-configs"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"] });
+      queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"] });
       toast({ title: "Thành công", description: "Đã xóa cấu hình máy in" });
     },
     onError: () => {

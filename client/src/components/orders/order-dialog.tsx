@@ -53,15 +53,15 @@ export function OrderDialog({
   const queryClient = useQueryClient();
 
   const { data: products, isLoading: productsLoading } = useQuery({
-    queryKey: ["/api/products"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
   });
 
   const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["/api/categories"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
   });
 
   const { data: existingOrderItems, refetch: refetchExistingItems } = useQuery({
-    queryKey: ["/api/order-items", existingOrder?.id],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", existingOrder?.id],
     enabled: !!(existingOrder?.id && mode === "edit" && open),
     staleTime: 0,
     queryFn: async () => {
@@ -275,12 +275,12 @@ export function OrderDialog({
         try {
           // Clear existing cache for this specific order items
           queryClient.removeQueries({
-            queryKey: ["/api/order-items", existingOrder.id],
+            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", existingOrder.id],
           });
 
           // Force fresh fetch of order items
           const freshOrderItems = await queryClient.fetchQuery({
-            queryKey: ["/api/order-items", existingOrder.id],
+            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items", existingOrder.id],
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
@@ -308,11 +308,11 @@ export function OrderDialog({
 
       // Invalidate and refetch all related queries
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["/api/orders"] }),
-        queryClient.invalidateQueries({ queryKey: ["/api/tables"] }),
-        queryClient.invalidateQueries({ queryKey: ["/api/order-items"] }),
-        queryClient.refetchQueries({ queryKey: ["/api/orders"] }),
-        queryClient.refetchQueries({ queryKey: ["/api/tables"] }),
+        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] }),
+        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] }),
+        queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"] }),
+        queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"] }),
+        queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] }),
       ]);
 
       // Reset form state
@@ -1143,12 +1143,12 @@ export function OrderDialog({
                                                 Promise.all([
                                                   queryClient.invalidateQueries(
                                                     {
-                                                      queryKey: ["/api/orders"],
+                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
                                                     },
                                                   ),
                                                   queryClient.invalidateQueries(
                                                     {
-                                                      queryKey: ["/api/tables"],
+                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
                                                     },
                                                   ),
                                                   queryClient.invalidateQueries(
@@ -1170,10 +1170,10 @@ export function OrderDialog({
                                                   // Force immediate refetch to update table grid display
                                                   return Promise.all([
                                                     queryClient.refetchQueries({
-                                                      queryKey: ["/api/orders"],
+                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
                                                     }),
                                                     queryClient.refetchQueries({
-                                                      queryKey: ["/api/tables"],
+                                                      queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
                                                     }),
                                                   ]);
                                                 });
@@ -1198,10 +1198,10 @@ export function OrderDialog({
 
                                           // Invalidate queries to refresh data
                                           queryClient.invalidateQueries({
-                                            queryKey: ["/api/order-items"],
+                                            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
                                           });
                                           queryClient.invalidateQueries({
-                                            queryKey: ["/api/orders"],
+                                            queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
                                           });
                                         })
                                         .catch((error) => {

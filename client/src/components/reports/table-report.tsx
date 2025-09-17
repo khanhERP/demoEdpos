@@ -43,7 +43,7 @@ export function TableReport() {
 
   // Fetch data using EXACT same pattern as other reports
   const { data: orders = [], isLoading: ordersLoading } = useQuery({
-    queryKey: ["/api/orders"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/orders");
@@ -63,7 +63,7 @@ export function TableReport() {
   });
 
   const { data: invoices = [], isLoading: invoicesLoading } = useQuery({
-    queryKey: ["/api/invoices"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/invoices");
@@ -83,7 +83,7 @@ export function TableReport() {
   });
 
   const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
-    queryKey: ["/api/transactions"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/transactions");
@@ -103,7 +103,7 @@ export function TableReport() {
   });
 
   const { data: tables = [], isLoading: tablesLoading } = useQuery({
-    queryKey: ["/api/tables"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/tables");
@@ -124,7 +124,7 @@ export function TableReport() {
 
   // Fetch order items and transaction items for detailed analysis
   const { data: orderItems = [], isLoading: orderItemsLoading } = useQuery({
-    queryKey: ["/api/order-items"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/order-items");
@@ -144,7 +144,7 @@ export function TableReport() {
   });
 
   const { data: transactionItems = [], isLoading: transactionItemsLoading } = useQuery({
-    queryKey: ["/api/transaction-items"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transaction-items"],
     queryFn: async () => {
       try {
         const response = await fetch("/api/transaction-items");

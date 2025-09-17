@@ -47,11 +47,11 @@ export function ClockInOut() {
   const { t } = useTranslation();
 
   const { data: employees } = useQuery({
-    queryKey: ["/api/employees"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
   });
 
   const { data: todayAttendance, refetch: refetchTodayAttendance } = useQuery({
-    queryKey: ["/api/attendance/today", selectedEmployeeId],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance/today", selectedEmployeeId],
     enabled: !!selectedEmployeeId,
   });
 
@@ -62,7 +62,7 @@ export function ClockInOut() {
         notes,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance"] });
       refetchTodayAttendance();
       setNotes("");
       toast({
@@ -87,7 +87,7 @@ export function ClockInOut() {
         {},
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance"] });
       refetchTodayAttendance();
       toast({
         title: t("common.success"),
@@ -111,7 +111,7 @@ export function ClockInOut() {
         {},
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance"] });
       refetchTodayAttendance();
       toast({
         title: t("common.success"),
@@ -135,7 +135,7 @@ export function ClockInOut() {
         {},
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance"] });
       refetchTodayAttendance();
       toast({
         title: t("common.success"),

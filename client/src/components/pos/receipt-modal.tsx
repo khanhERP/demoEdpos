@@ -44,7 +44,7 @@ export function ReceiptModal({
 
   // Query store settings to get dynamic address - ALWAYS CALL THIS HOOK
   const { data: storeSettings } = useQuery({
-    queryKey: ["/api/store-settings"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
     queryFn: async () => {
       const response = await apiRequest("GET", "/api/store-settings");
       return response.json();

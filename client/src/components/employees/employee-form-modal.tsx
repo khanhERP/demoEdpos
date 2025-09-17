@@ -127,7 +127,7 @@ export function EmployeeFormModal({
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/employees"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"] });
       toast({
         title: t("common.successTitle"),
         description: t("employees.addEmployeeSuccess"),
@@ -183,7 +183,7 @@ export function EmployeeFormModal({
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/employees"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"] });
       toast({
         title: t("common.successTitle"),
         description: t("employees.updateEmployeeSuccess"),

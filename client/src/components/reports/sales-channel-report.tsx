@@ -61,12 +61,12 @@ export function SalesChannelReport() {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
   const { data: employees } = useQuery({
-    queryKey: ["/api/employees"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees"],
     staleTime: 5 * 60 * 1000,
   });
 
   const { data: categories } = useQuery({
-    queryKey: ["/api/categories"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
     staleTime: 5 * 60 * 1000,
   });
 

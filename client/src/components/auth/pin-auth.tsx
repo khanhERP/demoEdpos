@@ -21,7 +21,7 @@ export function PinAuth({ onAuthSuccess }: PinAuthProps) {
 
   // Fetch store settings để lấy PIN
   const { data: storeData } = useQuery({
-    queryKey: ["/api/store-settings"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
     queryFn: async () => {
       const response = await apiRequest("GET", "/api/store-settings");
       return response.json();

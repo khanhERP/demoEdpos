@@ -108,7 +108,7 @@ function MenuReport() {
 
   // Query categories
   const { data: categories = [] } = useQuery({
-    queryKey: ["/api/categories"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
     queryFn: async () => {
       try {
         const response = await apiRequest("GET", "/api/categories");
@@ -125,7 +125,7 @@ function MenuReport() {
 
   // Query products
   const { data: products = [] } = useQuery({
-    queryKey: ["/api/products", selectedCategory, productType, productSearch],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", selectedCategory, productType, productSearch],
     queryFn: async () => {
       try {
         const searchParam = productSearch
@@ -153,7 +153,7 @@ function MenuReport() {
     error: analysisError,
     refetch,
   } = useQuery({
-    queryKey: ["/api/menu-analysis", startDate, endDate, selectedCategory],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/menu-analysis", startDate, endDate, selectedCategory],
     queryFn: async () => {
       try {
         const params = new URLSearchParams({
@@ -260,8 +260,8 @@ function MenuReport() {
 
   const handleRefresh = () => {
     // Refresh both orders and order items data
-    queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range"] });
-    queryClient.invalidateQueries({ queryKey: ["/api/order-items"] });
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range"] });
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"] });
   };
 
   if (analysisError) {
@@ -750,7 +750,7 @@ function MenuReport() {
             <Button
               onClick={() => {
                 refetch();
-                queryClient.invalidateQueries({ queryKey: ["/api/menu-analysis"] });
+                queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/menu-analysis"] });
               }}
               variant="outline"
               size="sm"

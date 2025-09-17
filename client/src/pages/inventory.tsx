@@ -86,11 +86,11 @@ export default function InventoryPage() {
   const { data: products = [], isLoading: productsLoading } = useQuery<
     Product[]
   >({
-    queryKey: ["/api/products"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
   });
 
   const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ["/api/categories"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
   });
 
   const stockUpdateForm = useForm<StockUpdateForm>({
@@ -117,7 +117,7 @@ export default function InventoryPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       setShowStockDialog(false);
       stockUpdateForm.reset();
       toast({
@@ -160,7 +160,7 @@ export default function InventoryPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       toast({
         title: "Thành công",
         description: "Trạng thái theo dõi tồn kho đã được cập nhật",
@@ -191,7 +191,7 @@ export default function InventoryPage() {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       setShowStockDialog(false);
       stockUpdateForm.reset();
       toast({
@@ -240,7 +240,7 @@ export default function InventoryPage() {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       toast({
         title: "",
         description: t("inventory.deleteSuccess") || "Xóa sản phẩm thành công",
@@ -285,7 +285,7 @@ export default function InventoryPage() {
       return response.json();
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       toast({
         title: "Dọn dẹp thành công",
         description: `Đã xóa ${data.deletedCount} sản phẩm vô hiệu khỏi cơ sở dữ liệu`,

@@ -71,9 +71,9 @@ export default function POS({ onLogout }: POSPageProps) {
 
               // Clear cache and force refresh
               queryClient.clear();
-              queryClient.invalidateQueries({ queryKey: ["/api/products"] });
-              queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
-              queryClient.invalidateQueries({ queryKey: ["/api/store-settings"] });
+              queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+              queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
+              queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"] });
 
               // Dispatch custom events for components
               window.dispatchEvent(new CustomEvent('forceDataRefresh', {
@@ -109,9 +109,9 @@ export default function POS({ onLogout }: POSPageProps) {
 
       // Force data refresh for any e-invoice related events
       queryClient.clear();
-      queryClient.invalidateQueries({ queryKey: ["/api/products"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/categories"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/store-settings"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"] });
+      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"] });
 
       // Dispatch refresh event for components
       window.dispatchEvent(new CustomEvent('forceDataRefresh', {

@@ -61,23 +61,23 @@ export function CustomerReport() {
   const [debtTo, setDebtTo] = useState("");
 
   const { data: orders } = useQuery({
-    queryKey: ["/api/orders"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
   });
 
   const { data: products } = useQuery({
-    queryKey: ["/api/products"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
   });
 
   const { data: categories } = useQuery({
-    queryKey: ["/api/categories"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
   });
 
   const { data: customers } = useQuery({
-    queryKey: ["/api/customers"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"],
   });
 
   const { data: customerDebts } = useQuery({
-    queryKey: ["/api/customer-debts"],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customer-debts"],
     enabled: concernType === "debt",
   });
 
