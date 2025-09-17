@@ -21,10 +21,5 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist"), // Vercel nhận dist/
     emptyOutDir: true
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "client/src"),
-    }
   }
 })
