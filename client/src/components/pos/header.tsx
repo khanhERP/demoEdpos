@@ -77,7 +77,7 @@ export function POSHeader({ onLogout }: POSHeaderProps) {
   const { data: todayAttendance } = useQuery<AttendanceRecord[]>({
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance", todayDate],
     queryFn: async () => {
-      const response = await fetch(`/api/attendance?date=${todayDate}`);
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance?date=${todayDate}`);
       if (!response.ok) {
         throw new Error("Failed to fetch attendance records");
       }

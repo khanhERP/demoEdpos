@@ -146,7 +146,7 @@ export function ProductManagerModal({
       id: number;
       data: Partial<z.infer<typeof productFormSchema>>;
     }) => {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -174,7 +174,7 @@ export function ProductManagerModal({
 
   const deleteProductMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) throw new Error("Failed to delete product");

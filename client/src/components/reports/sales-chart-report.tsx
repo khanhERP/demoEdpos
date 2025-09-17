@@ -111,7 +111,7 @@ export function SalesChartReport() {
     queryFn: async () => {
       try {
         const response = await fetch(
-          `/api/orders/date-range/${startDate}/${endDate}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -172,7 +172,7 @@ export function SalesChartReport() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", selectedCategory, productType, productSearch],
     queryFn: async () => {
       const response = await fetch(
-        `/api/products/${selectedCategory}/${productType}/${productSearch || ""}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${selectedCategory}/${productType}/${productSearch || ""}`,
       );
       if (!response.ok) throw new Error("Failed to fetch products");
       return response.json();
@@ -189,7 +189,7 @@ export function SalesChartReport() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers", customerSearch, customerStatus],
     queryFn: async () => {
       const response = await fetch(
-        `/api/customers/${customerSearch || "all"}/${customerStatus}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/${customerSearch || "all"}/${customerStatus}`,
       );
       if (!response.ok) throw new Error("Failed to fetch customers");
       return response.json();
@@ -216,7 +216,7 @@ export function SalesChartReport() {
           productType,
           productSearch: productSearch || "",
         });
-        const response = await fetch(`/api/product-analysis?${params}`);
+        const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/product-analysis?${params}`);
         if (!response.ok) throw new Error("Failed to fetch product analysis");
         return response.json();
       },

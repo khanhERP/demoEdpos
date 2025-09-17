@@ -220,7 +220,7 @@ export function PrintDialog({
         console.log('🖨️ Print Dialog: Updating order status to paid before printing for order:', receiptData.orderId);
 
         try {
-          const statusResponse = await fetch(`/api/orders/${receiptData.orderId}/status`, {
+          const statusResponse = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${receiptData.orderId}/status`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

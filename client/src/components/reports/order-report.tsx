@@ -65,7 +65,7 @@ export function OrderReport() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
     queryFn: async () => {
       try {
-        const response = await fetch(`/api/orders/date-range/${startDate}/${endDate}`);
+        const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -83,7 +83,7 @@ export function OrderReport() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions", startDate, endDate],
     queryFn: async () => {
       try {
-        const response = await fetch(`/api/transactions/${startDate}/${endDate}`);
+        const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/transactions/${startDate}/${endDate}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

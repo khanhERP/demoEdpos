@@ -94,7 +94,7 @@ export function MembershipModal({ isOpen, onClose }: MembershipModalProps) {
   // Update customer membership
   const updateMembershipMutation = useMutation({
     mutationFn: async ({ customerId, membershipLevel }: { customerId: number; membershipLevel: string }) => {
-      const response = await fetch(`/api/customers/${customerId}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/${customerId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

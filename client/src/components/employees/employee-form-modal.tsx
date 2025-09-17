@@ -173,7 +173,7 @@ export function EmployeeFormModal({
     mutationFn: async (data: InsertEmployee) => {
       const response = await apiRequest(
         "PUT",
-        `/api/employees/${employee?.id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees/${employee?.id}`,
         data,
       );
       if (!response.ok) {

@@ -138,7 +138,7 @@ export default function InventoryPage() {
 
   const updateProductTrackInventoryMutation = useMutation({
     mutationFn: async ({ id, trackInventory }: { id: number; trackInventory: boolean }) => {
-      const response = await fetch(`/api/products/${id}/track-inventory`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${id}/track-inventory`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -221,7 +221,7 @@ export default function InventoryPage() {
 
   const deleteProductMutation = useMutation({
     mutationFn: async (productId: number) => {
-      const response = await fetch(`/api/products/${productId}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${productId}`, {
         method: "DELETE",
       });
       if (!response.ok) {

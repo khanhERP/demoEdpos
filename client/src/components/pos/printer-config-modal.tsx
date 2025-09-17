@@ -87,7 +87,7 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
   // Update printer config mutation
   const updateConfigMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
-      const response = await apiRequest("PUT", `/api/printer-configs/${id}`, data);
+      const response = await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs/${id}`, data);
       return response.json();
     },
     onSuccess: () => {
@@ -105,7 +105,7 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
   // Delete printer config mutation
   const deleteConfigMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/printer-configs/${id}`);
+      await apiRequest("DELETE", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs/${id}`);
     },
     onSuccess: () => {
       // Force refetch data
@@ -121,7 +121,7 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
   // Test printer connection mutation
   const testConnectionMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("POST", `/api/printer-configs/${id}/test`);
+      const response = await apiRequest("POST", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs/${id}/test`);
       return response.json();
     },
     onSuccess: (data) => {

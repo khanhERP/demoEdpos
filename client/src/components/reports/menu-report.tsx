@@ -133,7 +133,7 @@ function MenuReport() {
           : "";
         const response = await apiRequest(
           "GET",
-          `/api/products/${selectedCategory}/${productType}/${searchParam}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${selectedCategory}/${productType}/${searchParam}`,
         );
         if (!response.ok) throw new Error("Failed to fetch products");
         const data = await response.json();
@@ -164,7 +164,7 @@ function MenuReport() {
 
         const response = await apiRequest(
           "GET",
-          `/api/menu-analysis?${params.toString()}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/menu-analysis?${params.toString()}`,
         );
         if (!response.ok) {
           console.error(

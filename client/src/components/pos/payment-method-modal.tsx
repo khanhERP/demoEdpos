@@ -856,7 +856,7 @@ export function PaymentMethodModal({
 
         try {
           // First update the payment method and status
-          const updateResponse = await fetch(`/api/orders/${orderInfo.id}`, {
+          const updateResponse = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderInfo.id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -910,7 +910,7 @@ export function PaymentMethodModal({
                 if (otherActiveOrders.length === 0) {
                   console.log(`🔄 Updating table ${updatedOrder.tableId} to available after ${method} payment`);
                   
-                  const tableUpdateResponse = await fetch(`/api/tables/${updatedOrder.tableId}/status`, {
+                  const tableUpdateResponse = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${updatedOrder.tableId}/status`, {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
@@ -1070,7 +1070,7 @@ export function PaymentMethodModal({
         );
 
         const statusResponse = await fetch(
-          `/api/orders/${orderInfo.id}/status`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderInfo.id}/status`,
           {
             method: "PUT",
             headers: {
@@ -1290,7 +1290,7 @@ export function PaymentMethodModal({
         );
 
         const statusResponse = await fetch(
-          `/api/orders/${orderInfo.id}/status`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderInfo.id}/status`,
           {
             method: "PUT",
             headers: {

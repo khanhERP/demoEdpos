@@ -162,7 +162,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       }
 
       try {
-        const response = await apiRequest("GET", `/api/order-items/${orderId}`);
+        const response = await apiRequest("GET", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${orderId}`);
         const data = await response.json();
         return Array.isArray(data) ? data : [];
       } catch (error) {
@@ -356,7 +356,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
                 const [freshTables, freshOrders] = await Promise.all([
                   fetch(
-                    `/api/tables?_ws_refresh=${cacheBuster}&_force=true&_timestamp=${timestamp}`,
+                    `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables?_ws_refresh=${cacheBuster}&_force=true&_timestamp=${timestamp}`,
                     {
                       cache: "no-store",
                       headers: {
@@ -372,7 +372,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                     return r.json();
                   }),
                   fetch(
-                    `/api/orders?_ws_refresh=${cacheBuster}&_force=true&_timestamp=${timestamp}`,
+                    `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?_ws_refresh=${cacheBuster}&_force=true&_timestamp=${timestamp}`,
                     {
                       cache: "no-store",
                       headers: {
@@ -577,7 +577,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                 // Fetch order items for this order
                 const response = await apiRequest(
                   "GET",
-                  `/api/order-items/${order.id}`,
+                  `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`,
                 );
                 const orderItemsData = await response.json();
 
@@ -757,7 +757,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
   const updateTableStatusMutation = useMutation({
     mutationFn: ({ tableId, status }: { tableId: number; status: string }) =>
-      apiRequest("PUT", `/api/tables/${tableId}/status`, { status }),
+      apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${tableId}/status`, { status }),
     onSuccess: async (data, variables) => {
       console.log(
         `🔄 Table Grid: Table ${variables.tableId} status updated to ${variables.status}`,
@@ -797,7 +797,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       orderId: number;
       paymentMethod: string;
     }) =>
-      apiRequest("PUT", `/api/orders/${orderId}/status`, {
+      apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, {
         status: "paid",
         paymentMethod,
       }),
@@ -847,7 +847,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             try {
               await apiRequest(
                 "PUT",
-                `/api/tables/${completedOrder.tableId}/status`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${completedOrder.tableId}/status`,
                 {
                   status: "available",
                 },
@@ -959,7 +959,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
-                `/api/orders/${variables.orderId}`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${variables.orderId}`,
               );
               return response.json();
             },
@@ -969,7 +969,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             queryFn: async () => {
               const response = await apiRequest(
                 "GET",
-                `/api/order-items/${variables.orderId}`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${variables.orderId}`,
               );
               return response.json();
             },
@@ -1080,7 +1080,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       });
 
       // Then mark order as paid
-      await apiRequest("PUT", `/api/orders/${orderId}/status`, {
+      await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, {
         status: "paid",
         paymentMethod: "points",
         customerId,
@@ -1125,7 +1125,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             try {
               await apiRequest(
                 "PUT",
-                `/api/tables/${completedOrder.tableId}/status`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${completedOrder.tableId}/status`,
                 {
                   status: "available",
                 },
@@ -1171,7 +1171,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
-              `/api/orders/${variables.orderId}`,
+              `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${variables.orderId}`,
             );
             return response.json();
           },
@@ -1187,7 +1187,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             try {
               const orderItemsResponse = await apiRequest(
                 "GET",
-                `/api/order-items/${variables.orderId}`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${variables.orderId}`,
               );
               const orderItemsData = await orderItemsResponse.json();
 
@@ -1362,7 +1362,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       });
 
       // Then mark order as paid with mixed payment
-      await apiRequest("PUT", `/api/orders/${orderId}/status`, {
+      await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, {
         status: "paid",
         paymentMethod: `points + ${paymentMethod}`,
         customerId,
@@ -1407,7 +1407,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             try {
               await apiRequest(
                 "PUT",
-                `/api/tables/${completedOrder.tableId}/status`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${completedOrder.tableId}/status`,
                 {
                   status: "available",
                 },
@@ -1455,7 +1455,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
-              `/api/orders/${variables.orderId}`,
+              `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${variables.orderId}`,
             );
             return response.json();
           },
@@ -1471,7 +1471,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             try {
               const orderItemsResponse = await apiRequest(
                 "GET",
-                `/api/order-items/${variables.orderId}`,
+                `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${variables.orderId}`,
               );
               const orderItemsData = await orderItemsResponse.json();
 
@@ -1546,7 +1546,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // First cancel the order
       const response = await apiRequest(
         "PUT",
-        `/api/orders/${orderId}/status`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`,
         { status: "cancelled" },
       );
 
@@ -1563,7 +1563,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
         // If no other active orders, update table status to available
         if (!otherActiveOrders || otherActiveOrders.length === 0) {
-          await apiRequest("PUT", `/api/tables/${order.tableId}/status`, {
+          await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${order.tableId}/status`, {
             status: "available",
           });
         }
@@ -1597,7 +1597,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       console.log("🧮 Recalculating order total for order:", orderId);
 
       // Fetch current order items after deletion
-      const response = await apiRequest("GET", `/api/order-items/${orderId}`);
+      const response = await apiRequest("GET", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${orderId}`);
       const remainingItems = await response.json();
 
       console.log(
@@ -1612,7 +1612,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         );
 
         // Set totals to zero instead of deleting the order
-        const updateResult = await apiRequest("PUT", `/api/orders/${orderId}`, {
+        const updateResult = await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}`, {
           subtotal: "0",
           tax: "0",
           total: "0",
@@ -1656,7 +1656,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       });
 
       // Update order with new totals
-      const updateResult = await apiRequest("PUT", `/api/orders/${orderId}`, {
+      const updateResult = await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}`, {
         subtotal: newSubtotal.toString(),
         tax: newTax.toString(),
         total: newTotal.toString(),
@@ -1679,7 +1679,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       Promise.all([
         fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", { cache: "no-store" }).then((r) => r.json()),
         fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", { cache: "no-store" }).then((r) => r.json()),
-        fetch(`/api/order-items/${orderId}`, { cache: "no-store" }).then((r) =>
+        fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${orderId}`, { cache: "no-store" }).then((r) =>
           r.json(),
         ),
       ])
@@ -1746,7 +1746,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   const recalculateOrderTotalMutation = useMutation({
     mutationFn: async (orderId: number) => {
       // Fetch current order items
-      const response = await apiRequest("GET", `/api/order-items/${orderId}`);
+      const response = await apiRequest("GET", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${orderId}`);
       const items = await response.json();
 
       // Calculate new total based on remaining items
@@ -1778,7 +1778,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       const newTotal = newSubtotal + newTax;
 
       // Update order with new totals
-      return apiRequest("PUT", `/api/orders/${orderId}`, {
+      return apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}`, {
         subtotal: newSubtotal.toString(),
         tax: newTax.toString(),
         total: newTotal.toString(),
@@ -2716,11 +2716,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
     try {
       const orderItems = await queryClient.fetchQuery({
-        queryKey: [`/api/order-items/${order.id}`],
+        queryKey: [`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`],
         queryFn: async () => {
           const response = await apiRequest(
             "GET",
-            `/api/order-items/${order.id}`,
+            `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`,
           );
           return response.json();
         },
@@ -2825,11 +2825,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       // Fallback to manual print - try to show receipt modal
       try {
         const orderItems = await queryClient.fetchQuery({
-          queryKey: [`/api/order-items/${order.id}`],
+          queryKey: [`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`],
           queryFn: async () => {
             const response = await apiRequest(
               "GET",
-              `/api/order-items/${order.id}`,
+              `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`,
             );
             return response.json();
           },
@@ -3827,7 +3827,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
               // Strategy 2: Force immediate fresh data fetch with timestamp to bypass any cache
               const timestamp = Date.now().toString();
               const [freshTables, freshOrders] = await Promise.all([
-                fetch(`/api/tables?_t=${timestamp}&_force=refresh`, {
+                fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables?_t=${timestamp}&_force=refresh`, {
                   cache: "no-store",
                   headers: {
                     "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -3835,7 +3835,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
                     Expires: "0",
                   },
                 }).then((r) => r.json()),
-                fetch(`/api/orders?_t=${timestamp}&_force=refresh`, {
+                fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?_t=${timestamp}&_force=refresh`, {
                   cache: "no-store",
                   headers: {
                     "Cache-Control": "no-cache, no-store, must-revalidate",

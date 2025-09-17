@@ -190,7 +190,7 @@ export function OrderManagement() {
     queryFn: async () => {
       if (!selectedOrder?.id) return [];
       try {
-        const response = await apiRequest('GET', `/api/order-items/${selectedOrder.id}`);
+        const response = await apiRequest('GET', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${selectedOrder.id}`);
         if (!response.ok) {
           console.error(`API error fetching order items: ${response.status} ${response.statusText}`);
           return [];
@@ -206,7 +206,7 @@ export function OrderManagement() {
 
   const updateOrderStatusMutation = useMutation({
     mutationFn: ({ orderId, status }: { orderId: number; status: string }) =>
-      apiRequest('PUT', `/api/orders/${orderId}/status`, { status }),
+      apiRequest('PUT', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders'] });
       queryClient.invalidateQueries({ queryKey: ['https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables'] });
@@ -323,7 +323,7 @@ export function OrderManagement() {
       });
 
       // Then mark order as paid
-      await apiRequest('PUT', `/api/orders/${orderId}/status`, {
+      await apiRequest('PUT', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, {
         status: 'paid',
         paymentMethod: paymentMethod || 'points',
         customerId,
@@ -367,7 +367,7 @@ export function OrderManagement() {
       });
 
       // Then mark order as paid with mixed payment
-      await apiRequest('PUT', `/api/orders/${orderId}/status`, {
+      await apiRequest('PUT', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, {
         status: 'paid',
         paymentMethod: `points + ${paymentMethod}`,
         customerId
@@ -430,13 +430,13 @@ export function OrderManagement() {
       console.log('📋 Step 1: Updating order status to PAID for order:', orderId);
 
       console.log('🔍 API Call Details:', {
-        url: `/api/orders/${orderId}/status`,
+        url: `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`,
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'paid' })
       });
 
-      const statusResponse = await apiRequest('PUT', `/api/orders/${orderId}/status`, { status: 'paid' });
+      const statusResponse = await apiRequest('PUT', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, { status: 'paid' });
 
       console.log('🔍 API Response Status:', statusResponse.status, statusResponse.statusText);
 
@@ -460,7 +460,7 @@ export function OrderManagement() {
       // Step 2: Update additional payment details
       console.log('📋 Step 2: Updating payment details for order:', orderId);
 
-      const paymentDetailsResponse = await fetch(`/api/orders/${orderId}`, {
+      const paymentDetailsResponse = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -741,7 +741,7 @@ export function OrderManagement() {
       console.log(`🔍 DEBUG: Making API request to update order status...`);
 
       const startTime = Date.now();
-      const response = await apiRequest('PUT', `/api/orders/${orderId}/status`, { status: newStatus });
+      const response = await apiRequest('PUT', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, { status: newStatus });
       const endTime = Date.now();
 
       console.log(`⏱️ API CALL COMPLETED in ${endTime - startTime}ms for order ${orderId}`);
@@ -858,7 +858,7 @@ export function OrderManagement() {
       // Step 3: Fetch order items with proper error handling
       console.log('📦 Fetching order items for order:', order.id);
 
-      const orderItemsResponse = await apiRequest('GET', `/api/order-items/${order.id}`);
+      const orderItemsResponse = await apiRequest('GET', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`);
 
       if (!orderItemsResponse.ok) {
         const errorText = await orderItemsResponse.text();
@@ -1623,7 +1623,7 @@ export function OrderManagement() {
 
         try {
           // Fetch order items for calculation
-          const response = await apiRequest('GET', `/api/order-items/${order.id}`);
+          const response = await apiRequest('GET', `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${order.id}`);
           if (!response.ok) {
             console.warn(`❌ Failed to fetch order items for order ${order.id}`);
             return;

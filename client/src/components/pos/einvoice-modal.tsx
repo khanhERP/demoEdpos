@@ -158,7 +158,7 @@ export function EInvoiceModal({
         orderId,
       );
       // Pass the paymentMethod to the PUT request for status update
-      return apiRequest("PUT", `/api/orders/${orderId}/status`, {
+      return apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`, {
         status: "paid",
         paymentMethod, // Ensure paymentMethod is passed here
       });

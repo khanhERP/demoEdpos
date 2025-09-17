@@ -185,7 +185,7 @@ export function usePOS() {
 
     try {
       // Fetch product details
-      const response = await fetch(`/api/products/${productId}`);
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${productId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch product');
       }

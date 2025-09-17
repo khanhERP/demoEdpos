@@ -58,7 +58,7 @@ export function SalesReport() {
     queryFn: async () => {
       try {
         const response = await fetch(
-          `/api/orders/date-range/${startDate}/${endDate}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -84,7 +84,7 @@ export function SalesReport() {
     queryFn: async () => {
       try {
         const response = await fetch(
-          `/api/order-items/${startDate}/${endDate}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${startDate}/${endDate}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

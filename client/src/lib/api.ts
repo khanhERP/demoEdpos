@@ -48,7 +48,7 @@ export const createQRPosAsync = async (request: CreateQRPosRequest, bankCode: st
     console.log('📤 Request payload:', { ...request, bankCode, clientID });
     
     // Use proxy route to avoid CORS issues
-    const response = await fetch(`/api/pos/create-qr-proxy`, {
+    const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/pos/create-qr-proxy`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ export const createQRPosAsync = async (request: CreateQRPosRequest, bankCode: st
     
     // Fallback to alternative internal API route
     try {
-      const fallbackResponse = await fetch(`/api/pos/create-qr?bankCode=${bankCode}&clientID=${clientID}`, {
+      const fallbackResponse = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/pos/create-qr?bankCode=${bankCode}&clientID=${clientID}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

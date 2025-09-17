@@ -131,7 +131,7 @@ export function TableManagement() {
 
   const updateTableMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: TableFormData }) =>
-      apiRequest("PUT", `/api/tables/${id}`, data),
+      apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
       toast({
@@ -150,7 +150,7 @@ export function TableManagement() {
   });
 
   const deleteTableMutation = useMutation({
-    mutationFn: (id: number) => apiRequest("DELETE", `/api/tables/${id}`, {}),
+    mutationFn: (id: number) => apiRequest("DELETE", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables/${id}`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables"] });
       toast({

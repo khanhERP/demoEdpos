@@ -248,10 +248,10 @@ export default function SalesOrders() {
         let url;
         if (startDate && endDate) {
           // If both dates are provided, use date range endpoint
-          url = `/api/orders/date-range/${startDate}/${endDate}?page=${currentPage}&limit=${itemsPerPage}`;
+          url = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}?page=${currentPage}&limit=${itemsPerPage}`;
         } else {
           // If no dates provided, fetch all orders
-          url = `/api/orders?page=${currentPage}&limit=${itemsPerPage}`;
+          url = `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?page=${currentPage}&limit=${itemsPerPage}`;
         }
 
         const response = await apiRequest("GET", url);
@@ -313,7 +313,7 @@ export default function SalesOrders() {
       try {
         const response = await apiRequest(
           "GET",
-          `/api/order-items/${selectedInvoice.id}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${selectedInvoice.id}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -335,7 +335,7 @@ export default function SalesOrders() {
     mutationFn: async (updatedOrder: Order) => {
       const response = await apiRequest(
         "PUT",
-        `/api/orders/${updatedOrder.id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${updatedOrder.id}`,
         updatedOrder,
       );
       return response.json();
@@ -366,7 +366,7 @@ export default function SalesOrders() {
           // For orders, update status to 'cancelled'
           const response = await apiRequest(
             "PUT",
-            `/api/orders/${orderId}/status`,
+            `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`,
             {
               status: "cancelled",
             },
@@ -463,7 +463,7 @@ export default function SalesOrders() {
 
           const updateResponse = await apiRequest(
             "PUT",
-            `/api/orders/${selectedInvoice.id}`,
+            `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${selectedInvoice.id}`,
             updateData,
           );
           console.log(
@@ -540,7 +540,7 @@ export default function SalesOrders() {
       // Changed to accept orderId
       const response = await apiRequest(
         "PUT",
-        `/api/orders/${orderId}/status`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/${orderId}/status`,
         {
           status: "cancelled",
         },

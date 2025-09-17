@@ -76,7 +76,7 @@ export function InvoiceManagementModal({
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-items", selectedInvoice?.id],
     queryFn: async () => {
       if (!selectedInvoice?.id) return [];
-      const response = await apiRequest("GET", `/api/invoice-items/${selectedInvoice.id}`);
+      const response = await apiRequest("GET", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-items/${selectedInvoice.id}`);
       return response.json();
     },
     enabled: !!selectedInvoice?.id,

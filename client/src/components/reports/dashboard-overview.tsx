@@ -77,7 +77,7 @@ export function DashboardOverview() {
     queryFn: async () => {
       try {
         const response = await fetch(
-          `/api/orders/date-range/${startDate}/${endDate}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

@@ -128,7 +128,7 @@ export function CustomerFormModal({ isOpen, onClose, customer }: CustomerFormMod
 
   const updateMutation = useMutation({
     mutationFn: async (data: CustomerFormData) => {
-      const response = await apiRequest("PUT", `/api/customers/${customer!.id}`, data);
+      const response = await apiRequest("PUT", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/${customer!.id}`, data);
       return response.json();
     },
     onSuccess: () => {

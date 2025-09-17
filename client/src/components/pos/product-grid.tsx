@@ -50,7 +50,7 @@ export function ProductGrid({ selectedCategory, searchQuery, onAddToCart }: Prod
         params.append("search", searchQuery);
       }
 
-      const response = await fetch(`/api/products?${params}`);
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products?${params}`);
       if (!response.ok) throw new Error('Failed to fetch products');
       const allProducts = await response.json();
 

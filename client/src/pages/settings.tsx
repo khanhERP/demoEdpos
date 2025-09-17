@@ -162,7 +162,7 @@ export default function Settings() {
     if (!employeeToDelete) return;
 
     try {
-      const response = await fetch(`/api/employees/${employeeToDelete.id}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/employees/${employeeToDelete.id}`, {
         method: "DELETE",
       });
 
@@ -546,7 +546,7 @@ export default function Settings() {
     if (!customerToDelete) return;
 
     try {
-      const response = await fetch(`/api/customers/${customerToDelete.id}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/${customerToDelete.id}`, {
         method: "DELETE",
       });
 
@@ -684,7 +684,7 @@ export default function Settings() {
     }
 
     try {
-      const response = await fetch(`/api/categories/${editingCategory.id}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories/${editingCategory.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -745,7 +745,7 @@ export default function Settings() {
     if (!categoryToDelete) return;
 
     try {
-      const response = await fetch(`/api/categories/${categoryToDelete.id}`, {
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories/${categoryToDelete.id}`, {
         method: "DELETE",
       });
 
@@ -852,7 +852,7 @@ export default function Settings() {
 
       const response = await apiRequest(
         "PUT",
-        `/api/products/${editingProduct.id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${editingProduct.id}`,
         productData,
       );
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
@@ -883,7 +883,7 @@ export default function Settings() {
     if (!productToDelete) return;
 
     try {
-      await apiRequest("DELETE", `/api/products/${productToDelete.id}`);
+      await apiRequest("DELETE", `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${productToDelete.id}`);
 
       await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
 
@@ -988,7 +988,7 @@ export default function Settings() {
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
       const response = await apiRequest(
         "PUT",
-        `/api/einvoice-connections/${id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections/${id}`,
         data,
       );
       return response.json();
@@ -1017,7 +1017,7 @@ export default function Settings() {
     mutationFn: async (id: number) => {
       const response = await apiRequest(
         "DELETE",
-        `/api/einvoice-connections/${id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections/${id}`,
       );
       return response.json();
     },
@@ -1235,7 +1235,7 @@ export default function Settings() {
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
       const response = await apiRequest(
         "PUT",
-        `/api/invoice-templates/${id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates/${id}`,
         data,
       );
       return response.json();
@@ -1262,7 +1262,7 @@ export default function Settings() {
     mutationFn: async (id: number) => {
       const response = await apiRequest(
         "DELETE",
-        `/api/invoice-templates/${id}`,
+        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates/${id}`,
       );
       return response.json();
     },
