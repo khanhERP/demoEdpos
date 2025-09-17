@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 const app = express();
 app.use(express.json());
@@ -86,7 +87,7 @@ app.use((req, res, next) => {
   });
 
   // Add endpoint to receive payment notification from external API
-  app.post('/api/NotifyPos/ReceiveNotify', (req, res) => {
+app.post('/api/NotifyPos/ReceiveNotify', (req, res) => {
     try {
       const { TransactionUuid } = req.body;
 
@@ -128,51 +129,49 @@ app.use((req, res, next) => {
   // Other ports are firewalled. Default to 5000 if not specified.
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const PORT = process.env.PORT || 5001;
+  // const PORT = process.env.PORT || 5001;
 
   // Handle server errors first before trying to listen
-  server.on('error', (err: any) => {
-    if (err.code === 'EADDRINUSE') {
-      console.log(`⚠️ Port ${PORT} is busy, trying port ${PORT + 1}`);
-      setTimeout(() => {
-        server.listen({
-          port: PORT + 1,
-          host: "0.0.0.0",
-          reusePort: false,
-        }, () => {
-          log(`🚀 Server running on port ${PORT + 1}`);
-          import('./websocket-server').then((wsModule) => {
-            wsModule.initializeWebSocketServer(server);
-            log('WebSocket server initialized on same port as HTTP server');
-          });
-        });
-      }, 1000);
-    } else {
-      console.error('💥 Server error:', err);
-    }
-  });
+  // server.on('error', (err: any) => {
+  //   if (err.code === 'EADDRINUSE') {
+  //     console.log(`⚠️ Port ${PORT} is busy, trying port ${PORT + 1}`);
+  //     setTimeout(() => {
+  //       server.listen({
+  //         port: PORT + 1,
+  //         host: "0.0.0.0",
+  //         reusePort: false,
+  //       }, () => {
+  //         log(`🚀 Server running on port ${PORT + 1}`);
+  //         import('./websocket-server').then((wsModule) => {
+  //           wsModule.initializeWebSocketServer(server);
+  //           log('WebSocket server initialized on same port as HTTP server');
+  //         });
+  //       });
+  //     }, 1000);
+  //   } else {
+  //     console.error('💥 Server error:', err);
+  //   }
+  // });
 
   // Try to start server on primary port
-  try {
-    server.listen({
-      port: PORT,
-      host: "0.0.0.0",
-      reusePort: false,
-    }, () => {
-      log(`🚀 Server running on port ${PORT}`);
+  // try {
+  //   server.listen({
+  //     port: PORT,
+  //     host: "0.0.0.0",
+  //     reusePort: false,
+  //   }, () => {
+  //     log(`🚀 Server running on port ${PORT}`);
 
-      // Initialize WebSocket server after HTTP server is running
-      import('./websocket-server').then((wsModule) => {
-        wsModule.initializeWebSocketServer(server);
-        log('WebSocket server initialized on same port as HTTP server');
-      });
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-  }
-  
+  //     // Initialize WebSocket server after HTTP server is running
+  //     import('./websocket-server').then((wsModule) => {
+  //       wsModule.initializeWebSocketServer(server);
+  //       log('WebSocket server initialized on same port as HTTP server');
+  //     });
+  //   });
+  // } catch (error) {
+  //   console.error('Failed to start server:', error);
+  // }
 })();
-
-app.get("/api/hello", (req, res) => {
-  res.json({ msg: "Hello" });
-});
+export default (req: VercelRequest, res: VercelResponse) => {
+  app(req as any, res as any);
+};
