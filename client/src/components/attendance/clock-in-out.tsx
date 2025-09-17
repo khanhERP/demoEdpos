@@ -57,7 +57,7 @@ export function ClockInOut() {
 
   const clockInMutation = useMutation({
     mutationFn: () =>
-      apiRequest("POST", "/api/attendance/clock-in", {
+      apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/attendance/clock-in", {
         employeeId: selectedEmployeeId,
         notes,
       }),

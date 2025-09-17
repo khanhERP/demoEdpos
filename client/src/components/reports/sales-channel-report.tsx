@@ -73,7 +73,7 @@ export function SalesChannelReport() {
   // Sales channel sales data query
   const { data: salesChannelSalesData, isLoading: salesLoading } = useQuery({
     queryKey: [
-      "/api/sales-channel-sales",
+      "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/sales-channel-sales",
       startDate,
       endDate,
       selectedSeller,
@@ -100,7 +100,7 @@ export function SalesChannelReport() {
   // Sales channel profit data query
   const { data: salesChannelProfitData, isLoading: profitLoading } = useQuery({
     queryKey: [
-      "/api/sales-channel-profit",
+      "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/sales-channel-profit",
       startDate,
       endDate,
       selectedSeller,
@@ -128,7 +128,7 @@ export function SalesChannelReport() {
   const { data: salesChannelProductsData, isLoading: productsLoading } =
     useQuery({
       queryKey: [
-        "/api/sales-channel-products",
+        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/sales-channel-products",
         startDate,
         endDate,
         selectedSeller,

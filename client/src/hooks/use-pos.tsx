@@ -71,7 +71,7 @@ export function usePOS() {
         notes: null,
       }));
 
-      const response = await fetch("/api/orders", {
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ order: orderData, items }),

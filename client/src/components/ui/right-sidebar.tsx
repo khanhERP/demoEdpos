@@ -39,7 +39,7 @@ export function RightSidebar() {
   const { data: storeSettings } = useQuery({
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
     queryFn: async () => {
-      const response = await apiRequest("GET", "/api/store-settings");
+      const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings");
       return response.json();
     },
   });

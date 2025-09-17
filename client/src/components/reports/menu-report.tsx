@@ -111,7 +111,7 @@ function MenuReport() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories"],
     queryFn: async () => {
       try {
-        const response = await apiRequest("GET", "/api/categories");
+        const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/categories");
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
         return Array.isArray(data) ? data : [];

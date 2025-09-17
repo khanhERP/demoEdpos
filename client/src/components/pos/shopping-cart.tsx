@@ -229,7 +229,7 @@ export function ShoppingCart({
   const { data: products } = useQuery<any[]>({
     queryKey: ["products"],
     queryFn: async () => {
-      const response = await fetch("/api/products");
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products");
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }

@@ -235,7 +235,7 @@ export function OrderDialog({
           return updateResult;
         } else {
           console.log("📝 Creating new order...");
-          const response = await apiRequest("POST", "/api/orders", orderData);
+          const response = await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", orderData);
 
           if (!response.ok) {
             const errorData = await response.text();
@@ -1154,14 +1154,14 @@ export function OrderDialog({
                                                   queryClient.invalidateQueries(
                                                     {
                                                       queryKey: [
-                                                        "/api/order-items",
+                                                        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
                                                       ],
                                                     },
                                                   ),
                                                   queryClient.invalidateQueries(
                                                     {
                                                       queryKey: [
-                                                        "/api/order-items",
+                                                        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
                                                         existingOrder.id,
                                                       ],
                                                     },

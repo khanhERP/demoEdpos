@@ -238,7 +238,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
   useEffect(() => {
     if (orderDetailsOpen && selectedOrder?.id) {
       const cachedData = queryClient.getQueryData([
-        "/api/order-items",
+        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items",
         selectedOrder.id,
       ]);
       if (!cachedData) {
@@ -883,11 +883,11 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       try {
         // Use fetch directly with no-cache to bypass React Query entirely for immediate update
         const [freshTables, freshOrders] = await Promise.all([
-          fetch("/api/tables", {
+          fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", {
             cache: "no-store",
             headers: { "Cache-Control": "no-cache" },
           }).then((r) => r.json()),
-          fetch("/api/orders", {
+          fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", {
             cache: "no-store",
             headers: { "Cache-Control": "no-cache" },
           }).then((r) => r.json()),
@@ -1074,7 +1074,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       orderId: number;
     }) => {
       // First redeem points
-      await apiRequest("POST", "/api/customers/redeem-points", {
+      await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points", {
         customerId,
         points,
       });
@@ -1355,7 +1355,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       paymentMethod: string;
     }) => {
       // First redeem all available points
-      await apiRequest("POST", "/api/customers/redeem-points", {
+      await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers/redeem-points", {
         customerId,
         points,
       });
@@ -1676,8 +1676,8 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
 
       // Force immediate fresh fetch without cache
       Promise.all([
-        fetch("/api/orders", { cache: "no-store" }).then((r) => r.json()),
-        fetch("/api/tables", { cache: "no-store" }).then((r) => r.json()),
+        fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders", { cache: "no-store" }).then((r) => r.json()),
+        fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables", { cache: "no-store" }).then((r) => r.json()),
         fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/${orderId}`, { cache: "no-store" }).then((r) =>
           r.json(),
         ),
@@ -2106,7 +2106,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
         // Strategy A: Direct fetch with no-cache headers
         const [freshTables, freshOrders] = await Promise.all([
           fetch(
-            "/api/tables?" +
+            "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/tables?" +
               new URLSearchParams({
                 _t: Date.now().toString(),
                 _force: "true",
@@ -2121,7 +2121,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
             },
           ).then((r) => r.json()),
           fetch(
-            "/api/orders?" +
+            "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders?" +
               new URLSearchParams({
                 _t: Date.now().toString(),
                 _force: "true",
@@ -2756,7 +2756,7 @@ export function TableGrid({ onTableSelect, selectedTableId }: TableGridProps) {
       };
 
       // Call auto-print API for both employee and kitchen printers
-      const response = await fetch("/api/auto-print", {
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/auto-print", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

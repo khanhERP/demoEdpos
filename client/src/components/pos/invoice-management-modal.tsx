@@ -65,7 +65,7 @@ export function InvoiceManagementModal({
   const { data: invoices = [], isLoading } = useQuery<Invoice[]>({
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices"],
     queryFn: async () => {
-      const response = await apiRequest("GET", "/api/invoices");
+      const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoices");
       return response.json();
     },
     enabled: isOpen,

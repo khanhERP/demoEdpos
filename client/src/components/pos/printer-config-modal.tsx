@@ -58,7 +58,7 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
   const { data: printerConfigs = [], isLoading } = useQuery({
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs"],
     queryFn: async () => {
-      const response = await apiRequest("GET", "/api/printer-configs");
+      const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs");
       return response.json();
     },
     enabled: isOpen,
@@ -69,7 +69,7 @@ export function PrinterConfigModal({ isOpen, onClose }: PrinterConfigModalProps)
   // Create printer config mutation
   const createConfigMutation = useMutation({
     mutationFn: async (configData: any) => {
-      const response = await apiRequest("POST", "/api/printer-configs", configData);
+      const response = await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs", configData);
       return response.json();
     },
     onSuccess: () => {

@@ -46,7 +46,7 @@ export function ReceiptModal({
   const { data: storeSettings } = useQuery({
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings"],
     queryFn: async () => {
-      const response = await apiRequest("GET", "/api/store-settings");
+      const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/store-settings");
       return response.json();
     },
     enabled: isOpen, // Only fetch when modal is open
@@ -171,7 +171,7 @@ export function ReceiptModal({
       let activePrinterConfigs = [];
       try {
         console.log("🖨️ Fetching active printer configurations...");
-        const printerResponse = await fetch("/api/printer-configs");
+        const printerResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/printer-configs");
         if (printerResponse.ok) {
           const allConfigs = await printerResponse.json();
           activePrinterConfigs = allConfigs.filter(
@@ -209,7 +209,7 @@ export function ReceiptModal({
         console.log("🖨️ Trying configured POS printers for all platforms...");
 
         try {
-          const printResponse = await fetch("/api/pos/print-receipt", {
+          const printResponse = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/pos/print-receipt", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

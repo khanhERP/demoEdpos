@@ -104,7 +104,7 @@ export default function InventoryPage() {
   const updateStockMutation = useMutation({
     mutationFn: async (data: StockUpdateForm) => {
       console.log("Updating stock:", data);
-      const response = await fetch("/api/inventory/update-stock", {
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/inventory/update-stock", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -178,7 +178,7 @@ export default function InventoryPage() {
   const createProductMutation = useMutation({
     mutationFn: async (data: any) => {
       console.log("Sending product data:", data);
-      const response = await fetch("/api/products", {
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -276,7 +276,7 @@ export default function InventoryPage() {
 
   const cleanupMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch("/api/products/cleanup/inactive", {
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/cleanup/inactive", {
         method: "DELETE",
       });
       if (!response.ok) {

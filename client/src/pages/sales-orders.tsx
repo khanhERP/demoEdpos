@@ -237,7 +237,7 @@ export default function SalesOrders() {
     error: ordersError,
   } = useQuery({
     queryKey: [
-      "/api/orders/date-range",
+      "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range",
       startDate,
       endDate,
       currentPage,
@@ -288,7 +288,7 @@ export default function SalesOrders() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"],
     queryFn: async () => {
       try {
-        const response = await apiRequest("GET", "/api/products");
+        const response = await apiRequest("GET", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -431,7 +431,7 @@ export default function SalesOrders() {
     mutationFn: async (invoiceData: any) => {
       const response = await apiRequest(
         "POST",
-        "/api/einvoice/publish",
+        "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice/publish",
         invoiceData,
       );
       return response.json();

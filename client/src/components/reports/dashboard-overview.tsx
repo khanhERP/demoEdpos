@@ -100,7 +100,7 @@ export function DashboardOverview() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items"],
     queryFn: async () => {
       try {
-        const response = await fetch("/api/order-items");
+        const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -334,7 +334,7 @@ export function DashboardOverview() {
     queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders"],
     queryFn: async () => {
       try {
-        const response = await fetch("/api/orders");
+        const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders");
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         return await response.json();
