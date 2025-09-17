@@ -24,8 +24,8 @@ export default defineConfig({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
- build: {
-  outDir: "dist",
+build: {
+  outDir: path.resolve(import.meta.dirname, "dist_client"), // đổi tên thư mục
   emptyOutDir: true,
 },
   server: {
