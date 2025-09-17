@@ -22,10 +22,13 @@ export default defineConfig({
     outDir: path.resolve(__dirname, "dist"), // Vercel nhận dist/
     emptyOutDir: true
   },
+  server: {
   proxy: {
-  "/api": {
-    target: "https://demo-edpos.vercel.app",
-    changeOrigin: true,
+    "/api": {
+      target: "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev",
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, ""),
+    },
   },
 },
 })
