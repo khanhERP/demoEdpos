@@ -289,7 +289,7 @@ export default function Settings() {
   const { data: productsData, isLoading: productsLoading } = useQuery<any[]>({
     queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products", { includeInactive: true }],
     queryFn: async () => {
-      const response = await fetch("/api/products?includeInactive=true");
+      const response = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products?includeInactive=true");
       if (!response.ok) throw new Error("Failed to fetch products");
       return response.json();
     },
@@ -343,7 +343,7 @@ export default function Settings() {
   // Mutation to update store settings
   const updateStoreSettingsMutation = useMutation({
     mutationFn: async (settings: Partial<InsertStoreSettings>) => {
-      const response = await apiRequest("PUT", "/api/store-settings", settings);
+      const response = await apiRequest("PUT", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/store-settings", settings);
       return response.json();
     },
     onSuccess: () => {
@@ -630,7 +630,7 @@ export default function Settings() {
     }
 
     try {
-      const response = await fetch("/api/categories", {
+      const response = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/categories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -810,7 +810,7 @@ export default function Settings() {
         afterTaxPrice: productForm.afterTaxPrice || null,
       };
 
-      const response = await apiRequest("POST", "/api/products", productData);
+      const response = await apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products", productData);
       queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products"] });
       toast({
         title: t("common.success"),
@@ -959,7 +959,7 @@ export default function Settings() {
     mutationFn: async (data: any) => {
       const response = await apiRequest(
         "POST",
-        "/api/einvoice-connections",
+        "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice-connections",
         data,
       );
       return response.json();
@@ -1210,7 +1210,7 @@ export default function Settings() {
   // Invoice template mutations
   const createTemplateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/api/invoice-templates", data);
+      const response = await apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates", data);
       return response.json();
     },
     onSuccess: () => {

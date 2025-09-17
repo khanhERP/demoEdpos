@@ -46,7 +46,7 @@ export function CustomerFormModal({ isOpen, onClose, customer }: CustomerFormMod
   // Generate customer ID for new customers
   const generateCustomerId = async () => {
     try {
-      const response = await apiRequest("GET", "/api/customers/next-id");
+      const response = await apiRequest("GET", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/next-id");
       const data = await response.json();
       return data.nextId;
     } catch (error) {
@@ -105,7 +105,7 @@ export function CustomerFormModal({ isOpen, onClose, customer }: CustomerFormMod
 
   const createMutation = useMutation({
     mutationFn: async (data: CustomerFormData) => {
-      const response = await apiRequest("POST", "/api/customers", data);
+      const response = await apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers", data);
       return response.json();
     },
     onSuccess: () => {

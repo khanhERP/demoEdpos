@@ -138,7 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Categories
   app.get(
-    "/api/categories",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/categories",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -167,7 +167,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/categories", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/categories", async (req: TenantRequest, res) => {
     try {
       const { name, icon } = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -193,7 +193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/categories/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/categories/:id", async (req: TenantRequest, res) => {
     try {
       const categoryId = parseInt(req.params.id);
       const { name, icon } = req.body;
@@ -224,7 +224,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/categories/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/categories/:id", async (req: TenantRequest, res) => {
     try {
       const categoryId = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -266,7 +266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Products
   app.get(
-    "/api/products",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -296,7 +296,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Endpoint for POS to get only active products
-  app.get("/api/products/active", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/active", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const products = await storage.getActiveProducts(tenantDb);
@@ -309,7 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get single product by ID
-  app.get("/api/products/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/:id", async (req: TenantRequest, res) => {
     try {
       const productId = parseInt(req.params.id);
       if (isNaN(productId)) {
@@ -364,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/products", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products", async (req: TenantRequest, res) => {
     try {
       console.log("Product creation request body:", req.body);
       const tenantDb = await getTenantDatabase(req);
@@ -436,7 +436,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/products/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       console.log("Product update request:", id, req.body);
@@ -492,7 +492,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/products/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -527,7 +527,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // New endpoint to cleanup inactive products
   app.delete(
-    "/api/products/cleanup/inactive",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/cleanup/inactive",
     async (req: TenantRequest, res) => {
       try {
         const tenantDb = await getTenantDatabase(req);
@@ -544,7 +544,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.get("/api/products/barcode/:sku", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/barcode/:sku", async (req: TenantRequest, res) => {
     try {
       const sku = req.params.sku;
       const tenantDb = await getTenantDatabase(req);
@@ -565,7 +565,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Transactions - Now creates orders instead for unified data storage
-  app.post("/api/transactions", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/transactions", async (req: TenantRequest, res) => {
     try {
       const { transaction, items } = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -743,7 +743,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/transactions", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/transactions", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const transactions = await storage.getTransactions(tenantDb);
@@ -757,7 +757,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get transactions by date range
   app.get(
-    "/api/transactions/:startDate/:endDate",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/transactions/:startDate/:endDate",
     async (req: TenantRequest, res) => {
       try {
         const { startDate, endDate } = req.params;
@@ -790,7 +790,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // API lấy danh sách đơn hàng với filter và pagination
-  app.get("/api/orders/list", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/list", async (req: TenantRequest, res) => {
     try {
       const {
         startDate,
@@ -935,7 +935,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get orders by date range
   app.get(
-    "/api/orders/date-range/:startDate/:endDate",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/date-range/:startDate/:endDate",
     async (req: TenantRequest, res) => {
       try {
         const { startDate, endDate } = req.params;
@@ -1010,7 +1010,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get invoices by date range
   app.get(
-    "/api/invoices/date-range/:startDate/:endDate",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices/date-range/:startDate/:endDate",
     async (req: TenantRequest, res) => {
       try {
         const { startDate, endDate } = req.params;
@@ -1072,7 +1072,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   app.get(
-    "/api/transactions/:transactionId",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/transactions/:transactionId",
     async (req: TenantRequest, res) => {
       try {
         const transactionId = req.params.transactionId;
@@ -1098,7 +1098,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Get next employee ID
-  app.get("/api/employees/next-id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees/next-id", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const nextId = await storage.getNextEmployeeId(tenantDb);
@@ -1113,7 +1113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POS QR Payment API Routes - Proxy for external CreateQRPos API
-  app.post("/api/pos/create-qr-proxy", async (req, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/pos/create-qr-proxy", async (req, res) => {
     try {
       const { bankCode, clientID, ...qrRequest } = req.body;
 
@@ -1222,7 +1222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Fallback route for CreateQRPos API
-  app.post("/api/pos/create-qr", async (req, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/pos/create-qr", async (req, res) => {
     try {
       const { bankCode, clientID } = req.query;
       const qrRequest = req.body;
@@ -1308,7 +1308,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Employees
   app.get(
-    "/api/employees",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -1337,7 +1337,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.get("/api/employees/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1357,7 +1357,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/employees", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees", async (req: TenantRequest, res) => {
     try {
       const validatedData = insertEmployeeSchema.parse(req.body);
       const tenantDb = await getTenantDatabase(req);
@@ -1393,7 +1393,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/employees/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertEmployeeSchema.partial().parse(req.body);
@@ -1440,7 +1440,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/employees/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1463,7 +1463,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Attendance routes
-  app.get("/api/attendance", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance", async (req: TenantRequest, res) => {
     try {
       const { date, startDate, endDate, employeeId } = req.query;
       const tenantDb = await getTenantDatabase(req);
@@ -1528,7 +1528,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get(
-    "/api/attendance/today/:employeeId",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance/today/:employeeId",
     async (req: TenantRequest, res) => {
       try {
         const employeeId = parseInt(req.params.employeeId);
@@ -1543,7 +1543,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/attendance/clock-in", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance/clock-in", async (req: TenantRequest, res) => {
     try {
       const { employeeId, notes } = req.body;
 
@@ -1585,7 +1585,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/attendance/clock-out/:id", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance/clock-out/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1606,7 +1606,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post(
-    "/api/attendance/break-start/:id",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance/break-start/:id",
     async (req: TenantRequest, res) => {
       try {
         const id = parseInt(req.params.id);
@@ -1628,7 +1628,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/attendance/break-end/:id", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance/break-end/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1648,7 +1648,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/attendance/:id/status", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/attendance/:id/status", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const { status } = req.body;
@@ -1670,7 +1670,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Tables
-  app.get("/api/tables", tenantMiddleware, async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables", tenantMiddleware, async (req: TenantRequest, res) => {
     try {
       console.log("🔍 GET /api/tables - Starting request processing");
       let tenantDb;
@@ -1693,7 +1693,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/tables/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1713,7 +1713,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/tables", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables", async (req: TenantRequest, res) => {
     try {
       const tableData = insertTableSchema.parse(req.body);
       const tenantDb = await getTenantDatabase(req);
@@ -1726,7 +1726,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/tables/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tableData = insertTableSchema.partial().parse(req.body);
@@ -1747,7 +1747,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/tables/:id/status", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables/:id/status", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const { status } = req.body;
@@ -1768,7 +1768,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/tables/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1791,7 +1791,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Orders
-  app.get("/api/orders", tenantMiddleware, async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", tenantMiddleware, async (req: TenantRequest, res) => {
     try {
       console.log("🔍 GET /api/orders - Starting request processing");
       const { salesChannel } = req.query;
@@ -1824,7 +1824,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/orders/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -1845,7 +1845,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/orders", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", async (req: TenantRequest, res) => {
     try {
       const { order, items } = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -1986,7 +1986,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/orders/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/:id", async (req: TenantRequest, res) => {
     try {
       const { id: rawId } = req.params;
       const orderData = req.body; // Use raw body to preserve all fields
@@ -2249,7 +2249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/orders/:id/status", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/:id/status", async (req: TenantRequest, res) => {
     try {
       const { id } = req.params;
       const { status } = req.body;
@@ -2429,7 +2429,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/orders/:id/payment", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/:id/payment", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const { paymentMethod, amountReceived, change } = req.body;
@@ -2478,7 +2478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get ALL order items
-  app.get("/api/order-items", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items", async (req: TenantRequest, res) => {
     try {
       console.log("=== GET ALL ORDER ITEMS API CALLED ===");
 
@@ -2535,7 +2535,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enhanced POS print-receipt endpoint with printer configuration support
-  app.post("/api/pos/print-receipt", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/pos/print-receipt", async (req: TenantRequest, res) => {
     try {
       const {
         content,
@@ -2773,7 +2773,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
 
   // API in qua máy in mạng (legacy endpoint, kept for compatibility)
-  app.post("/api/print/network", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/print/network", async (req: TenantRequest, res) => {
     try {
       const { printerIP, printerPort = 9100, data, orderId } = req.body;
 
@@ -2851,7 +2851,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Printer Configurations API
-  app.get("/api/printer-configs", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const configs = await db
@@ -2868,7 +2868,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/printer-configs", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const configData = req.body;
@@ -2909,7 +2909,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/printer-configs/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -2965,7 +2965,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/printer-configs/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -2993,7 +2993,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/printer-configs/:id/test", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id/test", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -3075,7 +3075,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // API kiểm tra trạng thái máy in (legacy endpoint)
-  app.get("/api/print/status/:ip/:port?", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/print/status/:ip/:port?", async (req: TenantRequest, res) => {
     try {
       const { ip, port = 9100 } = req.params;
       const net = require("net");
@@ -3116,7 +3116,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get order items for a specific order
-  app.get("/api/order-items/:orderId", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items/:orderId", async (req: TenantRequest, res) => {
     try {
       console.log("=== GET ORDER ITEMS API CALLED ===");
       const orderId = parseInt(req.params.orderId);
@@ -3164,7 +3164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update a specific order item
-  app.put("/api/order-items/:itemId", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items/:itemId", async (req: TenantRequest, res) => {
     try {
       console.log("=== UPDATE ORDER ITEM API CALLED ===");
       const itemId = parseInt(req.params.itemId);
@@ -3251,7 +3251,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Delete a specific order item
-  app.delete("/api/order-items/:itemId", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/order-items/:itemId", async (req: TenantRequest, res) => {
     try {
       console.log("=== DELETE ORDER ITEM API CALLED ===");
       const itemId = parseInt(req.params.itemId);
@@ -3295,7 +3295,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get POS orders specifically
   app.get(
-    "/api/orders/pos",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/pos",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -3321,7 +3321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get table orders specifically
   app.get(
-    "/api/orders/table",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/table",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -3348,7 +3348,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Add order items to existing order
-  app.post("/api/orders/:orderId/items", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/:orderId/items", async (req: TenantRequest, res) => {
     try {
       const orderId = parseInt(req.params.orderId);
       const { items } = req.body;
@@ -3567,7 +3567,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Inventory Management
-  app.post("/api/inventory/update-stock", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/inventory/update-stock", async (req: TenantRequest, res) => {
     try {
       const { productId, quantity, type, notes, trackInventory } = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -3629,7 +3629,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Store Settings
-  app.get("/api/store-settings", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/store-settings", async (req: TenantRequest, res) => {
     try {
       const settings = await storage.getStoreSettings();
       res.json(settings);
@@ -3642,7 +3642,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Current cart state for customer display
-  app.get("/api/current-cart", async (req, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/current-cart", async (req, res) => {
     try {
       console.log("📱 Customer Display: Current cart API called");
 
@@ -3676,7 +3676,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/store-settings", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/store-settings", async (req: TenantRequest, res) => {
     try {
       const validatedData = insertStoreSettingsSchema.partial().parse(req.body);
       const tenantDb = await getTenantDatabase(req);
@@ -3700,7 +3700,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Suppliers
   app.get(
-    "/api/suppliers",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/suppliers",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -3741,7 +3741,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.get("/api/suppliers/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/suppliers/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -3761,7 +3761,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/suppliers", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/suppliers", async (req: TenantRequest, res) => {
     try {
       const validatedData = insertSupplierSchema.parse(req.body);
       const tenantDb = await getTenantDatabase(req);
@@ -3780,7 +3780,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/suppliers/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/suppliers/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertSupplierSchema.partial().parse(req.body);
@@ -3811,7 +3811,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/suppliers/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/suppliers/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -3834,7 +3834,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get next customer ID
-  app.get("/api/customers/next-id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/next-id", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const nextId = await storage.getNextCustomerId(tenantDb);
@@ -3850,7 +3850,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Customer management routes - Added Here
   app.get(
-    "/api/customers",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -3879,7 +3879,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.get("/api/customers/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -3898,7 +3898,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Create customer
-  app.post("/api/customers", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
 
@@ -3946,7 +3946,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/customers/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const customerData = req.body;
@@ -3971,7 +3971,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/customers/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -3991,7 +3991,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/customers/:id/visit", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id/visit", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const { amount, points } = req.body;
@@ -4019,7 +4019,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Point Management API
-  app.get("/api/customers/:id/points", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id/points", async (req: TenantRequest, res) => {
     try {
       const customerId = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -4039,7 +4039,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/customers/:id/points", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id/points", async (req: TenantRequest, res) => {
     try {
       const customerId = parseInt(req.params.id);
       const pointUpdateSchema = z.object({
@@ -4092,7 +4092,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get(
-    "/api/customers/:id/point-history",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:id/point-history",
     async (req: TenantRequest, res) => {
       try {
         const customerId = parseInt(req.params.id);
@@ -4114,7 +4114,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // New endpoints for points management modal
-  app.post("/api/customers/adjust-points", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/adjust-points", async (req: TenantRequest, res) => {
     try {
       const pointUpdateSchema = z.object({
         customerId: z.number().int().min(1),
@@ -4165,7 +4165,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/customers/redeem-points", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/redeem-points", async (req: TenantRequest, res) => {
     try {
       const redeemSchema = z.object({
         customerId: z.number().int().min(1),
@@ -4212,7 +4212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/point-transactions", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/point-transactions", async (req: TenantRequest, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 100;
       const tenantDb = await getTenantDatabase(req);
@@ -4231,7 +4231,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Membership thresholds management
-  app.get("/api/membership-thresholds", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/membership-thresholds", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const thresholds = await storage.getMembershipThresholds(tenantDb);
@@ -4243,7 +4243,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/membership-thresholds", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/membership-thresholds", async (req: TenantRequest, res) => {
     try {
       const thresholdSchema = z.object({
         GOLD: z.number().min(0),
@@ -4272,7 +4272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Supplier Reports APIs
-  app.get("/api/supplier-debts", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/supplier-debts", async (req: TenantRequest, res) => {
     try {
       const { startDate, endDate, supplierId } = req.query;
       const tenantDb = await getTenantDatabase(req);
@@ -4317,7 +4317,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/supplier-purchases", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/supplier-purchases", async (req: TenantRequest, res) => {
     try {
       const { startDate, endDate, supplierId } = req.query;
       const tenantDb = await getTenantDatabase(req);
@@ -4362,7 +4362,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Invoice templates management
   app.get(
-    "/api/invoice-templates",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -4397,7 +4397,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.get("/api/invoice-templates/active", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates/active", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const activeTemplates = await storage.getActiveInvoiceTemplates();
@@ -4410,7 +4410,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/invoice-templates", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates", async (req: TenantRequest, res) => {
     try {
       const templateData = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -4427,7 +4427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/invoice-templates/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const templateData = req.body;
@@ -4453,7 +4453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/invoice-templates/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoice-templates/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -4478,7 +4478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Invoices management
   app.get(
-    "/api/invoices",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -4507,7 +4507,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/invoices", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices", async (req: TenantRequest, res) => {
     try {
       console.log("🔍 POST /api/invoices - Creating new invoice");
       const tenantDb = await getTenantDatabase(req);
@@ -4565,7 +4565,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/invoices/:id", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -4593,7 +4593,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/invoices/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -4622,7 +4622,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/invoices/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -4654,7 +4654,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // E-invoice connections management
   app.get(
-    "/api/einvoice-connections",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice-connections",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -4689,7 +4689,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/einvoice-connections", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice-connections", async (req: TenantRequest, res) => {
     try {
       const connectionData = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -4706,7 +4706,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/einvoice-connections/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice-connections/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const connectionData = req.body;
@@ -4733,7 +4733,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.delete(
-    "/api/einvoice-connections/:id",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice-connections/:id",
     async (req: TenantRequest, res) => {
       try {
         const id = parseInt(req.params.id);
@@ -4759,7 +4759,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Menu Analysis API
-  app.get("/api/menu-analysis", async (req, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/menu-analysis", async (req, res) => {
     try {
       const { startDate, endDate, categoryId, productType, productSearch } =
         req.query;
@@ -4997,7 +4997,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Printer configuration management APIs
   app.get(
-    "/api/printer-configs",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -5032,7 +5032,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/printer-configs", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const configData = req.body;
@@ -5049,7 +5049,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/printer-configs/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -5078,7 +5078,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/printer-configs/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -5104,7 +5104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/printer-configs/:id/test", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id/test", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -5192,7 +5192,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Customer Reports APIs
-  app.get("/api/customer-debts", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customer-debts", async (req: TenantRequest, res) => {
     try {
       const { startDate, endDate, customerId } = req.query;
       const tenantDb = await getTenantDatabase(req);
@@ -5228,7 +5228,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/customer-sales", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customer-sales", async (req: TenantRequest, res) => {
     try {
       const { startDate, endDate, customerId } = req.query;
       const tenantDb = await getTenantDatabase(req);
@@ -5264,7 +5264,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Bulk create products
-  app.post("/api/products/bulk", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/bulk", async (req: TenantRequest, res) => {
     try {
       const { products: productList } = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -5364,7 +5364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Employee routes
   app.get(
-    "/api/employees",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -5394,7 +5394,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Employee sales report data
-  app.get("/api/employee-sales", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employee-sales", async (req: TenantRequest, res) => {
     try {
       const { startDate, endDate, employeeId } = req.query;
       const tenantDb = await getTenantDatabase(req);
@@ -5433,7 +5433,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Server time endpoint for consistent timestamps
-  app.get("/api/server-time", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/server-time", async (req: TenantRequest, res) => {
     try {
       const serverTime = {
         timestamp: new Date().toISOString(),
@@ -5457,7 +5457,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Product Analysis API - using orders and order_items data
-  app.get("/api/product-analysis", async (req: TenantRequest, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/product-analysis", async (req: TenantRequest, res) => {
     try {
       const { startDate, endDate, categoryId, productType, productSearch } =
         req.query;
@@ -5640,7 +5640,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // // Enhanced API endpoints for sales chart report - using same data source as dashboard
   app.get(
-    "/api/dashboard-data/:startDate/:endDate",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/dashboard-data/:startDate/:endDate",
     async (req: TenantRequest, res) => {
       try {
         const { startDate, endDate } = req.params;
@@ -5802,7 +5802,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Transactions API with enhanced filtering
   app.get(
-    "/api/transactions/:startDate/:endDate/:salesMethod/:salesChannel/:analysisType/:concernType/:selectedEmployee",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/transactions/:startDate/:endDate/:salesMethod/:salesChannel/:analysisType/:concernType/:selectedEmployee",
     async (req: TenantRequest, res) => {
       try {
         const {
@@ -5911,7 +5911,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   app.get(
-    "/api/orders/:startDate/:endDate/:selectedEmployee/:salesChannel/:salesMethod/:analysisType/:concernType",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders/:startDate/:endDate/:selectedEmployee/:salesChannel/:salesMethod/:analysisType/:concernType",
     async (req: TenantRequest, res) => {
       try {
         const {
@@ -6027,7 +6027,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   app.get(
-    "/api/products/:selectedCategory/:productType/:productSearch?",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/:selectedCategory/:productType/:productSearch?",
     async (req: TenantRequest, res) => {
       try {
         const { selectedCategory, productType, productSearch } = req.params;
@@ -6112,7 +6112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   app.get(
-    "/api/customers/:customerSearch?/:customerStatus?",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/customers/:customerSearch?/:customerStatus?",
     async (req: TenantRequest, res) => {
       try {
         const { customerSearch, customerStatus } = req.params;
@@ -6191,7 +6191,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   );
 
   // Tax code lookup proxy endpoint
-  app.post("/api/tax-code-lookup", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tax-code-lookup", async (req: TenantRequest, res) => {
     try {
       const { taxCode } = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -6240,7 +6240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // E-invoice publish proxy endpoint
-  app.post("/api/einvoice/publish", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice/publish", async (req: TenantRequest, res) => {
     try {
       const publishRequest = req.body;
       const tenantDb = await getTenantDatabase(req);
@@ -6329,7 +6329,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Printer configuration management APIs
   app.get(
-    "/api/printer-configs",
+    "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs",
     tenantMiddleware,
     async (req: TenantRequest, res) => {
       try {
@@ -6345,7 +6345,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     },
   );
 
-  app.post("/api/printer-configs", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs", async (req: TenantRequest, res) => {
     try {
       const tenantDb = await getTenantDatabase(req);
       const configData = req.body;
@@ -6365,7 +6365,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/printer-configs/:id", async (req: TenantRequest, res) => {
+  app.put("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -6389,7 +6389,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/printer-configs/:id", async (req: TenantRequest, res) => {
+  app.delete("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -6409,7 +6409,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Test printer connection
-  app.post("/api/printer-configs/:id/test", async (req: TenantRequest, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/printer-configs/:id/test", async (req: TenantRequest, res) => {
     try {
       const id = parseInt(req.params.id);
       const tenantDb = await getTenantDatabase(req);
@@ -6501,7 +6501,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POS Print Receipt API with real printer integration
-  app.post("/api/pos/print-receipt", async (req, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/pos/print-receipt", async (req, res) => {
     try {
       const { content, type, timestamp, orderId, transactionId, printerId } =
         req.body;
@@ -6734,7 +6734,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }
 
   // Test customer display connection
-  app.post("/api/test-customer-display", async (req, res) => {
+  app.post("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/test-customer-display", async (req, res) => {
     try {
       const { testCart } = req.body;
 
@@ -6796,7 +6796,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Database health check
-  app.get("/api/health/db", async (req, res) => {
+  app.get("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/health/db", async (req, res) => {
     try {
       // Test basic connection with simple query
       const result = await db.execute(sql`

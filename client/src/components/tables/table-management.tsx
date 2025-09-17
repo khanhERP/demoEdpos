@@ -111,7 +111,7 @@ export function TableManagement() {
 
   const createTableMutation = useMutation({
     mutationFn: (data: TableFormData) =>
-      apiRequest("POST", "/api/tables", data),
+      apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tables"] });
       toast({

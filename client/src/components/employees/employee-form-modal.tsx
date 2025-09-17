@@ -67,7 +67,7 @@ export function EmployeeFormModal({
   // Generate employee ID for new employees
   const generateEmployeeId = async () => {
     try {
-      const response = await apiRequest("GET", "/api/employees/next-id");
+      const response = await apiRequest("GET", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees/next-id");
       const data = await response.json();
       return data.nextId;
     } catch (error) {
@@ -119,7 +119,7 @@ export function EmployeeFormModal({
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertEmployee) => {
-      const response = await apiRequest("POST", "/api/employees", data);
+      const response = await apiRequest("POST", "https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/employees", data);
       if (!response.ok) {
         const errorData = await response.json();
         throw errorData;

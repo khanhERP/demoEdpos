@@ -341,7 +341,7 @@ export function EInvoiceModal({
     setIsTaxCodeLoading(true);
     try {
       // Use a proxy endpoint through our server to avoid CORS issues
-      const response = await fetch("/api/tax-code-lookup", {
+      const response = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/tax-code-lookup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -566,7 +566,7 @@ export function EInvoiceModal({
       );
 
       // Lưu hóa đơn vào bảng invoices và invoice_items
-      const invoiceResponse = await fetch("/api/invoices", {
+      const invoiceResponse = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -986,7 +986,7 @@ export function EInvoiceModal({
       );
 
       // Call the proxy API
-      const response = await fetch("/api/einvoice/publish", {
+      const response = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/einvoice/publish", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1124,7 +1124,7 @@ export function EInvoiceModal({
             invoicePayload,
           );
 
-          const invoiceResponse = await fetch("/api/invoices", {
+          const invoiceResponse = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/invoices", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -1178,7 +1178,7 @@ export function EInvoiceModal({
 
           console.log("💾 Saving published order to database:", orderData);
 
-          const saveResponse = await fetch("/api/orders", {
+          const saveResponse = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/orders", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -1323,7 +1323,7 @@ export function EInvoiceModal({
         };
 
         try {
-          const transactionResponse = await fetch("/api/transactions", {
+          const transactionResponse = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/transactions", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

@@ -45,7 +45,7 @@ export function BulkImportModal({ isOpen, onClose }: BulkImportModalProps) {
 
   const bulkCreateMutation = useMutation({
     mutationFn: async (products: ProductRow[]) => {
-      const response = await fetch("/api/products/bulk", {
+      const response = await fetch("https://64071157-147f-4160-96cd-6dc099d777d2-00-1d0mzv8b48h7n.pike.replit.dev/api/products/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ products }),
