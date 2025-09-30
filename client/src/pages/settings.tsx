@@ -69,6 +69,10 @@ import {
   ShoppingCart,
   Printer,
   Receipt,
+  Upload,
+  Link,
+  FileImage,
+  X,
 } from "lucide-react";
 import { CustomerFormModal } from "@/components/customers/customer-form-modal";
 import { CustomerPointsModal } from "@/components/customers/customer-points-modal";
@@ -90,8 +94,12 @@ const EINVOICE_PROVIDERS = [
   { name: "WinInvoice", value: "9" },
 ];
 
-export default function Settings() {
-  const { t } = useTranslation();
+interface SettingsPageProps {
+  onLogout: () => void;
+}
+
+export default function SettingsPage({ onLogout }: SettingsPageProps) {
+  const { t, currentLanguage } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("store");
@@ -128,8 +136,8 @@ export default function Settings() {
     password: "",
     softwareName: "",
     loginUrl: "",
-    signMethod: "Ký server",
-    cqtCode: "Cấp nhật",
+    signMethod: "server",
+    cqtCode: "level1",
     notes: "",
     isActive: true,
   });
@@ -176,22 +184,21 @@ export default function Settings() {
           errorData.message.includes("attendance records")
         ) {
           toast({
-            title: "Không thể xóa nhân viên",
-            description:
-              "Nhân viên này đã có dữ liệu chấm công trong hệ thống. Không thể xóa để đảm bảo tính toàn vẹn dữ liệu.",
+            title: t("settings.cannotDeleteEmployee"),
+            description: t("settings.cannotDeleteEmployeeAttendance"),
             variant: "destructive",
           });
         } else if (errorData.message && errorData.message.includes("orders")) {
           toast({
-            title: "Không thể xóa nhân viên",
-            description:
-              "Nhân viên này đã có đơn hàng trong hệ thống. Không thể xóa để đảm bảo tính toàn vẹn dữ liệu.",
+            title: t("settings.cannotDeleteEmployee"),
+            description: t("settings.cannotDeleteEmployeeOrders"),
             variant: "destructive",
           });
         } else {
           toast({
-            title: "Lỗi",
-            description: errorData.message || "Có lỗi xảy ra khi xóa nhân viên",
+            title: t("common.error"),
+            description:
+              errorData.message || t("settings.employeeDeleteErrorDesc"),
             variant: "destructive",
           });
         }
@@ -206,8 +213,8 @@ export default function Settings() {
       });
 
       toast({
-        title: "Thành công",
-        description: "Nhân viên đã được xóa thành công",
+        title: t("settings.employeeDeleteSuccessTitle"),
+        description: t("settings.employeeDeleteSuccessDesc"),
       });
 
       setShowEmployeeDeleteDialog(false);
@@ -215,8 +222,8 @@ export default function Settings() {
     } catch (error) {
       console.error("Employee delete error:", error);
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi xóa nhân viên",
+        title: t("settings.genericErrorTitle"),
+        description: t("settings.employeeDeleteErrorDesc"),
         variant: "destructive",
       });
     }
@@ -232,13 +239,13 @@ export default function Settings() {
     name: "",
     sku: "",
     price: "",
-    stock: "0",
+    stock: 0,
     categoryId: "",
-    description: "",
-    isActive: "true",
-    trackInventory: true,
-    taxRate: "",
-    afterTaxPrice: "",
+    imageUrl: "",
+    floor: "1층",
+    zone: "전체구역",
+    imageInputMethod: "url" as "url" | "file",
+    selectedImageFile: null as File | null,
   });
 
   // Fetch store settings
@@ -306,6 +313,11 @@ export default function Settings() {
     pinCode: "",
     openTime: "09:00",
     closeTime: "22:00",
+    priceIncludesTax: false,
+    defaultFloor: "1", // Added for floor management
+    floorPrefix: "층", // Added for floor management
+    zonePrefix: "구역", // Added for zone management
+    defaultZone: "A", // Added for zone management
   });
 
   // Update local state when data is loaded
@@ -322,6 +334,11 @@ export default function Settings() {
         pinCode: storeData.pinCode || "",
         openTime: storeData.openTime || "09:00",
         closeTime: storeData.closeTime || "22:00",
+        priceIncludesTax: storeData.priceIncludesTax || false,
+        defaultFloor: storeData.defaultFloor || "1",
+        floorPrefix: storeData.floorPrefix || "층",
+        zonePrefix: storeData.zonePrefix || "구역",
+        defaultZone: storeData.defaultZone || "A",
       });
     }
   }, [storeData]);
@@ -365,7 +382,6 @@ export default function Settings() {
   const [paymentMethods, setPaymentMethods] = useState([
     {
       id: 1,
-      name: "Tiền mặt",
       nameKey: "cash",
       type: "cash",
       enabled: true,
@@ -373,7 +389,6 @@ export default function Settings() {
     },
     {
       id: 2,
-      name: "Thẻ tín dụng",
       nameKey: "creditCard",
       type: "card",
       enabled: false,
@@ -381,7 +396,6 @@ export default function Settings() {
     },
     {
       id: 3,
-      name: "Thẻ ghi nợ",
       nameKey: "debitCard",
       type: "debit",
       enabled: false,
@@ -389,7 +403,6 @@ export default function Settings() {
     },
     {
       id: 4,
-      name: "MoMo",
       nameKey: "momo",
       type: "digital",
       enabled: false,
@@ -397,7 +410,6 @@ export default function Settings() {
     },
     {
       id: 5,
-      name: "ZaloPay",
       nameKey: "zalopay",
       type: "digital",
       enabled: false,
@@ -405,7 +417,6 @@ export default function Settings() {
     },
     {
       id: 6,
-      name: "VNPay",
       nameKey: "vnpay",
       type: "digital",
       enabled: false,
@@ -413,7 +424,6 @@ export default function Settings() {
     },
     {
       id: 7,
-      name: "QR Code",
       nameKey: "qrCode",
       type: "qr",
       enabled: true,
@@ -421,7 +431,6 @@ export default function Settings() {
     },
     {
       id: 8,
-      name: "ShopeePay",
       nameKey: "shopeepay",
       type: "digital",
       enabled: false,
@@ -429,7 +438,6 @@ export default function Settings() {
     },
     {
       id: 9,
-      name: "GrabPay",
       nameKey: "grabpay",
       type: "digital",
       enabled: false,
@@ -441,11 +449,10 @@ export default function Settings() {
   const [editingPaymentMethod, setEditingPaymentMethod] = useState<any>(null);
   const [showPaymentMethodForm, setShowPaymentMethodForm] = useState(false);
   const [paymentMethodForm, setPaymentMethodForm] = useState({
-    name: "",
     icon: "",
   });
 
-  const handleStoreSettingChange = (field: string, value: string) => {
+  const handleStoreSettingChange = (field: string, value: string | boolean) => {
     setStoreSettings((prev) => ({
       ...prev,
       [field]: value,
@@ -470,8 +477,7 @@ export default function Settings() {
   const addPaymentMethod = () => {
     const newMethod = {
       id: paymentMethods.length + 1,
-      name: t("common.comboValues.newPaymentMethod"),
-      nameKey: "newPaymentMethod",
+      nameKey: "newPayment",
       type: "custom",
       enabled: false,
       icon: "💳",
@@ -492,7 +498,6 @@ export default function Settings() {
   // Payment method management functions
   const handleEditPaymentMethod = (method: any) => {
     setPaymentMethodForm({
-      name: method.name,
       icon: method.icon,
     });
     setEditingPaymentMethod(method);
@@ -500,13 +505,12 @@ export default function Settings() {
   };
 
   const handleUpdatePaymentMethod = () => {
-    if (!paymentMethodForm.name.trim() || !editingPaymentMethod) return;
+    if (!editingPaymentMethod) return;
 
     const updatedMethods = paymentMethods.map((method) =>
       method.id === editingPaymentMethod.id
         ? {
             ...method,
-            name: paymentMethodForm.name.trim(),
             icon: paymentMethodForm.icon,
           }
         : method,
@@ -517,11 +521,11 @@ export default function Settings() {
 
     setShowPaymentMethodForm(false);
     setEditingPaymentMethod(null);
-    setPaymentMethodForm({ name: "", icon: "" });
+    setPaymentMethodForm({ icon: "" });
 
     toast({
-      title: "Thành công",
-      description: "Phương thức thanh toán đã được cập nhật thành công",
+      title: t("settings.paymentUpdateSuccessTitle"),
+      description: t("settings.paymentUpdateSuccessDesc"),
     });
   };
 
@@ -556,8 +560,8 @@ export default function Settings() {
       await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/customers"] });
 
       toast({
-        title: "Thành công",
-        description: "Khách hàng đã được xóa thành công",
+        title: t("common.success"),
+        description: t("settings.customerDeleteSuccess"),
       });
 
       setShowCustomerDeleteDialog(false);
@@ -565,8 +569,8 @@ export default function Settings() {
     } catch (error) {
       console.error("Customer delete error:", error);
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi xóa khách hàng",
+        title: t("common.error"),
+        description: t("settings.customerDeleteError"),
         variant: "destructive",
       });
     }
@@ -607,22 +611,21 @@ export default function Settings() {
       name: "",
       sku: "",
       price: "",
-      stock: "0",
+      stock: 0,
       categoryId: "",
-      description: "",
-      isActive: "true",
-      trackInventory: true,
-      taxRate: "",
-      afterTaxPrice: "",
+      imageUrl: "",
+      floor: "1층",
+      zone: "전체구역",
+      imageInputMethod: "url",
+      selectedImageFile: null,
     });
-    setEditingProduct(null);
   };
 
   const handleCreateCategory = async () => {
     if (!categoryForm.name.trim()) {
       toast({
         title: t("common.error"),
-        description: "Vui lòng nhập tên danh mục",
+        description: t("settings.categoryNameRequired"),
         variant: "destructive",
       });
       return;
@@ -649,7 +652,7 @@ export default function Settings() {
 
       toast({
         title: t("common.success"),
-        description: "Danh mục đã được tạo thành công",
+        description: t("settings.categoryCreateSuccess"),
       });
       setShowCategoryForm(false);
       resetCategoryForm();
@@ -657,7 +660,7 @@ export default function Settings() {
       console.error("Category creation error:", error);
       toast({
         title: t("common.error"),
-        description: "Có lỗi xảy ra khi tạo danh mục",
+        description: t("settings.categoryCreateError"),
         variant: "destructive",
       });
     }
@@ -667,7 +670,7 @@ export default function Settings() {
     if (!categoryForm.name.trim()) {
       toast({
         title: t("common.error"),
-        description: "Vui lòng nhập tên danh mục",
+        description: t("settings.categoryNameRequired"),
         variant: "destructive",
       });
       return;
@@ -676,7 +679,7 @@ export default function Settings() {
     if (!editingCategory) {
       toast({
         title: t("common.error"),
-        description: "Không tìm thấy danh mục cần cập nhật",
+        description: t("settings.categoryNotFound"),
         variant: "destructive",
       });
       return;
@@ -707,13 +710,13 @@ export default function Settings() {
 
       toast({
         title: t("common.success"),
-        description: "Danh mục đã được cập nhật thành công",
+        description: t("settings.categoryUpdateSuccess"),
       });
     } catch (error) {
       console.error("Category update error:", error);
       toast({
         title: t("common.error"),
-        description: "Có lỗi xảy ra khi cập nhật danh mục",
+        description: t("settings.categoryUpdateError"),
         variant: "destructive",
       });
     }
@@ -728,7 +731,9 @@ export default function Settings() {
     if (categoryProducts && categoryProducts.length > 0) {
       toast({
         title: t("common.error"),
-        description: `Không thể xóa danh mục này vì còn ${categoryProducts.length} sản phẩm. Vui lòng xóa hoặc chuyển các sản phẩm sang danh mục khác trước.`,
+        description: t("settings.categoryDeleteWithProducts", {
+          count: categoryProducts.length,
+        }),
         variant: "destructive",
       });
       return;
@@ -761,7 +766,7 @@ export default function Settings() {
 
       toast({
         title: t("common.success"),
-        description: "Danh mục đã được xóa thành công",
+        description: t("settings.categoryDeleteSuccess"),
       });
 
       setShowDeleteDialog(false);
@@ -769,11 +774,10 @@ export default function Settings() {
     } catch (error) {
       console.error("Category delete error:", error);
 
-      let errorMessage = "Có lỗi xảy ra khi xóa danh mục";
+      let errorMessage = t("settings.categoryDeleteError");
       if (error instanceof Error) {
         if (error.message.includes("products")) {
-          errorMessage =
-            "Không thể xóa danh mục vì vẫn còn sản phẩm trong danh mục này. Vui lòng xóa hoặc chuyển các sản phẩm sang danh mục khác trước.";
+          errorMessage = t("settings.categoryDeleteErrorWithProducts");
         } else {
           errorMessage = error.message;
         }
@@ -787,84 +791,139 @@ export default function Settings() {
     }
   };
 
-  const handleCreateProduct = async () => {
-    if (
-      !productForm.name.trim() ||
-      !productForm.sku.trim() ||
-      !productForm.categoryId
-    )
-      return;
+  // Helper function to convert file to Base64
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
 
+  // Function to generate unique SKU
+  const generateProductSKU = () => {
+    const randomChars = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const sku = `ITEM-${randomChars.padEnd(6, '0')}`;
+    setProductForm(prev => ({ ...prev, sku }));
+  };
+
+  const handleCreateProduct = async () => {
     try {
-      const productData = {
+      let finalProductData = {
         ...productForm,
-        price: productForm.price,
-        stock: parseInt(productForm.stock) || 0,
         categoryId: parseInt(productForm.categoryId),
-        isActive: productForm.isActive === "true",
-        trackInventory: productForm.trackInventory,
-        taxRate: productForm.taxRate
-          ? parseFloat(productForm.taxRate).toString()
-          : "0",
-        afterTaxPrice: productForm.afterTaxPrice || null,
+        price: productForm.price.toString(),
+        stock: Number(productForm.stock),
+        floor: productForm.floor, // Add floor
+        zone: productForm.zone,   // Add zone
       };
 
-      const response = await apiRequest("POST", "https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", productData);
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
-      toast({
-        title: t("common.success"),
-        description: t("common.productCreateSuccess"),
+      // Handle file upload if file method is selected
+      if (productForm.imageInputMethod === "file" && productForm.selectedImageFile) {
+        try {
+          const base64Image = await convertFileToBase64(productForm.selectedImageFile);
+          finalProductData.imageUrl = base64Image;
+        } catch (error) {
+          console.error("파일 변환 오류:", error);
+          toast({
+            title: "오류",
+            description: "이미지 파일 처리 중 오류가 발생했습니다.",
+            variant: "destructive",
+          });
+          return;
+        }
+      } else if (productForm.imageInputMethod === "url") {
+        // Ensure imageUrl is set if URL method is selected
+        finalProductData.imageUrl = productForm.imageUrl;
+      }
+
+
+      const response = await fetch("https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalProductData),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
+        throw new Error(errorData.message || "Failed to create product");
+      }
+
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
       setShowProductForm(false);
       resetProductForm();
+      toast({
+        title: t("common.success"),
+        description: t("settings.productCreatedSuccess"),
+      });
     } catch (error) {
+      console.error("Product creation error:", error);
       toast({
         title: t("common.error"),
-        description: t("common.error"),
+        description: (error as Error).message || t("settings.productCreatedError"),
         variant: "destructive",
       });
     }
   };
 
   const handleUpdateProduct = async () => {
-    if (
-      !productForm.name.trim() ||
-      !productForm.sku.trim() ||
-      !productForm.categoryId ||
-      !editingProduct
-    )
-      return;
+    if (!editingProduct) return;
 
     try {
-      const productData = {
+      let finalProductData = {
         ...productForm,
-        price: productForm.price,
-        stock: parseInt(productForm.stock) || 0,
         categoryId: parseInt(productForm.categoryId),
-        isActive: productForm.isActive === "true",
-        trackInventory: productForm.trackInventory,
-        taxRate: productForm.taxRate
-          ? parseFloat(productForm.taxRate).toString()
-          : "0",
-        afterTaxPrice: productForm.afterTaxPrice || null,
+        price: productForm.price.toString(),
+        stock: Number(productForm.stock),
+        floor: productForm.floor, // Add floor
+        zone: productForm.zone,   // Add zone
       };
 
-      const response = await apiRequest(
-        "PUT",
-        `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${editingProduct.id}`,
-        productData,
-      );
-      queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      // Handle file upload if file method is selected
+      if (productForm.imageInputMethod === "file" && productForm.selectedImageFile) {
+        try {
+          const base64Image = await convertFileToBase64(productForm.selectedImageFile);
+          finalProductData.imageUrl = base64Image;
+        } catch (error) {
+          console.error("파일 변환 오류:", error);
+          toast({
+            title: "오류",
+            description: "이미지 파일 처리 중 오류가 발생했습니다.",
+            variant: "destructive",
+          });
+          return;
+        }
+      } else if (productForm.imageInputMethod === "url") {
+        // Ensure imageUrl is set if URL method is selected
+        finalProductData.imageUrl = productForm.imageUrl;
+      }
+
+
+      const response = await fetch(`https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products/${editingProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalProductData),
+      });
+
+      if (!response.ok) {
+         const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
+        throw new Error(errorData.message || "Failed to update product");
+      }
+
+      await queryClient.refetchQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+      setShowProductForm(false);
+      setEditingProduct(null);
+      resetProductForm();
       toast({
         title: t("common.success"),
-        description: t("common.productUpdateSuccess"),
+        description: t("settings.productUpdatedSuccess"),
       });
-      setShowProductForm(false);
-      resetProductForm();
     } catch (error) {
+      console.error("Product update error:", error);
       toast({
         title: t("common.error"),
-        description: t("common.error"),
+        description: (error as Error).message || t("settings.productUpdatedError"),
         variant: "destructive",
       });
     }
@@ -888,7 +947,7 @@ export default function Settings() {
 
       toast({
         title: t("common.success"),
-        description: "Sản phẩm đã được xóa thành công",
+        description: t("settings.productDeleteSuccess"),
       });
 
       setShowProductDeleteDialog(false);
@@ -896,8 +955,8 @@ export default function Settings() {
     } catch (error) {
       console.error("Product delete error:", error);
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi xóa sản phẩm",
+        title: t("settings.genericErrorTitle"),
+        description: t("settings.productDeleteError"),
         variant: "destructive",
       });
     }
@@ -913,22 +972,19 @@ export default function Settings() {
   };
 
   const handleEditProduct = (product: any) => {
+    setEditingProduct(product);
     setProductForm({
       name: product.name,
       sku: product.sku,
       price: product.price.toString(),
-      stock: product.stock.toString(),
+      stock: product.stock,
       categoryId: product.categoryId.toString(),
-      description: product.description || "",
-      isActive: product.isActive ? "true" : "false",
-      trackInventory:
-        product.trackInventory !== undefined ? product.trackInventory : true,
-      taxRate: product.taxRate ? parseFloat(product.taxRate).toString() : "",
-      afterTaxPrice: product.afterTaxPrice
-        ? product.afterTaxPrice.toString()
-        : "",
+      imageUrl: product.imageUrl || "",
+      floor: product.floor || "1층",
+      zone: product.zone || "A구역",
+      imageInputMethod: (product.imageUrl && product.imageUrl.trim() !== "") ? "url" : "url",
+      selectedImageFile: null,
     });
-    setEditingProduct(product);
     setShowProductForm(true);
   };
 
@@ -968,16 +1024,16 @@ export default function Settings() {
         queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
       });
       toast({
-        title: "Thành công",
-        description: "Kết nối HĐĐT đã được tạo thành công",
+        title: t("common.success"),
+        description: t("settings.einvoiceConnectionCreateSuccess"),
       });
       setShowEInvoiceForm(false);
       resetEInvoiceForm();
     },
     onError: () => {
       toast({
-        title: "Lỗi",
-        description: "Có l i xảy ra khi tạo kết nối HĐĐT",
+        title: t("common.error"),
+        description: t("settings.einvoiceConnectionCreateError"),
         variant: "destructive",
       });
     },
@@ -997,16 +1053,16 @@ export default function Settings() {
         queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
       });
       toast({
-        title: "Thành công",
-        description: "Kết nối HĐĐT đã được cập nhật thành công",
+        title: t("common.success"),
+        description: t("settings.einvoiceConnectionUpdateSuccess"),
       });
       setShowEInvoiceForm(false);
       resetEInvoiceForm();
     },
     onError: () => {
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi cập nhật kết nối HĐĐT",
+        title: t("common.error"),
+        description: t("settings.einvoiceConnectionUpdateError"),
         variant: "destructive",
       });
     },
@@ -1025,16 +1081,16 @@ export default function Settings() {
         queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/einvoice-connections"],
       });
       toast({
-        title: "Thành công",
-        description: "Kết nối HĐĐT đã được xóa thành công",
+        title: t("common.success"),
+        description: t("settings.einvoiceConnectionDeleteSuccess"),
       });
       setShowEInvoiceDeleteDialog(false);
       setEInvoiceToDelete(null);
     },
     onError: () => {
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi xóa kết nối HĐĐT",
+        title: t("common.error"),
+        description: t("settings.einvoiceConnectionDeleteError"),
         variant: "destructive",
       });
     },
@@ -1048,8 +1104,8 @@ export default function Settings() {
       password: "",
       softwareName: "",
       loginUrl: "",
-      signMethod: "Ký server",
-      cqtCode: "Cấp nhật",
+      signMethod: "server",
+      cqtCode: "level1",
       notes: "",
       isActive: true,
     });
@@ -1073,23 +1129,23 @@ export default function Settings() {
     };
 
     if (!eInvoiceForm.taxCode.trim()) {
-      errors.taxCode = "Mã số thuế là bắt buộc";
+      errors.taxCode = t("settings.taxCodeRequired");
     }
 
     if (!eInvoiceForm.loginId.trim()) {
-      errors.loginId = "ID đăng nhập là bắt buộc";
+      errors.loginId = t("settings.loginIdRequired");
     }
 
     if (!eInvoiceForm.password.trim()) {
-      errors.password = "Mật khẩu là bắt buộc";
+      errors.password = t("settings.passwordRequired");
     }
 
     if (!eInvoiceForm.softwareName.trim()) {
-      errors.softwareName = "Phần mềm HĐĐT là bắt buộc";
+      errors.softwareName = t("settings.softwareNameRequired");
     }
 
     if (!eInvoiceForm.loginUrl.trim()) {
-      errors.loginUrl = "Đường dẫn đăng nhập là bắt buộc";
+      errors.loginUrl = t("settings.loginUrlRequired");
     }
 
     setEInvoiceFormErrors(errors);
@@ -1135,8 +1191,8 @@ export default function Settings() {
       password: eInvoice.password || "",
       softwareName: eInvoice.softwareName || "",
       loginUrl: eInvoice.loginUrl || "",
-      signMethod: eInvoice.signMethod || "Ký server",
-      cqtCode: eInvoice.cqtCode || "Cấp nhật",
+      signMethod: eInvoice.signMethod || "server",
+      cqtCode: eInvoice.cqtCode || "level1",
       notes: eInvoice.notes === "-" ? "" : eInvoice.notes || "",
       isActive: eInvoice.isActive !== undefined ? eInvoice.isActive : true,
     });
@@ -1215,16 +1271,16 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
       toast({
-        title: "Thành công",
-        description: "Mẫu số HĐĐT đã được tạo thành công",
+        title: t("common.success"),
+        description: t("settings.einvoiceTemplateCreateSuccess"),
       });
       setShowTemplateForm(false);
       resetTemplateForm();
     },
     onError: () => {
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi tạo mẫu số HĐĐT",
+        title: t("common.error"),
+        description: t("settings.einvoiceTemplateCreateError"),
         variant: "destructive",
       });
     },
@@ -1242,16 +1298,16 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
       toast({
-        title: "Thành công",
-        description: "Mẫu số HĐĐT đã được cập nhật thành công",
+        title: t("common.success"),
+        description: t("settings.einvoiceTemplateUpdateSuccess"),
       });
       setShowTemplateForm(false);
       resetTemplateForm();
     },
     onError: () => {
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi cập nhật mẫu số HĐĐT",
+        title: t("common.error"),
+        description: t("settings.einvoiceTemplateUpdateError"),
         variant: "destructive",
       });
     },
@@ -1268,16 +1324,16 @@ export default function Settings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/invoice-templates"] });
       toast({
-        title: "Thành công",
-        description: "Mẫu số HĐĐT đã được xóa thành công",
+        title: t("common.success"),
+        description: t("settings.einvoiceTemplateDeleteSuccess"),
       });
       setShowTemplateDeleteDialog(false);
       setTemplateToDelete(null);
     },
     onError: () => {
       toast({
-        title: "Lỗi",
-        description: "Có lỗi xảy ra khi xóa mẫu số HĐĐT",
+        title: t("common.error"),
+        description: t("settings.einvoiceTemplateDeleteError"),
         variant: "destructive",
       });
     },
@@ -1290,8 +1346,8 @@ export default function Settings() {
       !templateForm.symbol.trim()
     ) {
       toast({
-        title: "Lỗi",
-        description: "Vui lòng điền đầy đủ thông tin bắt buộc",
+        title: t("common.error"),
+        description: t("settings.requiredFieldsError"),
         variant: "destructive",
       });
       return;
@@ -1317,8 +1373,8 @@ export default function Settings() {
       !templateForm.symbol.trim()
     ) {
       toast({
-        title: "Lỗi",
-        description: "Vui lòng điền đầy đủ thông tin bắt buộc",
+        title: t("common.error"),
+        description: t("settings.requiredFieldsError"),
         variant: "destructive",
       });
       return;
@@ -1365,6 +1421,11 @@ export default function Settings() {
     deleteTemplateMutation.mutate(templateToDelete.id);
   };
 
+  const refetchProducts = () => {
+    queryClient.invalidateQueries({ queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/products"] });
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50 pt-20 relative">
       {/* Background Pattern */}
@@ -1392,7 +1453,7 @@ export default function Settings() {
               <p className="text-gray-600">{t("settings.description")}</p>
             </div>
             <Button
-              onClick={() => (window.location.href = "/")}
+              onClick={() => (window.location.href = "/tables")}
               variant="outline"
               className="bg-white hover:bg-green-50 border-green-200 text-green-700 hover:text-green-800"
             >
@@ -1418,7 +1479,7 @@ export default function Settings() {
                   <span className="hidden lg:inline">
                     {t("settings.storeInfo")}
                   </span>
-                  <span className="lg:hidden">Cửa hàng</span>
+                  <span className="lg:hidden">{t("settings.storeInfo")}</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="customers"
@@ -1428,7 +1489,7 @@ export default function Settings() {
                   <span className="hidden lg:inline">
                     {t("customers.title")}
                   </span>
-                  <span className="lg:hidden">Khách hàng</span>
+                  <span className="lg:hidden">{t("customers.title")}</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="categories"
@@ -1438,7 +1499,7 @@ export default function Settings() {
                   <span className="hidden lg:inline">
                     {t("settings.categories")}
                   </span>
-                  <span className="lg:hidden">Sản phẩm</span>
+                  <span className="lg:hidden">{t("settings.categories")}</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="employees"
@@ -1448,7 +1509,7 @@ export default function Settings() {
                   <span className="hidden lg:inline">
                     {t("settings.employees")}
                   </span>
-                  <span className="lg:hidden">Nhân viên</span>
+                  <span className="lg:hidden">{t("settings.employees")}</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="payments"
@@ -1458,7 +1519,9 @@ export default function Settings() {
                   <span className="hidden lg:inline">
                     {t("settings.paymentMethods")}
                   </span>
-                  <span className="lg:hidden">Thanh toán</span>
+                  <span className="lg:hidden">
+                    {t("settings.paymentMethods")}
+                  </span>
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -1475,7 +1538,9 @@ export default function Settings() {
                     <span className="hidden md:inline">
                       {t("settings.basicInfo")}
                     </span>
-                    <span className="md:hidden">Cơ bản</span>
+                    <span className="md:hidden">
+                      {t("settings.basicInfoShort")}
+                    </span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="einvoice"
@@ -1485,7 +1550,9 @@ export default function Settings() {
                     <span className="hidden md:inline">
                       {t("settings.einvoiceSetup")}
                     </span>
-                    <span className="md:hidden">HĐĐT</span>
+                    <span className="md:hidden">
+                      {t("settings.einvoiceShort")}
+                    </span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="operations"
@@ -1495,7 +1562,9 @@ export default function Settings() {
                     <span className="hidden md:inline">
                       {t("settings.operations")}
                     </span>
-                    <span className="md:hidden">HĐ</span>
+                    <span className="md:hidden">
+                      {t("settings.operationsShort")}
+                    </span>
                   </TabsTrigger>
                 </TabsList>
 
@@ -1601,9 +1670,32 @@ export default function Settings() {
                           {storeSettings.pinCode &&
                             storeSettings.pinCode.length < 4 && (
                               <p className="text-sm text-orange-500">
-                                Mã PIN nên có ít nhất 4 chữ số
+                                {t("settings.pinCodeMinLength")}
                               </p>
                             )}
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="priceIncludesTax"
+                              checked={storeSettings.priceIncludesTax || false}
+                              onCheckedChange={(checked) =>
+                                setStoreSettings((prev) => ({
+                                  ...prev,
+                                  priceIncludesTax: Boolean(checked),
+                                }))
+                              }
+                            />
+                            <Label
+                              htmlFor="priceIncludesTax"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              {t("settings.priceIncludesTax")}
+                            </Label>
+                          </div>
+                          <p className="text-xs text-gray-500">
+                            {t("settings.priceIncludesTaxDesc")}
+                          </p>
                         </div>
                       </CardContent>
                     </Card>
@@ -1700,7 +1792,9 @@ export default function Settings() {
                               <span className="hidden md:inline">
                                 {t("settings.connectionManagement")}
                               </span>
-                              <span className="md:hidden">Kết nối</span>
+                              <span className="md:hidden">
+                                {t("settings.connections")}
+                              </span>
                             </TabsTrigger>
                             <TabsTrigger
                               value="settings"
@@ -1709,7 +1803,9 @@ export default function Settings() {
                               <span className="hidden md:inline">
                                 {t("settings.templateManagement")}
                               </span>
-                              <span className="md:hidden">Mẫu số</span>
+                              <span className="md:hidden">
+                                {t("settings.templates")}
+                              </span>
                             </TabsTrigger>
                           </TabsList>
 
@@ -1806,9 +1902,11 @@ export default function Settings() {
                                       >
                                         <div className="flex flex-col items-center gap-2">
                                           <SettingsIcon className="w-8 h-8 text-gray-400" />
-                                          <p>Chưa có kết nối HĐĐT nào</p>
+                                          <p>
+                                            {t("settings.noConnectionsYet")}
+                                          </p>
                                           <p className="text-xs">
-                                            Nhấn "Thêm kết nối" để bắt đầu
+                                            {t("settings.clickToAddConnection")}
                                           </p>
                                         </div>
                                       </td>
@@ -1986,7 +2084,7 @@ export default function Settings() {
                                       </th>
                                       <th className="w-[120px] px-3 py-3 text-center font-medium text-sm text-gray-600">
                                         <div className="leading-tight">
-                                          {t("common.templateUsage")}
+                                          {t("settings.templateUsage")}
                                         </div>
                                       </th>
                                       <th className="w-[120px] px-3 py-3 text-left font-medium text-sm text-gray-600">
@@ -2087,8 +2185,12 @@ export default function Settings() {
                                                 className={`text-xs ${template.useCK ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}
                                               >
                                                 {template.useCK
-                                                  ? "Sử dụng"
-                                                  : "Không sử dụng"}
+                                                  ? t(
+                                                      "settings.usageStatusActive",
+                                                    )
+                                                  : t(
+                                                      "settings.usageStatusInactive",
+                                                    )}
                                               </Badge>
                                             </td>
                                             <td className="px-3 py-3">
@@ -2149,7 +2251,7 @@ export default function Settings() {
                 </TabsContent>
 
                 <TabsContent value="operations">
-                  <div className="space-y-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <Card className="bg-white/80 backdrop-blur-sm border-white/20">
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -2195,6 +2297,66 @@ export default function Settings() {
                             />
                           </div>
                         </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-white/80 backdrop-blur-sm border-white/20">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Home className="w-5 h-5 text-green-600" />
+                          {t("settings.floorZoneManagement")}
+                        </CardTitle>
+                        <CardDescription>
+                          {t("settings.floorZoneDesc")}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="defaultFloor">
+                            {t("settings.defaultFloor")}
+                          </Label>
+                          <Select
+                            value={storeSettings.defaultFloor || "1"}
+                            onValueChange={(value) =>
+                              handleStoreSettingChange("defaultFloor", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("settings.selectDefaultFloor")} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">{t("settings.floor")} 1</SelectItem>
+                              <SelectItem value="2">{t("settings.floor")} 2</SelectItem>
+                              <SelectItem value="3">{t("settings.floor")} 3</SelectItem>
+                              <SelectItem value="4">{t("settings.floor")} 4</SelectItem>
+                              <SelectItem value="5">{t("settings.floor")} 5</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="defaultZone">
+                            {t("settings.defaultZone")}
+                          </Label>
+                          <Select
+                            value={storeSettings.defaultZone || "A"}
+                            onValueChange={(value) =>
+                              handleStoreSettingChange("defaultZone", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("settings.selectDefaultZone")} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="A">{t("settings.zoneA")}</SelectItem>
+                              <SelectItem value="B">{t("settings.zoneB")}</SelectItem>
+                              <SelectItem value="C">{t("settings.zoneC")}</SelectItem>
+                              <SelectItem value="D">{t("settings.zoneD")}</SelectItem>
+                              <SelectItem value="E">{t("settings.zoneE")}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Save button for Floor/Zone settings */}
                         <div className="flex justify-end mt-6">
                           <Button
                             onClick={saveStoreSettings}
@@ -2210,31 +2372,24 @@ export default function Settings() {
                       </CardContent>
                     </Card>
 
-                    {/* Printer Configuration Card */}
                     <Card className="bg-white/80 backdrop-blur-sm border-white/20">
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                          <Printer className="h-5 w-5 text-green-600" />
-                          {t("common.comboValues.printerConfiguration")}
+                          <Printer className="w-5 h-5 text-green-600" />
+                          {t("settings.printerManagementDesc")}
                         </CardTitle>
                         <CardDescription>
-                          Quản lý các máy in kết nối với hệ thống POS
+                          {t("settings.printerSetupDesc")}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <p className="text-sm text-gray-600">
-                            Thiết lập và quản lý máy in cho hóa đơn, biên lai và
-                            báo cáo
-                          </p>
-                          <Button
-                            onClick={() => setShowPrinterConfig(true)}
-                            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Printer className="mr-2 h-4 w-4" />
-                            Cấu hình máy in
-                          </Button>
-                        </div>
+                      <CardContent className="space-y-4">
+                        <Button
+                          onClick={() => setShowPrinterConfig(true)}
+                          className="w-full bg-green-600 hover:bg-green-700"
+                        >
+                          <Printer className="w-4 h-4 mr-2" />
+                          {t("settings.configurePrinter")}
+                        </Button>
                       </CardContent>
                     </Card>
                   </div>
@@ -2690,6 +2845,66 @@ export default function Settings() {
                                     <Trash2 className="w-4 h-4" />
                                   </Button>
                                 </div>
+                                {/* Confirm Delete Category Dialog */}
+                                <AlertDialog
+                                  open={
+                                    showDeleteDialog &&
+                                    categoryToDelete?.id === category.id
+                                  }
+                                  onOpenChange={(isOpen) => {
+                                    if (!isOpen) {
+                                      setShowDeleteDialog(false);
+                                      setCategoryToDelete(null);
+                                    }
+                                  }}
+                                >
+                                  <AlertDialogContent className="sm:max-w-[425px]">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+                                        <Trash2 className="w-5 h-5" />
+                                        {t("common.comboValues.confirmDeleteCategoryTitle")}
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription className="text-left">
+                                        <div className="space-y-3">
+                                          <p>
+                                            {t("common.comboValues.confirmDeleteCategoryDesc", {
+                                              name: categoryToDelete?.name,
+                                            })}
+                                          </p>
+                                          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                            <div className="flex items-start gap-2">
+                                              <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                                              <p className="text-sm text-red-700">
+                                                {t("common.comboValues.deleteCategoryWarning")}
+                                              </p>
+                                            </div>
+                                          </div>
+                                          <p className="text-sm text-gray-600">
+                                            {t("common.comboValues.deleteCategoryDetails")}
+                                          </p>
+                                        </div>
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter className="gap-2">
+                                      <AlertDialogCancel
+                                        onClick={() => {
+                                          setShowDeleteDialog(false);
+                                          setCategoryToDelete(null);
+                                        }}
+                                        className="hover:bg-gray-100"
+                                      >
+                                        {t("common.comboValues.cancelAction")}
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={confirmDeleteCategory}
+                                        className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                                      >
+                                        <Trash2 className="w-4 h-4 mr-2" />
+                                        {t("common.comboValues.deleteCategoryAction")}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
                               </div>
                             </CardContent>
                           </Card>
@@ -3007,7 +3222,7 @@ export default function Settings() {
                     {employeesLoading ? (
                       <div className="text-center py-8">
                         <p className="text-gray-500">
-                          Đang tải dữ liệu nhân viên...
+                          {t("settings.loadingEmployeeData")}
                         </p>
                       </div>
                     ) : !filteredEmployees || filteredEmployees.length === 0 ? (
@@ -3202,9 +3417,7 @@ export default function Settings() {
                             <div className="flex items-center gap-2">
                               <span className="text-2xl">{method.icon}</span>
                               <span className="font-medium">
-                                {method.nameKey
-                                  ? t(`common.${method.nameKey}`)
-                                  : method.name}
+                                {t(`settings.payments.${method.nameKey}`)}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -3335,15 +3548,23 @@ export default function Settings() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="fas fa-utensils">
-                    🍽️ Món ăn chính
+                    🍽️ {t("settings.categoryIcons.mainDish")}
                   </SelectItem>
-                  <SelectItem value="fas fa-coffee">☕ Đồ uống</SelectItem>
-                  <SelectItem value="fas fa-cookie">🍪 Đồ ăn vặt</SelectItem>
+                  <SelectItem value="fas fa-coffee">
+                    ☕ {t("settings.categoryIcons.beverage")}
+                  </SelectItem>
+                  <SelectItem value="fas fa-cookie">
+                    🍪 {t("settings.categoryIcons.snack")}
+                  </SelectItem>
                   <SelectItem value="fas fa-ice-cream">
-                    🍨 Tráng miệng
+                    🍨 {t("settings.categoryIcons.dessert")}
                   </SelectItem>
-                  <SelectItem value="fas fa-beer">🍺 Đồ uống có cồn</SelectItem>
-                  <SelectItem value="fas fa-apple-alt">🍎 Trái cây</SelectItem>
+                  <SelectItem value="fas fa-beer">
+                    🍺 {t("settings.categoryIcons.alcoholic")}
+                  </SelectItem>
+                  <SelectItem value="fas fa-apple-alt">
+                    🍎 {t("settings.categoryIcons.fruit")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -3402,18 +3623,29 @@ export default function Settings() {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="productSku" className="text-right">
-                SKU
+                SKU (Tự động tạo nếu để trống)
               </Label>
-              <Input
-                id="productSku"
-                value={productForm.sku}
-                onChange={(e) =>
-                  setProductForm({ ...productForm, sku: e.target.value })
-                }
-                className="col-span-3"
-                placeholder="Nhập SKU sản phẩm"
-                disabled={!!editingProduct}
-              />
+              <div className="col-span-3 flex gap-2">
+                <Input
+                  id="productSku"
+                  value={productForm.sku}
+                  onChange={(e) =>
+                    setProductForm({ ...productForm, sku: e.target.value })
+                  }
+                  placeholder="ITEM-xxxxxx (tự động tạo)"
+                  disabled={!!editingProduct}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={generateProductSKU}
+                  disabled={!!editingProduct}
+                  className="whitespace-nowrap"
+                >
+                  Tạo SKU
+                </Button>
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="trackInventory" className="text-right">
@@ -3435,12 +3667,48 @@ export default function Settings() {
                 </Label>
               </div>
             </div>
+
+            {/* Price, Stock, Category, Floor, Zone, Image Upload */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="productPrice" className="text-right">
+                {t("settings.productPrice")}
+              </Label>
+              <Input
+                id="productPrice"
+                type="number"
+                step="0.01"
+                value={productForm.price}
+                onChange={(e) =>
+                  setProductForm((prev) => ({ ...prev, price: e.target.value }))
+                }
+                className="col-span-3"
+                placeholder={t("settings.productPricePlaceholder")}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="productStock" className="text-right">
+                {t("settings.productStock")}
+              </Label>
+              <Input
+                id="productStock"
+                type="number"
+                value={productForm.stock}
+                onChange={(e) =>
+                  setProductForm((prev) => ({
+                    ...prev,
+                    stock: parseInt(e.target.value) || 0,
+                  }))
+                }
+                className="col-span-3"
+                placeholder={t("settings.productStockPlaceholder")}
+              />
+            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="productCategory" className="text-right">
                 {t("settings.productCategory")}
               </Label>
               <Select
-                value={productForm.categoryId}
+                value={productForm.categoryId?.toString() || ""}
                 onValueChange={(value) =>
                   setProductForm((prev) => ({ ...prev, categoryId: value }))
                 }
@@ -3460,161 +3728,165 @@ export default function Settings() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productPrice" className="text-right">
-                {t("settings.productPrice")}
-              </Label>
-              <Input
-                id="productPrice"
-                type="number"
-                step="0.01"
-                value={productForm.price}
-                onChange={(e) => {
-                  const basePrice = e.target.value;
-                  setProductForm((prev) => ({ ...prev, price: basePrice }));
 
-                  // Auto calculate after tax price when base price changes
-                  if (basePrice && productForm.taxRate) {
-                    const basePriceNum = parseFloat(basePrice);
-                    const taxRateNum = parseFloat(productForm.taxRate);
-                    if (!isNaN(basePriceNum) && !isNaN(taxRateNum)) {
-                      const afterTaxPrice =
-                        basePriceNum * (1 + taxRateNum / 100);
-                      setProductForm((prev) => ({
-                        ...prev,
-                        afterTaxPrice: Math.floor(afterTaxPrice).toString(),
-                      }));
-                    }
-                  }
-                }}
-                className="col-span-3"
-                placeholder={t("settings.productPricePlaceholder")}
-              />
-            </div>
+            {/* 층과 구역 선택 */}
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="taxRate" className="text-right">
-                {t("settings.taxRatePercent")}
-              </Label>
-              <Input
-                id="taxRate"
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                value={productForm.taxRate || ""}
-                onChange={(e) => {
-                  const taxRate = e.target.value;
-                  setProductForm((prev) => ({ ...prev, taxRate }));
-
-                  // Auto calculate after tax price when tax rate changes
-                  if (taxRate && productForm.price) {
-                    const basePriceNum = parseFloat(productForm.price);
-                    const taxRateNum = parseFloat(taxRate);
-                    if (!isNaN(basePriceNum) && !isNaN(taxRateNum)) {
-                      const afterTaxPrice =
-                        basePriceNum * (1 + taxRateNum / 100);
-                      setProductForm((prev) => ({
-                        ...prev,
-                        afterTaxPrice: Math.floor(afterTaxPrice).toString(),
-                      }));
-                    }
-                  } else if (!taxRate || parseFloat(taxRate) === 0) {
-                    // If tax rate is 0 or empty, after tax price equals base price
-                    setProductForm((prev) => ({
-                      ...prev,
-                      afterTaxPrice: productForm.price,
-                    }));
-                  }
-                }}
-                className="col-span-3"
-                placeholder={t("settings.taxRatePlaceholder")}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="afterTaxPrice" className="text-right">
-                {t("settings.afterTaxPrice")}
-              </Label>
-              <Input
-                id="afterTaxPrice"
-                type="number"
-                value={productForm.afterTaxPrice || ""}
-                onChange={(e) => {
-                  const afterTaxPrice = e.target.value;
-                  setProductForm((prev) => ({ ...prev, afterTaxPrice }));
-
-                  // Auto calculate base price from after tax price
-                  if (afterTaxPrice && productForm.taxRate) {
-                    const afterTaxPriceNum = parseFloat(afterTaxPrice);
-                    const taxRateNum = parseFloat(productForm.taxRate);
-                    if (!isNaN(afterTaxPriceNum) && !isNaN(taxRateNum)) {
-                      const basePrice =
-                        afterTaxPriceNum / (1 + taxRateNum / 100);
-                      setProductForm((prev) => ({
-                        ...prev,
-                        price: Math.round(basePrice).toString(),
-                      }));
-                    }
-                  }
-                }}
-                className="col-span-3"
-                placeholder={t("settings.afterTaxPricePlaceholder")}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productStock" className="text-right">
-                {t("settings.productStock")}
-              </Label>
-              <Input
-                id="productStock"
-                type="number"
-                value={productForm.stock}
-                onChange={(e) =>
-                  setProductForm((prev) => ({ ...prev, stock: e.target.value }))
-                }
-                className="col-span-3"
-                placeholder={t("settings.productStockPlaceholder")}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productDescription" className="text-right">
-                {t("settings.productDescriptionLabel")}
-              </Label>
-              <Textarea
-                id="productDescription"
-                value={productForm.description}
-                onChange={(e) =>
-                  setProductForm((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                className="col-span-3"
-                placeholder={t("settings.productDescriptionPlaceholder")}
-                rows={3}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="productIsActive" className="text-right">
-                {t("settings.usageStatusLabel")}
+              <Label htmlFor="productFloor" className="text-right">
+                {t("tables.floorLabel")}
               </Label>
               <Select
-                value={productForm.isActive}
+                value={productForm.floor || "1층"}
                 onValueChange={(value) =>
-                  setProductForm((prev) => ({ ...prev, isActive: value }))
+                  setProductForm((prev) => ({ ...prev, floor: value }))
                 }
               >
                 <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder={t("settings.selectUsageStatus")} />
+                  <SelectValue placeholder={t("tables.floorPlaceholder")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="true">
-                    {t("settings.usageStatusActive")}
-                  </SelectItem>
-                  <SelectItem value="false">
-                    {t("settings.usageStatusInactive")}
-                  </SelectItem>
+                  <SelectItem value="1층">1층</SelectItem>
+                  <SelectItem value="2층">2층</SelectItem>
+                  <SelectItem value="3층">3층</SelectItem>
+                  <SelectItem value="4층">4층</SelectItem>
+                  <SelectItem value="5층">5층</SelectItem>
+                  <SelectItem value="6층">6층</SelectItem>
+                  <SelectItem value="7층">7층</SelectItem>
+                  <SelectItem value="8층">8층</SelectItem>
+                  <SelectItem value="9층">9층</SelectItem>
+                  <SelectItem value="10층">10층</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="productZone" className="text-right">
+                {t("tables.zoneLabel")}
+              </Label>
+              <Select
+                value={productForm.zone || "전체구역"}
+                onValueChange={(value) =>
+                  setProductForm((prev) => ({ ...prev, zone: value }))
+                }
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder={t("tables.zonePlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="전체구역">
+                                {currentLanguage === "ko" ? "전체구역" : 
+                                 currentLanguage === "en" ? "All Zones" :
+                                 "Tất cả khu vực"}
+                              </SelectItem>
+                  <SelectItem value="A구역">A구역</SelectItem>
+                  <SelectItem value="B구역">B구역</SelectItem>
+                  <SelectItem value="C구역">C구역</SelectItem>
+                  <SelectItem value="D구역">D구역</SelectItem>
+                  <SelectItem value="E구역">E구역</SelectItem>
+                  <SelectItem value="F구역">F구역</SelectItem>
+                  <SelectItem value="VIP구역">VIP구역</SelectItem>
+                  <SelectItem value="테라스구역">테라스구역</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 이미지 입력 방식 선택 */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">
+                {t("tables.imageUrlOptional")}
+              </Label>
+              <div className="col-span-3 space-y-3">
+                <div className="flex space-x-2">
+                  <Button
+                    type="button"
+                    variant={productForm.imageInputMethod === "url" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setProductForm(prev => ({ ...prev, imageInputMethod: "url", selectedImageFile: null }))}
+                    className="flex items-center gap-2"
+                  >
+                    <Link className="w-4 h-4" />
+                    URL 입력
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={productForm.imageInputMethod === "file" ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setProductForm(prev => ({ ...prev, imageInputMethod: "file", imageUrl: "" }))}
+                    className="flex items-center gap-2"
+                  >
+                    <FileImage className="w-4 h-4" />
+                    파일 업로드
+                  </Button>
+                </div>
+
+                {productForm.imageInputMethod === "url" ? (
+                  <Input
+                    placeholder={t("tables.imageUrl")}
+                    value={productForm.imageUrl || ""}
+                    onChange={(e) =>
+                      setProductForm((prev) => ({ ...prev, imageUrl: e.target.value }))
+                    }
+                  />
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center w-full">
+                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          {productForm.selectedImageFile ? (
+                            <>
+                              <FileImage className="w-8 h-8 mb-2 text-green-500" />
+                              <p className="text-sm text-gray-700 font-medium">
+                                {productForm.selectedImageFile.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {(productForm.selectedImageFile.size / 1024).toFixed(1)} KB
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-8 h-8 mb-2 text-gray-400" />
+                              <p className="mb-2 text-sm text-gray-500">
+                                <span className="font-semibold">이미지 파일을 선택하거나</span>
+                              </p>
+                              <p className="text-xs text-gray-500">드래그엤드롭으로 업로드</p>
+                            </>
+                          )}
+                        </div>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (file.size > 5 * 1024 * 1024) {
+                                toast({
+                                  title: "오류",
+                                  description: "이미지 크기는 5MB를 초과할 수 없습니다.",
+                                  variant: "destructive",
+                                });
+                                return;
+                              }
+                              setProductForm(prev => ({ ...prev, selectedImageFile: file, imageUrl: "" }));
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                    {productForm.selectedImageFile && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setProductForm(prev => ({ ...prev, selectedImageFile: null }))}
+                        className="w-full"
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        파일 제거
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <DialogFooter>
@@ -3806,22 +4078,20 @@ export default function Settings() {
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa nhân viên "{employeeToDelete?.name}"
-                  không?
+                  {t("employees.confirmDeleteEmployeeDesc", {
+                    name: employeeToDelete?.name || "",
+                  })}
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-sm text-red-700">
-                      <strong>Cảnh báo:</strong> Hành động này không thể hoàn
-                      tác. Thông tin nhân viên sẽ bị xóa vĩnh viễn khỏi hệ
-                      thống.
+                      {t("employees.deleteEmployeeWarning")}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Điều này bao gồm lịch sử làm việc, chấm công và các quyền truy
-                  cập.
+                  {t("employees.deleteEmployeeDetails")}
                 </p>
               </div>
             </AlertDialogDescription>
@@ -3856,28 +4126,24 @@ export default function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-red-600">
               <Trash2 className="w-5 h-5" />
-              Xác nhận xóa kết nối HĐĐT
+              {t("settings.confirmDeleteConnectionTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa kết nối{" "}
-                  <span className="font-semibold text-gray-900">
-                    "{eInvoiceToDelete?.softwareName}"
-                  </span>{" "}
-                  không?
+                  {t("settings.confirmDeleteConnectionDesc").replace("{{name}}", eInvoiceToDelete?.softwareName || "")}
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-sm text-red-700">
-                      <strong>Cảnh báo:</strong> Hành động này không thể hoàn
-                      tác. Kết nối HĐĐT sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                      <strong>{t("common.warning")}:</strong>{" "}
+                      {t("settings.deleteConnectionWarning")}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Điều này có thể ảnh hưởng đến việc xuất hóa đơn điện tử.
+                  {t("settings.deleteConnectionDetails")}
                 </p>
               </div>
             </AlertDialogDescription>
@@ -3890,14 +4156,14 @@ export default function Settings() {
               }}
               className="hover:bg-gray-100"
             >
-              Hủy bỏ
+              {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteEInvoice}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Xóa kết nối
+              {t("settings.deleteConnectionAction")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -3918,173 +4184,138 @@ export default function Settings() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="taxCode" className="text-right mt-2">
-                {t("settings.taxIdRequired")}{" "}
-                <span className="text-red-500">*</span>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="taxCode" className="text-right">
+                {t("settings.taxIdRequired")} *
               </Label>
-              <div className="col-span-3 space-y-1">
-                <Input
-                  id="taxCode"
-                  value={eInvoiceForm.taxCode}
-                  onChange={(e) => {
-                    setEInvoiceForm((prev) => ({
-                      ...prev,
-                      taxCode: e.target.value,
-                    }));
-                    if (eInvoiceFormErrors.taxCode) {
-                      setEInvoiceFormErrors((prev) => ({
-                        ...prev,
-                        taxCode: "",
-                      }));
-                    }
-                  }}
-                  className={`${eInvoiceFormErrors.taxCode ? "border-red-500" : ""}`}
-                  placeholder="Nhập mã số thuế"
-                />
-                {eInvoiceFormErrors.taxCode && (
-                  <p className="text-sm text-red-500">
-                    {eInvoiceFormErrors.taxCode}
-                  </p>
-                )}
-              </div>
+              <Input
+                id="taxCode"
+                value={eInvoiceForm.taxCode}
+                onChange={(e) =>
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    taxCode: e.target.value,
+                  }))
+                }
+                className={`col-span-3 ${
+                  eInvoiceFormErrors.taxCode ? "border-red-500" : ""
+                }`}
+                placeholder={t("settings.taxIdPlaceholder")}
+              />
+              {eInvoiceFormErrors.taxCode && (
+                <div className="col-span-4 text-sm text-red-500">
+                  {eInvoiceFormErrors.taxCode}
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="loginId" className="text-right mt-2">
-                {t("settings.loginIdLabel")}{" "}
-                <span className="text-red-500">*</span>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="loginId" className="text-right">
+                {t("settings.loginIdLabel")} *
               </Label>
-              <div className="col-span-3 space-y-1">
-                <Input
-                  id="loginId"
-                  value={eInvoiceForm.loginId}
-                  onChange={(e) => {
-                    setEInvoiceForm((prev) => ({
-                      ...prev,
-                      loginId: e.target.value,
-                    }));
-                    if (eInvoiceFormErrors.loginId) {
-                      setEInvoiceFormErrors((prev) => ({
-                        ...prev,
-                        loginId: "",
-                      }));
-                    }
-                  }}
-                  className={`${eInvoiceFormErrors.loginId ? "border-red-500" : ""}`}
-                  placeholder="Nhập ID đăng nhập"
-                />
-                {eInvoiceFormErrors.loginId && (
-                  <p className="text-sm text-red-500">
-                    {eInvoiceFormErrors.loginId}
-                  </p>
-                )}
-              </div>
+              <Input
+                id="loginId"
+                value={eInvoiceForm.loginId}
+                onChange={(e) =>
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    loginId: e.target.value,
+                  }))
+                }
+                className={`col-span-3 ${
+                  eInvoiceFormErrors.loginId ? "border-red-500" : ""
+                }`}
+                placeholder={t("settings.loginIdLabel")}
+              />
+              {eInvoiceFormErrors.loginId && (
+                <div className="col-span-4 text-sm text-red-500">
+                  {eInvoiceFormErrors.loginId}
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="password" className="text-right mt-2">
-                {t("settings.passwordLabel")}{" "}
-                <span className="text-red-500">*</span>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="password" className="text-right">
+                {t("settings.passwordLabel")} *
               </Label>
-              <div className="col-span-3 space-y-1">
-                <Input
-                  id="password"
-                  type="password"
-                  value={eInvoiceForm.password}
-                  onChange={(e) => {
-                    setEInvoiceForm((prev) => ({
-                      ...prev,
-                      password: e.target.value,
-                    }));
-                    if (eInvoiceFormErrors.password) {
-                      setEInvoiceFormErrors((prev) => ({
-                        ...prev,
-                        password: "",
-                      }));
-                    }
-                  }}
-                  className={`${eInvoiceFormErrors.password ? "border-red-500" : ""}`}
-                  placeholder="Nhập mật khẩu"
-                />
-                {eInvoiceFormErrors.password && (
-                  <p className="text-sm text-red-500">
-                    {eInvoiceFormErrors.password}
-                  </p>
-                )}
-              </div>
+              <Input
+                id="password"
+                type="password"
+                value={eInvoiceForm.password}
+                onChange={(e) =>
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    password: e.target.value,
+                  }))
+                }
+                className={`col-span-3 ${
+                  eInvoiceFormErrors.password ? "border-red-500" : ""
+                }`}
+                placeholder={t("settings.passwordLabel")}
+              />
+              {eInvoiceFormErrors.password && (
+                <div className="col-span-4 text-sm text-red-500">
+                  {eInvoiceFormErrors.password}
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="softwareName" className="text-right mt-2">
-                {t("settings.softwareLabel")}{" "}
-                <span className="text-red-500">*</span>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="softwareName" className="text-right">
+                {t("settings.softwareLabel")} *
               </Label>
-              <div className="col-span-3 space-y-1">
-                <Select
-                  value={eInvoiceForm.softwareName}
-                  onValueChange={(value) => {
-                    setEInvoiceForm((prev) => ({
-                      ...prev,
-                      softwareName: value,
-                    }));
-                    if (eInvoiceFormErrors.softwareName) {
-                      setEInvoiceFormErrors((prev) => ({
-                        ...prev,
-                        softwareName: "",
-                      }));
-                    }
-                  }}
+              <Select
+                value={eInvoiceForm.softwareName}
+                onValueChange={(value) =>
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    softwareName: value,
+                  }))
+                }
+              >
+                <SelectTrigger
+                  className={`col-span-3 ${
+                    eInvoiceFormErrors.softwareName ? "border-red-500" : ""
+                  }`}
                 >
-                  <SelectTrigger
-                    className={`${eInvoiceFormErrors.softwareName ? "border-red-500" : ""}`}
-                  >
-                    <SelectValue
-                      placeholder={t("settings.selectSoftwarePlaceholder")}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {EINVOICE_PROVIDERS.map((provider) => (
-                      <SelectItem key={provider.value} value={provider.name}>
-                        {provider.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {eInvoiceFormErrors.softwareName && (
-                  <p className="text-sm text-red-500">
-                    {eInvoiceFormErrors.softwareName}
-                  </p>
-                )}
-              </div>
+                  <SelectValue
+                    placeholder={t("settings.selectSoftwarePlaceholder")}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {EINVOICE_PROVIDERS.map((provider) => (
+                    <SelectItem key={provider.value} value={provider.name}>
+                      {provider.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {eInvoiceFormErrors.softwareName && (
+                <div className="col-span-4 text-sm text-red-500">
+                  {eInvoiceFormErrors.softwareName}
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="loginUrl" className="text-right mt-2">
-                {t("settings.loginUrlLabel")}{" "}
-                <span className="text-red-500">*</span>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="loginUrl" className="text-right">
+                {t("settings.loginUrlLabel")} *
               </Label>
-              <div className="col-span-3 space-y-1">
-                <Input
-                  id="loginUrl"
-                  value={eInvoiceForm.loginUrl}
-                  onChange={(e) => {
-                    setEInvoiceForm((prev) => ({
-                      ...prev,
-                      loginUrl: e.target.value,
-                    }));
-                    if (eInvoiceFormErrors.loginUrl) {
-                      setEInvoiceFormErrors((prev) => ({
-                        ...prev,
-                        loginUrl: "",
-                      }));
-                    }
-                  }}
-                  className={`${eInvoiceFormErrors.loginUrl ? "border-red-500" : ""}`}
-                  placeholder="https://api.example.com"
-                />
-                {eInvoiceFormErrors.loginUrl && (
-                  <p className="text-sm text-red-500">
-                    {eInvoiceFormErrors.loginUrl}
-                  </p>
-                )}
-              </div>
+              <Input
+                id="loginUrl"
+                value={eInvoiceForm.loginUrl}
+                onChange={(e) =>
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    loginUrl: e.target.value,
+                  }))
+                }
+                className={`col-span-3 ${
+                  eInvoiceFormErrors.loginUrl ? "border-red-500" : ""
+                }`}
+                placeholder="https://example.com/login"
+              />
+              {eInvoiceFormErrors.loginUrl && (
+                <div className="col-span-4 text-sm text-red-500">
+                  {eInvoiceFormErrors.loginUrl}
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="signMethod" className="text-right">
@@ -4093,7 +4324,10 @@ export default function Settings() {
               <Select
                 value={eInvoiceForm.signMethod}
                 onValueChange={(value) =>
-                  setEInvoiceForm((prev) => ({ ...prev, signMethod: value }))
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    signMethod: value,
+                  }))
                 }
               >
                 <SelectTrigger className="col-span-3">
@@ -4103,10 +4337,10 @@ export default function Settings() {
                   <SelectItem value="Ký server">
                     {t("settings.signMethodServer")}
                   </SelectItem>
-                  <SelectItem value="Ký USB Token">
+                  <SelectItem value="USB Token">
                     {t("settings.signMethodUsbToken")}
                   </SelectItem>
-                  <SelectItem value="Ký HSM">
+                  <SelectItem value="HSM">
                     {t("settings.signMethodHsm")}
                   </SelectItem>
                 </SelectContent>
@@ -4119,7 +4353,10 @@ export default function Settings() {
               <Select
                 value={eInvoiceForm.cqtCode}
                 onValueChange={(value) =>
-                  setEInvoiceForm((prev) => ({ ...prev, cqtCode: value }))
+                  setEInvoiceForm((prev) => ({
+                    ...prev,
+                    cqtCode: value,
+                  }))
                 }
               >
                 <SelectTrigger className="col-span-3">
@@ -4162,7 +4399,10 @@ export default function Settings() {
                   id="isDefault"
                   checked={eInvoiceForm.isActive}
                   onCheckedChange={(checked) =>
-                    setEInvoiceForm((prev) => ({ ...prev, isActive: checked }))
+                    setEInvoiceForm((prev) => ({
+                      ...prev,
+                      isActive: checked,
+                    }))
                   }
                 />
                 <Label htmlFor="isDefault" className="text-sm">
@@ -4221,7 +4461,7 @@ export default function Settings() {
                   setTemplateForm((prev) => ({ ...prev, name: e.target.value }))
                 }
                 className="col-span-3"
-                placeholder="Ví dụ: Mẫu số 1"
+                placeholder={t("settings.templateNamePlaceholder")}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -4238,7 +4478,7 @@ export default function Settings() {
                   }))
                 }
                 className="col-span-3"
-                placeholder="Ví dụ: 01GTKT0/001"
+                placeholder={t("settings.templateNumberPlaceholder")}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -4255,7 +4495,7 @@ export default function Settings() {
                   }))
                 }
                 className="col-span-3"
-                placeholder="Ví dụ: 123451/88890345"
+                placeholder={t("settings.templateCodePlaceholder")}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -4272,7 +4512,7 @@ export default function Settings() {
                   }))
                 }
                 className="col-span-3"
-                placeholder="Ví dụ: AA/19E"
+                placeholder={t("settings.symbolPlaceholder")}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -4301,8 +4541,8 @@ export default function Settings() {
                   }))
                 }
                 className="col-span-3"
-                placeholder={t("common.notesPlaceholder")}
                 rows={3}
+                placeholder={t("settings.notesPlaceholder")}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -4365,28 +4605,26 @@ export default function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-red-600">
               <Trash2 className="w-5 h-5" />
-              Xác nhận xóa mẫu số HĐĐT
+              {t("settings.confirmDeleteTemplateTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               <div className="space-y-3">
                 <p>
-                  Bạn có chắc chắn muốn xóa mẫu số{" "}
-                  <span className="font-semibold text-gray-900">
-                    "{templateToDelete?.name}"
-                  </span>{" "}
-                  không?
+                  {t("settings.confirmDeleteTemplateDesc", {
+                    name: templateToDelete?.name,
+                  })}
                 </p>
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                     <p className="text-sm text-red-700">
-                      <strong>Cảnh báo:</strong> Hành động này không thể hoàn
-                      tác. Mẫu số HĐĐT sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                      <strong>{t("common.warning")}:</strong>{" "}
+                      {t("settings.deleteTemplateWarning")}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600">
-                  Điều này có thể ảnh hưởng đến việc xuất hóa đơn điện tử.
+                  {t("settings.deleteTemplateDetails")}
                 </p>
               </div>
             </AlertDialogDescription>
@@ -4399,14 +4637,14 @@ export default function Settings() {
               }}
               className="hover:bg-gray-100"
             >
-              Hủy bỏ
+              {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteTemplate}
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Xóa mẫu số
+              {t("settings.deleteTemplateAction")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -4431,23 +4669,14 @@ export default function Settings() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="paymentMethodName" className="text-right">
-                {t("common.name")}
-              </Label>
-              <Input
-                id="paymentMethodName"
-                value={paymentMethodForm.name}
-                onChange={(e) =>
-                  setPaymentMethodForm((prev) => ({
-                    ...prev,
-                    name: e.target.value,
-                  }))
-                }
-                className="col-span-3"
-                placeholder={t("common.name")}
-              />
-            </div>
+            {editingPaymentMethod && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">{t("common.name")}</Label>
+                <span className="col-span-3 text-sm text-gray-600">
+                  {t(`settings.payments.${editingPaymentMethod.nameKey}`)}
+                </span>
+              </div>
+            )}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="paymentMethodIcon" className="text-right">
                 {t("common.icon")}

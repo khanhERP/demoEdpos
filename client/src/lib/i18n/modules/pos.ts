@@ -119,7 +119,6 @@ export interface POSTranslations {
   productNameRequired: string;
   skuRequired: string;
   invalidPrice: string;
-  amountReceivedLabel: string;
   invalidCategoryId: string;
   invalidTaxRate: string;
   duplicateSku: string;
@@ -137,6 +136,40 @@ export interface POSTranslations {
   paymentMethod: string;
   amountReceived: string;
   phone: string;
+  printerConfiguration: string;
+  addNewPrinter: string;
+  editPrinter: string;
+  printerName: string;
+  printerType: string;
+  thermal: string;
+  inkjet: string;
+  laser: string;
+  connectionType: string;
+  network: string;
+  bluetooth: string;
+  ipAddress: string;
+  port: string;
+  macAddress: string;
+  employeePrinter: string;
+  kitchenPrinter: string;
+  inUse: string;
+  addNew: string;
+  update: string;
+  printerList: string;
+  printers: string;
+  off: string;
+  test: string;
+  edit: string;
+  employee: string;
+  kitchen: string;
+  using: string;
+  close: string;
+  loading: string;
+  noPrinterConfigs: string;
+  cancel: string;
+  posLocation: string;
+  floor: string;
+  zone: string;
 }
 
 export const posTranslations: { [key: string]: POSTranslations } = {
@@ -271,13 +304,49 @@ export const posTranslations: { [key: string]: POSTranslations } = {
     duplicateSkuCount: "중복 SKU 수",
     each: "개당",
     mainStoreLocation: "본점 위치",
-    transactionNumber: "거래번T��:",
+    transactionNumber: "거래번T:",
     date: "날짜:",
     cashier: "계산원:",
     subtotal: "소계:",
     tax: "세금:",
     total: "총계:",
     phone: "전화:",
+
+    // Printer configuration
+    printerConfiguration: "프린터 구성",
+    addNewPrinter: "새 프린터 추가",
+    editPrinter: "프린터 편집",
+    printerName: "프린터 이름",
+    printerType: "프린터 유형",
+    thermal: "열전사",
+    inkjet: "잉크젯",
+    laser: "레이저",
+    connectionType: "연결 유형",
+    network: "네트워크",
+    bluetooth: "블루투스",
+    ipAddress: "IP 주소",
+    port: "포트",
+    macAddress: "MAC 주소",
+    employeePrinter: "직원 프린터",
+    kitchenPrinter: "주방 프린터",
+    inUse: "사용 중",
+    addNew: "새로 추가",
+    update: "업데이트",
+    printerList: "프린터 목록",
+    printers: "프린터",
+    off: "끄기",
+    test: "테스트",
+    edit: "편집",
+    employee: "직원",
+    kitchen: "주방",
+    using: "사용 중",
+    close: "닫기",
+    loading: "로딩 중...",
+    noPrinterConfigs: "프린터 구성이 없습니다",
+    cancel: "취소",
+    posLocation: "POS 위치",
+    floor: "층",
+    zone: "구역",
   },
   en: {
     title: "POS System",
@@ -419,6 +488,42 @@ export const posTranslations: { [key: string]: POSTranslations } = {
     paymentMethodLabel: "Payment Method:",
     amountReceivedLabel: "Amount Received:",
     phone: "Phone:",
+
+    // Printer configuration
+    printerConfiguration: "Printer Configuration",
+    addNewPrinter: "Add New Printer",
+    editPrinter: "Edit Printer",
+    printerName: "Printer Name",
+    printerType: "Printer Type",
+    thermal: "Thermal",
+    inkjet: "Inkjet",
+    laser: "Laser",
+    connectionType: "Connection Type",
+    network: "Network",
+    bluetooth: "Bluetooth",
+    ipAddress: "IP Address",
+    port: "Port",
+    macAddress: "MAC Address",
+    employeePrinter: "Employee Printer",
+    kitchenPrinter: "Kitchen Printer",
+    inUse: "In Use",
+    addNew: "Add New",
+    update: "Update",
+    printerList: "Printer List",
+    printers: "printers",
+    off: "Off",
+    test: "Test",
+    edit: "Edit",
+    employee: "Employee",
+    kitchen: "Kitchen",
+    using: "Using",
+    close: "Close",
+    loading: "Loading...",
+    noPrinterConfigs: "No printer configurations",
+    cancel: "Cancel",
+    posLocation: "POS Location",
+    floor: "Floor",
+    zone: "Zone",
   },
   vi: {
     title: "Hệ thống POS",
@@ -560,5 +665,41 @@ export const posTranslations: { [key: string]: POSTranslations } = {
     paymentMethodLabel: "Phương thức thanh toán:",
     amountReceivedLabel: "Số tiền nhận:",
     phone: "Điện thoại:",
+
+    // Printer configuration
+    printerConfiguration: "Cấu hình máy in",
+    addNewPrinter: "Thêm máy in mới",
+    editPrinter: "Chỉnh sửa máy in",
+    printerName: "Tên máy in",
+    printerType: "Loại máy in",
+    thermal: "Thermal (Nhiệt)",
+    inkjet: "Inkjet (Phun mực)",
+    laser: "Laser",
+    connectionType: "Loại kết nối",
+    network: "Mạng (Network)",
+    bluetooth: "Bluetooth",
+    ipAddress: "Địa chỉ IP",
+    port: "Cổng (Port)",
+    macAddress: "Địa chỉ MAC",
+    employeePrinter: "Máy in nhân viên",
+    kitchenPrinter: "Máy in bếp",
+    inUse: "Đang sử dụng",
+    addNew: "Thêm mới",
+    update: "Cập nhật",
+    printerList: "Danh sách máy in",
+    printers: "máy in",
+    off: "Tắt",
+    test: "Test",
+    edit: "Sửa",
+    employee: "Nhân viên",
+    kitchen: "Bếp",
+    using: "Đang dùng",
+    close: "Đóng",
+    loading: "Đang tải...",
+    noPrinterConfigs: "Chưa có cấu hình máy in nào",
+    cancel: "Hủy",
+    posLocation: "Vị trí POS",
+    floor: "Tầng",
+    zone: "Khu vực",
   },
 };

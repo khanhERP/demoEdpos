@@ -8,9 +8,10 @@ import {
   boolean,
   varchar,
   date,
+  numeric, // Import numeric
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { z } from "zod";
 import { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
@@ -38,6 +39,9 @@ export const products = pgTable("products", {
     .default("0.00"),
   priceIncludesTax: boolean("price_includes_tax").notNull().default(false),
   afterTaxPrice: decimal("after_tax_price", { precision: 10, scale: 2 }),
+  beforeTaxPrice: decimal("before_tax_price", { precision: 18, scale: 2 }),
+  floor: varchar("floor", { length: 50 }).default("1층"),
+  zone: varchar("zone", { length: 50 }).default("A구역"),
 });
 
 export const transactions = pgTable("transactions", {
@@ -112,7 +116,13 @@ export const storeSettings = pgTable("store_settings", {
   closeTime: text("close_time").default("22:00"),
   goldThreshold: text("gold_threshold").default("300000"),
   vipThreshold: text("vip_threshold").default("1000000"),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  priceIncludesTax: boolean("price_includes_tax").default(false),
+  defaultFloor: text("default_floor").default("1"),
+  defaultZone: text("default_zone").default("A"),
+  floorPrefix: text("floor_prefix").default("층"),
+  zonePrefix: text("zone_prefix").default("구역"),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+  updatedAt: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const suppliers = pgTable("suppliers", {
@@ -132,11 +142,65 @@ export const suppliers = pgTable("suppliers", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const purchaseReceipts = pgTable("purchase_receipts", {
+  id: serial("id").primaryKey(),
+  receiptNumber: text("receipt_number").notNull().unique(),
+  supplierId: integer("supplier_id")
+    .references(() => suppliers.id)
+    .notNull(),
+  employeeId: integer("employee_id")
+    .references(() => employees.id),
+  purchaseDate: date("purchase_date"),
+  actualDeliveryDate: date("actual_delivery_date"),
+  subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull().default("0.00"),
+  tax: decimal("tax", { precision: 10, scale: 2 }).notNull().default("0.00"),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull().default("0.00"),
+  status: text("status").notNull().default("pending"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const purchaseReceiptItems = pgTable("purchase_receipt_items", {
+  id: serial("id").primaryKey(),
+  purchaseReceiptId: integer("purchase_receipt_id")
+    .references(() => purchaseReceipts.id)
+    .notNull(),
+  productId: integer("product_id")
+    .references(() => products.id),
+  productName: text("product_name").notNull(),
+  sku: text("sku"),
+  quantity: integer("quantity").notNull(),
+  receivedQuantity: integer("received_quantity").notNull().default(0),
+  unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
+  total: decimal("total", { precision: 10, scale: 2 }).notNull(),
+  taxRate: decimal("tax_rate", { precision: 5, scale: 2 }).default("0.00"),
+  notes: text("notes"),
+});
+
+export const purchaseReceiptDocuments = pgTable("purchase_receipt_documents", {
+  id: serial("id").primaryKey(),
+  purchaseReceiptId: integer("purchase_receipt_id")
+    .references(() => purchaseReceipts.id)
+    .notNull(),
+  fileName: text("file_name").notNull(),
+  originalFileName: text("original_file_name").notNull(),
+  fileType: text("file_type").notNull(), // "image/jpeg", "image/png", "application/pdf", etc.
+  fileSize: integer("file_size").notNull(),
+  filePath: text("file_path").notNull(),
+  description: text("description"),
+  uploadedBy: integer("uploaded_by")
+    .references(() => employees.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const tables = pgTable("tables", {
   id: serial("id").primaryKey(),
-  tableNumber: text("table_number").notNull().unique(),
-  capacity: integer("capacity").notNull().default(4),
-  status: text("status").notNull().default("available"), // "available", "occupied", "reserved", "maintenance"
+  tableNumber: varchar("table_number", { length: 50 }).notNull(),
+  capacity: integer("capacity").default(4),
+  status: varchar("status", { length: 20 }).default("available"),
+  floor: varchar("floor", { length: 50 }).default("1층"), // Added floor field
+  zone: varchar("zone", { length: 50 }).default("A"), // Added zone field
   qrCode: text("qr_code"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -161,6 +225,7 @@ export const orders = pgTable("orders", {
   symbol: varchar("symbol", { length: 20 }),
   invoiceNumber: varchar("invoice_number", { length: 50 }),
   salesChannel: text("sales_channel").notNull().default("table"), // "table", "pos", "online", "delivery"
+  priceIncludeTax: boolean("price_include_tax").notNull().default(false),
   notes: text("notes"),
   orderedAt: timestamp("ordered_at").defaultNow().notNull(),
   servedAt: timestamp("served_at"),
@@ -191,20 +256,59 @@ export const insertProductSchema = createInsertSchema(products)
     id: true,
   })
   .extend({
-    price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Price must be a positive number",
+    price: z.union([z.string(), z.number()]).refine((val) => {
+      const numVal = typeof val === 'string' ?
+        parseInt(val.replace(/[^0-9]/g, '')) : val;
+      return !isNaN(numVal) && numVal > 0 && numVal < 100000000;
+    }, {
+      message: "Price must be a positive number less than 100,000,000",
     }),
     stock: z.number().min(0, "Stock cannot be negative"),
     productType: z.number().min(1).max(3, "Product type is required"),
     taxRate: z
-      .string()
+      .union([z.string(), z.number()])
+      .transform((val) => {
+        // Always convert to string with proper formatting
+        const numVal = typeof val === 'string' ? parseFloat(val) : val;
+        if (isNaN(numVal) || numVal < 0 || numVal > 100) {
+          throw new Error("Tax rate must be between 0 and 100");
+        }
+        return numVal.toFixed(2);
+      }),
+    priceIncludesTax: z.boolean().optional().default(false),
+    afterTaxPrice: z
+      .union([z.string(), z.number(), z.null(), z.undefined()])
+      .optional()
       .refine(
-        (val) => !isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 100,
+        (val) => {
+          if (!val || val === null || val === undefined) return true;
+          if (typeof val === 'string' && val.trim() === "") return true;
+          const numVal = typeof val === 'string' ?
+            parseInt(val.replace(/[^0-9]/g, '')) : val;
+          return !isNaN(numVal) && numVal > 0;
+        },
         {
-          message: "Tax rate must be between 0 and 100",
+          message: "After tax price must be a positive number",
         },
       ),
-    priceIncludesTax: z.boolean().optional().default(false),
+    beforeTaxPrice: z
+      .union([z.string(), z.number(), z.null(), z.undefined()])
+      .optional()
+      .refine(
+        (val) => {
+          if (!val || val === null || val === undefined) return true;
+          const numVal = typeof val === 'string' ? Number(val) : val;
+          return !isNaN(numVal) && numVal >= 0;
+        },
+        {
+          message: "Before tax price must be a positive number",
+        },
+      ),
+    sku: z.string().optional(),
+    name: z.string().min(1, "Product name is required"),
+    categoryId: z.number().min(1, "Category is required"),
+    floor: z.union([z.string(), z.number()]).optional().default("1층"),
+    zone: z.union([z.string(), z.number()]).optional().default("A구역"),
   });
 
 export const insertTransactionSchema = createInsertSchema(transactions).omit({
@@ -261,6 +365,7 @@ export const insertTableSchema = createInsertSchema(tables)
         message: "Status must be available, occupied, reserved, or maintenance",
       }),
     }),
+    floor: z.string().optional().default("1층"),
   });
 
 export const insertOrderSchema = createInsertSchema(orders)
@@ -290,6 +395,7 @@ export const insertOrderSchema = createInsertSchema(orders)
     }),
     einvoiceStatus: z.number().min(0).max(10).optional().default(0),
     salesChannel: z.enum(["table", "pos", "online", "delivery"]).optional().default("table"),
+    priceIncludeTax: z.boolean().optional().default(false),
     paidAt: z.union([z.date(), z.string().datetime()]).optional().transform((val) => {
       if (typeof val === 'string') {
         return new Date(val);
@@ -309,8 +415,14 @@ export const insertStoreSettingsSchema = createInsertSchema(storeSettings).omit(
   {
     id: true,
     updatedAt: true,
+    createdAt: true,
   },
-);
+).extend({
+  priceIncludesTax: z.boolean().optional().default(false),
+  defaultFloor: z.string().optional().default("1"),
+  enableMultiFloor: z.boolean().optional().default(false),
+  floorPrefix: z.string().optional().default("층"),
+});
 
 export const insertSupplierSchema = createInsertSchema(suppliers)
   .omit({
@@ -329,12 +441,63 @@ export const insertSupplierSchema = createInsertSchema(suppliers)
       .or(z.literal("")),
   });
 
+export const insertPurchaseReceiptSchema = createInsertSchema(purchaseReceipts)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    purchaseDate: z.string().optional(),
+    actualDeliveryDate: z.string().optional(),
+    subtotal: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "Subtotal must be a positive number",
+    }),
+    tax: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "Tax must be a positive number",
+    }),
+    total: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "Total must be a positive number",
+    }),
+  });
+
+export const insertPurchaseReceiptItemSchema = createInsertSchema(purchaseReceiptItems)
+  .omit({
+    id: true,
+    purchaseReceiptId: true,
+  })
+  .extend({
+    quantity: z.number().min(1, "Quantity must be at least 1"),
+    receivedQuantity: z.number().min(0, "Received quantity cannot be negative"),
+    unitPrice: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Unit price must be a positive number",
+    }),
+    total: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+      message: "Total must be a positive number",
+    }),
+  });
+
+export const insertPurchaseReceiptDocumentSchema = createInsertSchema(purchaseReceiptDocuments)
+  .omit({
+    id: true,
+    purchaseReceiptId: true,
+    createdAt: true,
+  })
+  .extend({
+    fileSize: z.number().min(0, "File size cannot be negative"),
+  });
+
+
+
 export type Category = typeof categories.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Transaction = typeof transactions.$inferSelect;
 export type TransactionItem = typeof transactionItems.$inferSelect;
 export type Employee = InferSelectModel<typeof employees>;
 export type InsertEmployee = InferInsertModel<typeof employees>;
+export type PurchaseReceipt = typeof purchaseReceipts.$inferSelect;
+export type PurchaseReceiptItem = typeof purchaseReceiptItems.$inferSelect;
+export type PurchaseReceiptDocument = typeof purchaseReceiptDocuments.$inferSelect;
 
 // Customers table
 export const customers = pgTable("customers", {
@@ -374,6 +537,39 @@ export const pointTransactions = pgTable("point_transactions", {
   newBalance: integer("new_balance").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const insertCustomerSchema = createInsertSchema(customers)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    email: z
+      .string()
+      .email("Invalid email format")
+      .optional()
+      .or(z.literal("")),
+    membershipLevel: z
+      .enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"])
+      .optional(),
+    status: z.enum(["active", "inactive"]).optional(),
+  });
+
+export const insertPointTransactionSchema = createInsertSchema(
+  pointTransactions,
+)
+  .omit({
+    id: true,
+    createdAt: true,
+  })
+  .extend({
+    type: z.enum(["earned", "redeemed", "adjusted", "expired"], {
+      errorMap: () => ({
+        message: "Type must be earned, redeemed, adjusted, or expired",
+      }),
+    }),
+  });
 
 export const inventoryTransactions = pgTable("inventory_transactions", {
   id: serial("id").primaryKey(),
@@ -460,6 +656,7 @@ export const printerConfigs = pgTable("printer_configs", {
   isEmployee: boolean("is_employee").notNull().default(false),
   isKitchen: boolean("is_kitchen").notNull().default(false),
   isActive: boolean("is_active").notNull().default(true),
+  copies: integer("copies").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -478,43 +675,9 @@ export const invoiceTemplates = pgTable("invoice_templates", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const insertCustomerSchema = createInsertSchema(customers)
-  .omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-  })
-  .extend({
-    email: z
-      .string()
-      .email("Invalid email format")
-      .optional()
-      .or(z.literal("")),
-    membershipLevel: z
-      .enum(["BRONZE", "SILVER", "GOLD", "PLATINUM"])
-      .optional(),
-    status: z.enum(["active", "inactive"]).optional(),
-  });
-
-export const insertPointTransactionSchema = createInsertSchema(
-  pointTransactions,
-)
-  .omit({
-    id: true,
-    createdAt: true,
-  })
-  .extend({
-    type: z.enum(["earned", "redeemed", "adjusted", "expired"], {
-      errorMap: () => ({
-        message: "Type must be earned, redeemed, adjusted, or expired",
-      }),
-    }),
-  });
-
-export type Customer = InferSelectModel<typeof customers>;
 export type PointTransaction = typeof pointTransactions.$inferSelect;
 export type AttendanceRecord = typeof attendanceRecords.$inferSelect;
-export type Table = typeof tables.$inferSelect;
+export type Table = InferSelectModel<typeof tables>;
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
 export type StoreSettings = typeof storeSettings.$inferSelect;
@@ -534,6 +697,9 @@ export type InsertCustomer = z.infer<typeof insertCustomerSchema>;
 export type InsertPointTransaction = z.infer<
   typeof insertPointTransactionSchema
 >;
+export type InsertPurchaseReceipt = z.infer<typeof insertPurchaseReceiptSchema>;
+export type InsertPurchaseReceiptItem = z.infer<typeof insertPurchaseReceiptItemSchema>;
+export type InsertPurchaseReceiptDocument = z.infer<typeof insertPurchaseReceiptDocumentSchema>;
 
 export const insertEInvoiceConnectionSchema = createInsertSchema(
   eInvoiceConnections,
@@ -587,6 +753,7 @@ export const insertPrinterConfigSchema = createInsertSchema(printerConfigs).omit
 }).extend({
   printerType: z.enum(["thermal", "inkjet", "laser"]).optional(),
   connectionType: z.enum(["usb", "network", "bluetooth"]).optional(),
+  copies: z.number().min(0).optional().default(0),
 });
 
 export type PrinterConfig = typeof printerConfigs.$inferSelect;
@@ -699,7 +866,111 @@ export const pointTransactionsRelations = relations(
   }),
 );
 
+export const suppliersRelations = relations(suppliers, ({ many }) => ({
+  purchaseReceipts: many(purchaseReceipts),
+}));
+
+export const purchaseReceiptsRelations = relations(purchaseReceipts, ({ one, many }) => ({
+  supplier: one(suppliers, {
+    fields: [purchaseReceipts.supplierId],
+    references: [suppliers.id],
+  }),
+  employee: one(employees, {
+    fields: [purchaseReceipts.employeeId],
+    references: [employees.id],
+  }),
+  items: many(purchaseReceiptItems),
+  documents: many(purchaseReceiptDocuments),
+}));
+
+export const purchaseReceiptItemsRelations = relations(
+  purchaseReceiptItems,
+  ({ one }) => ({
+    purchaseReceipt: one(purchaseReceipts, {
+      fields: [purchaseReceiptItems.purchaseReceiptId],
+      references: [purchaseReceipts.id],
+    }),
+    product: one(products, {
+      fields: [purchaseReceiptItems.productId],
+      references: [products.id],
+    }),
+  }),
+);
+
+export const purchaseReceiptDocumentsRelations = relations(
+  purchaseReceiptDocuments,
+  ({ one }) => ({
+    purchaseReceipt: one(purchaseReceipts, {
+      fields: [purchaseReceiptDocuments.purchaseReceiptId],
+      references: [purchaseReceipts.id],
+    }),
+    uploadedByEmployee: one(employees, {
+      fields: [purchaseReceiptDocuments.uploadedBy],
+      references: [employees.id],
+    }),
+  }),
+);
+
 // Receipt data type
 export type Receipt = Transaction & {
   items: (TransactionItem & { productName: string })[];
 };
+
+// Alias for backward compatibility - use purchase receipt schema
+export const insertPurchaseOrderSchema = insertPurchaseReceiptSchema;
+export const insertPurchaseOrderItemSchema = insertPurchaseReceiptItemSchema;
+
+export const insertInventoryTransactionSchema = createInsertSchema(
+  inventoryTransactions,
+).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InventoryTransaction = typeof inventoryTransactions.$inferSelect;
+export type InsertInventoryTransaction = z.infer<
+  typeof insertInventoryTransactionSchema
+>;
+
+// Purchase orders table
+export const purchaseOrders = pgTable('purchase_orders', {
+  id: serial('id').primaryKey(),
+  orderNumber: varchar('order_number', { length: 50 }).notNull(),
+  supplierId: integer('supplier_id').references(() => suppliers.id),
+  status: varchar('status', { length: 20 }).default('pending'),
+  expectedDeliveryDate: timestamp('expected_delivery_date'),
+  notes: text('notes'),
+  total: numeric('total', { precision: 10, scale: 2 }).default('0'),
+  createdAt: timestamp('created_at').default(sql`now()`),
+  updatedAt: timestamp('updated_at').default(sql`now()`)
+});
+
+// Income vouchers table
+export const incomeVouchers = pgTable('income_vouchers', {
+  id: serial('id').primaryKey(),
+  voucherNumber: varchar('voucher_number', { length: 50 }).notNull(),
+  date: varchar('date', { length: 10 }).notNull(),
+  amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
+  account: varchar('account', { length: 50 }).notNull(),
+  recipient: varchar('recipient', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 20 }),
+  category: varchar('category', { length: 50 }).notNull(),
+  description: text('description'),
+  createdAt: timestamp('created_at').default(sql`now()`),
+  updatedAt: timestamp('updated_at').default(sql`now()`)
+});
+
+// Expense vouchers table
+export const expenseVouchers = pgTable('expense_vouchers', {
+  id: serial('id').primaryKey(),
+  voucherNumber: varchar('voucher_number', { length: 50 }).notNull(),
+  date: varchar('date', { length: 10 }).notNull(),
+  amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
+  account: varchar('account', { length: 50 }).notNull(),
+  recipient: varchar('recipient', { length: 255 }).notNull(),
+  phone: varchar('phone', { length: 20 }),
+  category: varchar('category', { length: 50 }).notNull(),
+  description: text('description'),
+  createdAt: timestamp('created_at').default(sql`now()`),
+  updatedAt: timestamp('updated_at').default(sql`now()`)
+});

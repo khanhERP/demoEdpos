@@ -54,11 +54,11 @@ export function SalesReport() {
     error: ordersError,
     refetch: refetchOrders,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range", startDate, endDate, "all"],
     queryFn: async () => {
       try {
         const response = await fetch(
-          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}`,
+          `https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/orders/date-range/${startDate}/${endDate}/all`,
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -80,7 +80,7 @@ export function SalesReport() {
     isLoading: orderItemsLoading,
     refetch: refetchOrderItems,
   } = useQuery({
-    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/date-range", startDate, endDate],
+    queryKey: ["https://66622521-d7f0-4a33-aadd-c50d66665c71-00-wqfql649629t.pike.replit.dev/api/order-items/date-range", startDate, endDate, "all"],
     queryFn: async () => {
       try {
         const response = await fetch(
@@ -266,28 +266,21 @@ export function SalesReport() {
 
       // Calculate totals based on unique combined data
       const totalRevenue = uniqueCombinedData.reduce(
-        (total: number, item: any) => {
-          const itemPrice = Number(item.price || item.total || 0);
-          const itemQuantity = Number(item.quantity || 1);
+        (sum: number, order: any) => {
+          // Revenue = Subtotal (đã trừ giảm giá) + Tax
+          const subtotal = Number(order.subtotal || 0); // Thành tiền sau khi trừ giảm giá
+          const tax = Number(order.tax || 0); // Thuế
+          const revenue = subtotal + tax; // Doanh thu thực tế
 
-          // Get discount from database, default to 0 if no data
-          const discountAmount =
-            item.discount !== undefined && item.discount !== null
-              ? Number(item.discount)
-              : 0;
-
-          return total + itemPrice * itemQuantity;
+          return sum + revenue;
         },
         0,
       );
 
       // Calculate subtotal revenue (excluding tax)
       const subtotalRevenue = paidOrders.reduce((total: number, order: any) => {
-        const subtotal = Number(order.subtotal || 0);
-        const tax = Number(order.tax || 0);
-        const discount = Number(order.discount || 0);
-        const revenue = subtotal - discount; // Same formula as dashboard
-        return total + revenue;
+        const subtotal = Number(order.subtotal || 0); // Subtotal đã là giá trị sau khi trừ discount
+        return total + subtotal;
       }, 0);
 
       // Total orders should be based on unique orders, not items

@@ -50,6 +50,8 @@ const createTableFormSchema = (t: any) =>
     tableNumber: z.string().min(1, t("tables.tableNumberRequired")),
     capacity: z.number().min(1, t("tables.capacityMinimum")),
     status: z.enum(["available", "occupied", "reserved", "maintenance"]),
+    floor: z.string().min(1, "층 정보는 필수입니다"),
+    zone: z.string().min(1, "구역 정보는 필수입니다"),
     qrCode: z.string().optional(),
   });
 
@@ -57,6 +59,8 @@ type TableFormData = {
   tableNumber: string;
   capacity: number;
   status: "available" | "occupied" | "reserved" | "maintenance";
+  floor: string;
+  zone: string;
   qrCode?: string;
 };
 
@@ -105,6 +109,8 @@ export function TableManagement() {
       tableNumber: "",
       capacity: 1,
       status: "available",
+      floor: "1층",
+      zone: "A구역",
       qrCode: "",
     },
   });
@@ -178,6 +184,8 @@ export function TableManagement() {
           | "occupied"
           | "reserved"
           | "maintenance",
+        floor: table.floor || "1층",
+        zone: (table as any).zone || "A구역",
         qrCode: table.qrCode || "",
       });
     } else {
@@ -186,6 +194,8 @@ export function TableManagement() {
         tableNumber: "",
         capacity: 1,
         status: "available",
+        floor: "1층",
+        zone: "A구역",
         qrCode: "",
       });
     }
@@ -266,6 +276,8 @@ export function TableManagement() {
             <TableHeader>
               <TableRow>
                 <TableHead>{t("tables.tableNumberLabel")}</TableHead>
+                <TableHead>{t("tables.floorLabel")}</TableHead>
+                <TableHead>{t("tables.zoneLabel")}</TableHead>
                 <TableHead>{t("tables.capacityLabel")}</TableHead>
                 <TableHead>{t("tables.statusLabel")}</TableHead>
                 <TableHead>{t("tables.qrCodeLabel")}</TableHead>
@@ -281,6 +293,16 @@ export function TableManagement() {
                     <TableRow key={table.id}>
                       <TableCell className="font-medium">
                         {table.tableNumber}
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm font-medium text-blue-600">
+                          {table.floor || "1층"}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm font-medium text-green-600">
+                          {(table as any).zone || "A구역"}
+                        </span>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1">
@@ -334,7 +356,7 @@ export function TableManagement() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={6}
+                    colSpan={7}
                     className="text-center py-8 text-gray-500"
                   >
                     {t("tables.noTables")}
@@ -395,6 +417,72 @@ export function TableManagement() {
                         }
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="floor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("tables.floorLabel")}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t("tables.floorPlaceholder")}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="1">{t("common.floor")} 1</SelectItem>
+                        <SelectItem value="2">{t("common.floor")} 2</SelectItem>
+                        <SelectItem value="3">{t("common.floor")} 3</SelectItem>
+                        <SelectItem value="4">{t("common.floor")} 4</SelectItem>
+                        <SelectItem value="5">{t("common.floor")} 5</SelectItem>
+                        <SelectItem value="6">{t("common.floor")} 6</SelectItem>
+                        <SelectItem value="7">{t("common.floor")} 7</SelectItem>
+                        <SelectItem value="8">{t("common.floor")} 8</SelectItem>
+                        <SelectItem value="9">{t("common.floor")} 9</SelectItem>
+                        <SelectItem value="10">
+                          {t("common.floor")} 10
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="zone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("tables.zoneLabel")}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t("tables.zonePlaceholder")}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="A">{t("common.zone")} A</SelectItem>
+                        <SelectItem value="B">{t("common.zone")} B</SelectItem>
+                        <SelectItem value="C">{t("common.zone")} C</SelectItem>
+                        <SelectItem value="D">{t("common.zone")} D</SelectItem>
+                        <SelectItem value="E">{t("common.zone")} E</SelectItem>
+                        <SelectItem value="F">{t("common.zone")} F</SelectItem>
+                        <SelectItem value="Vip">
+                          {t("common.zone")} VIP
+                        </SelectItem>
+                        <SelectItem value="All">{t("common.all")}</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
